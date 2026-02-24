@@ -606,6 +606,16 @@ const topPlayers = [
   { rank: 8, name: "chain_smoker", points: "35,100" },
   { rank: 9, name: "risk_taker_x", points: "31,400" },
   { rank: 10, name: "moon_shot_22", points: "28,600" },
+  { rank: 11, name: "flip_king", points: "26,300" },
+  { rank: 12, name: "sigma_grind", points: "24,100" },
+  { rank: 13, name: "onchain_ape", points: "22,800" },
+  { rank: 14, name: "wagmi_lord", points: "20,500" },
+  { rank: 15, name: "nft_degen_x", points: "18,900" },
+  { rank: 16, name: "based_bettor", points: "17,200" },
+  { rank: 17, name: "real_mvp_42", points: "15,800" },
+  { rank: 18, name: "diamond_bet", points: "14,300" },
+  { rank: 19, name: "chad_plays", points: "13,100" },
+  { rank: 20, name: "alpha_hunter", points: "12,500" },
 ];
 
 function LeaderboardSidebar() {
@@ -686,9 +696,27 @@ function SwitchBannerPromo() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      {/* Red gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[hsl(0_60%_8%)] via-[hsl(0_50%_10%)] to-[hsl(0_30%_6%)]" />
-      <div className="absolute top-0 left-0 w-60 h-full bg-[hsl(0_80%_30%/0.06)] blur-[60px] pointer-events-none" />
+      {/* Multi-layer cinematic background */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[hsl(0_70%_6%)] via-[hsl(0_40%_8%)] to-[hsl(350_30%_5%)]" />
+      {/* Radial spotlight left */}
+      <div className="absolute -left-20 top-1/2 -translate-y-1/2 w-80 h-60 bg-[hsl(0_80%_35%/0.1)] rounded-full blur-[80px] pointer-events-none" />
+      {/* Secondary glow right */}
+      <div className="absolute -right-10 -top-10 w-60 h-60 bg-[hsl(0_70%_25%/0.06)] rounded-full blur-[60px] pointer-events-none" />
+      {/* Animated diagonal streaks */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none opacity-[0.04]"
+        style={{
+          backgroundImage: "repeating-linear-gradient(135deg, transparent, transparent 40px, hsl(0 80% 50% / 0.3) 40px, hsl(0 80% 50% / 0.3) 41px)",
+        }}
+        animate={{ backgroundPosition: ["0px 0px", "80px 80px"] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+      />
+      {/* Grain overlay */}
+      <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+      }} />
+      {/* Bottom edge glow line */}
+      <div className="absolute bottom-0 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-[hsl(0_80%_40%/0.3)] to-transparent" />
 
       <div className="relative z-10 px-5 py-5 lg:py-6 border border-[hsl(0_40%_18%/0.25)] rounded-xl flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <div className="flex-1 space-y-1.5">
@@ -944,7 +972,10 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-5">
         {/* Left: main content */}
         <div className="space-y-6">
-          {/* 2. Status + Invite side by side */}
+          {/* 2. Getting Started — above profile */}
+          <GettingStarted />
+
+          {/* 3. Status + Invite side by side */}
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
             <div className="space-y-4">
               <PlayerStatusCard />
@@ -955,9 +986,6 @@ export default function Dashboard() {
 
           {/* Badges under profile */}
           <BadgeStrip />
-
-          {/* 3. Getting Started */}
-          <GettingStarted />
 
           {/* Arena nudge if idle points */}
           <ArenaNudge />
