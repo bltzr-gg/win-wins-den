@@ -7,7 +7,7 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "1rem",
+      padding: "2rem",
       screens: {
         "2xl": "1400px",
       },
@@ -16,6 +16,9 @@ export default {
       fontFamily: {
         display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
         body: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      maxWidth: {
+        hub: '1280px',
       },
       colors: {
         border: "hsl(var(--border))",
@@ -66,6 +69,7 @@ export default {
         epic: "hsl(var(--epic))",
         legendary: "hsl(var(--legendary))",
         rare: "hsl(var(--rare))",
+        claim: "hsl(var(--claim))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -82,8 +86,8 @@ export default {
           to: { height: "0" },
         },
         "pulse-glow": {
-          "0%, 100%": { boxShadow: "0 0 10px hsl(152 100% 50% / 0.2)" },
-          "50%": { boxShadow: "0 0 25px hsl(152 100% 50% / 0.4), 0 0 50px hsl(152 100% 50% / 0.15)" },
+          "0%, 100%": { boxShadow: "0 0 10px hsl(0 72% 55% / 0.2)" },
+          "50%": { boxShadow: "0 0 25px hsl(0 72% 55% / 0.4), 0 0 50px hsl(0 72% 55% / 0.15)" },
         },
         "float": {
           "0%, 100%": { transform: "translateY(0px)" },
