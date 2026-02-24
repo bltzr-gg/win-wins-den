@@ -707,6 +707,7 @@ function LeaderboardSidebar() {
    ═══════════════════════════════════════════════ */
 function SwitchBannerPromo() {
   const [walletState, setWalletState] = useState<"disconnected" | "eligible" | "claimed">("disconnected");
+  const estimatedBonus = walletState === "eligible" ? 320 : null;
 
   return (
     <motion.div
@@ -733,11 +734,25 @@ function SwitchBannerPromo() {
               Live
             </motion.span>
             <h2 className="font-display text-base lg:text-lg tracking-wide">
-              Switch Bonus<span className="text-primary"> Is Live</span>
+              {walletState === "disconnected" ? (
+                <>Switch Bonus<span className="text-primary"> Is Live</span></>
+              ) : walletState === "eligible" ? (
+                <>Your Bonus<span className="text-primary"> Is Ready</span></>
+              ) : (
+                <>Bonus<span className="text-multiplier"> Claimed</span></>
+              )}
             </h2>
           </div>
           <p className="text-xs text-muted-foreground">
-            Connect your wallet to reveal your personalized bonus from Stake, Rollbit, or Shuffle — up to <span className="text-primary font-semibold">$500</span>.
+            {walletState === "disconnected" ? (
+              <>Connect your wallet to reveal your personalized bonus from Stake, Rollbit, or Shuffle.</>
+            ) : walletState === "eligible" && estimatedBonus ? (
+              <>Estimated bonus: <span className="text-primary font-semibold">${estimatedBonus}</span> — claim it before the window closes.</>
+            ) : walletState === "eligible" ? (
+              <>You may qualify for up to <span className="text-primary font-semibold">$500</span>.</>
+            ) : (
+              <>Your Switch Bonus has been applied to your account.</>
+            )}
           </p>
         </div>
 
@@ -754,8 +769,8 @@ function SwitchBannerPromo() {
             onClick={() => setWalletState(walletState === "disconnected" ? "eligible" : "claimed")}
           >
             <Wallet className="w-3.5 h-3.5" />
-            {walletState === "disconnected" && "Check Eligibility"}
-            {walletState === "eligible" && "Claim Bonus"}
+            {walletState === "disconnected" && "Connect Wallet"}
+            {walletState === "eligible" && "Claim $" + estimatedBonus}
             {walletState === "claimed" && <><Check className="w-3.5 h-3.5" /> Claimed</>}
           </motion.button>
           <Link to="/switch" className="text-[10px] text-muted-foreground hover:text-foreground transition-colors underline-offset-2 hover:underline">
