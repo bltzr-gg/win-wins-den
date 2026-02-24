@@ -705,9 +705,18 @@ function LeaderboardSidebar() {
 /* ═══════════════════════════════════════════════
    7. SWITCH BONUS BANNER — compact, not dominant
    ═══════════════════════════════════════════════ */
+import platformStake from "@/assets/platforms/stake.png";
+import platformRollbit from "@/assets/platforms/rollbit.png";
+import platformShuffle from "@/assets/platforms/shuffle.png";
+
+const platforms = [
+  { name: "Stake", logo: platformStake },
+  { name: "Rollbit", logo: platformRollbit },
+  { name: "Shuffle", logo: platformShuffle },
+];
+
 function SwitchBannerPromo() {
   const [walletState, setWalletState] = useState<"disconnected" | "eligible" | "claimed">("disconnected");
-  const estimatedBonus = walletState === "eligible" ? 320 : null;
 
   return (
     <motion.div
@@ -716,15 +725,12 @@ function SwitchBannerPromo() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      {/* Grunge texture background image */}
       <img src={switchBonusBg} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
-      {/* Dark overlay for text readability */}
       <div className="absolute inset-0 bg-gradient-to-r from-[hsl(0_0%_0%/0.6)] via-[hsl(0_0%_0%/0.3)] to-[hsl(0_0%_0%/0.7)]" />
-      {/* Bottom edge glow line */}
       <div className="absolute bottom-0 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-[hsl(0_80%_40%/0.3)] to-transparent" />
 
       <div className="relative z-10 px-5 py-5 lg:py-6 border border-[hsl(0_40%_18%/0.25)] rounded-xl flex flex-col sm:flex-row items-start sm:items-center gap-4">
-        <div className="flex-1 space-y-1.5">
+        <div className="flex-1 space-y-2.5">
           <div className="flex items-center gap-2.5">
             <motion.span
               className="text-[9px] font-semibold px-2 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/20 uppercase tracking-wider"
@@ -734,25 +740,24 @@ function SwitchBannerPromo() {
               Live
             </motion.span>
             <h2 className="font-display text-base lg:text-lg tracking-wide">
-              {walletState === "disconnected" ? (
-                <>Switch Bonus<span className="text-primary"> Is Live</span></>
-              ) : walletState === "eligible" ? (
-                <>Your Bonus<span className="text-primary"> Is Ready</span></>
-              ) : (
-                <>Bonus<span className="text-multiplier"> Claimed</span></>
-              )}
+              Switch Bonus<span className="text-primary"> Is Live</span>
             </h2>
           </div>
-          <p className="text-xs text-muted-foreground">
-            {walletState === "disconnected" ? (
-              <>Connect your wallet to reveal your personalized bonus from Stake, Rollbit, or Shuffle.</>
-            ) : walletState === "eligible" && estimatedBonus ? (
-              <>Estimated bonus: <span className="text-primary font-semibold">${estimatedBonus}</span> — claim it before the window closes.</>
-            ) : walletState === "eligible" ? (
-              <>You may qualify for up to <span className="text-primary font-semibold">$500</span>.</>
-            ) : (
-              <>Your Switch Bonus has been applied to your account.</>
-            )}
+
+          <p className="text-xs text-muted-foreground leading-relaxed max-w-lg">
+            Connect your wallet to reveal your personalized bonus from{" "}
+            {platforms.map((p, i) => (
+              <span key={p.name} className="inline-flex items-center gap-1 align-middle">
+                <img
+                  src={p.logo}
+                  alt={p.name}
+                  className="w-4 h-4 rounded-sm object-cover inline-block grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-200"
+                />
+                <span className="text-foreground/80 font-medium">{p.name}</span>
+                {i < platforms.length - 1 && <span className="text-muted-foreground">,{" "}</span>}
+              </span>
+            ))}{" "}
+            or other major platforms — up to <span className="text-primary font-semibold">$500</span>.
           </p>
         </div>
 
@@ -769,8 +774,8 @@ function SwitchBannerPromo() {
             onClick={() => setWalletState(walletState === "disconnected" ? "eligible" : "claimed")}
           >
             <Wallet className="w-3.5 h-3.5" />
-            {walletState === "disconnected" && "Connect Wallet"}
-            {walletState === "eligible" && "Claim $" + estimatedBonus}
+            {walletState === "disconnected" && "Check Eligibility"}
+            {walletState === "eligible" && "Claim Bonus"}
             {walletState === "claimed" && <><Check className="w-3.5 h-3.5" /> Claimed</>}
           </motion.button>
           <Link to="/switch" className="text-[10px] text-muted-foreground hover:text-foreground transition-colors underline-offset-2 hover:underline">
