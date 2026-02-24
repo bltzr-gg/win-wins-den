@@ -193,120 +193,159 @@ function SeasonBanner() {
 }
 
 /* ═══════════════════════════════════════════════
-   2. VAULT TEASER (Daily Loop) — red accent, urgency
+   2. VAULT — Dominant section, daily + premium boxes
    ═══════════════════════════════════════════════ */
-function VaultTeaser() {
+function VaultSection() {
   const streakDays = [1, 2, 3, 4, 5, 6, 7];
+  const freeBoxAvailable = true;
+
+  const premiumBoxes = [
+    { name: "Silver Box", tier: "silver" as const, cost: 500, topReward: "$50", icons: [Zap, Gift, Sparkles, Star] },
+    { name: "Gold Box", tier: "gold" as const, cost: 2000, topReward: "$250", icons: [Zap, Gift, Sparkles, Star] },
+    { name: "Diamond Box", tier: "diamond" as const, cost: 5000, topReward: "$1,000", icons: [Zap, Gift, Sparkles, Star] },
+  ];
+
+  const tierAccent = {
+    silver: { text: "text-silver", border: "border-silver/20", bg: "bg-silver/8", btnBg: "bg-silver/10 hover:bg-silver/15 border-silver/20 text-silver" },
+    gold: { text: "text-gold", border: "border-gold/20", bg: "bg-gold/5", btnBg: "bg-gold/10 hover:bg-gold/15 border-gold/20 text-gold" },
+    diamond: { text: "text-epic", border: "border-epic/20", bg: "bg-epic/5", btnBg: "bg-epic/10 hover:bg-epic/15 border-epic/20 text-epic" },
+  };
 
   return (
     <motion.div
-      className="rounded-xl border border-border bg-card p-5 flex flex-col justify-between gap-4"
+      className="relative rounded-2xl border border-border bg-card overflow-hidden"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.15 }}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Box className="w-4 h-4 text-primary" />
-          <h3 className="font-display text-sm tracking-wider">The Vault</h3>
-        </div>
-        <motion.span
-          className="text-[9px] px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 font-semibold"
-          animate={{ opacity: [1, 0.6, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          1 Free Daily Box
-        </motion.span>
-      </div>
+      {/* Subtle red ambient for vault identity */}
+      <div className="absolute top-0 left-[15%] w-48 h-32 bg-[hsl(0_60%_30%/0.04)] rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute inset-0 metallic-sheen pointer-events-none" />
 
-      {/* Streak tracker */}
-      <div className="flex items-center gap-1.5">
-        {streakDays.map((d) => (
-          <motion.div
-            key={d}
-            className={`flex-1 h-2.5 rounded-full ${d <= userState.streak ? "bg-primary" : "bg-secondary"}`}
-            initial={d === userState.streak ? { scale: 0 } : {}}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2 + d * 0.04 }}
-          />
-        ))}
-      </div>
-      <div className="flex items-center justify-between text-[10px]">
-        <span className="text-muted-foreground flex items-center gap-1">
-          <motion.span
-            animate={userState.streak > 0 ? {
-              scale: [1, 1.3, 1],
-              rotate: [0, -8, 8, 0],
-            } : {}}
-            transition={userState.streak > 0 ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" } : {}}
-            className="inline-flex"
-          >
-            <Flame className="w-3 h-3 text-multiplier" />
-          </motion.span>
-          D{userState.streak}/D7
-        </span>
-        <span className="px-1.5 py-0.5 rounded bg-multiplier/10 text-multiplier border border-multiplier/20 font-semibold">1.3x</span>
-      </div>
-
-      <Link
-        to="/vault"
-        className="w-full py-3 rounded-lg bg-primary/10 text-primary border border-primary/20 font-display text-sm hover:bg-primary/15 transition-all flex items-center justify-center gap-2"
-      >
-        <Box className="w-4 h-4" />
-        Open Vault
-      </Link>
-    </motion.div>
-  );
-}
-
-/* ═══════════════════════════════════════════════
-   3. REWARD CHEST — gold only, differentiated
-   ═══════════════════════════════════════════════ */
-function RewardChestCard() {
-  return (
-    <motion.div
-      className="rounded-xl border border-gold/15 bg-card p-5 flex flex-col justify-between gap-4"
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2 }}
-    >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-gold" />
-          <h3 className="font-display text-sm tracking-wider">Reward Chest</h3>
-        </div>
-        <span className="text-[9px] px-2 py-0.5 rounded-full border border-gold/20 text-gold font-semibold">
-          Gold Tier
-        </span>
-      </div>
-      <div className="space-y-1">
-        <p className="text-[10px] text-muted-foreground">Cost: 200–300 REAL Points</p>
-        <p className="text-[10px] text-muted-foreground">You can open <span className="text-gold font-semibold">4 chests</span> now</p>
-        <p className="text-[10px] text-muted-foreground/70 italic">Earned via Tasks & Referrals</p>
-      </div>
-      <div className="flex gap-2">
-        {["🎟️", "💰", "🔥", "💎"].map((e, i) => (
-          <div key={i} className="w-9 h-9 rounded-lg bg-secondary/40 border border-gold/10 flex items-center justify-center text-base">
-            {e}
+      <div className="relative z-10 p-6 lg:p-7 space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+              <Box className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <h3 className="font-display text-xl tracking-wider">THE VAULT</h3>
+              <p className="text-[11px] text-muted-foreground mt-0.5">Open daily boxes for streak bonuses. Spend REAL Points on premium mystery boxes for higher rewards.</p>
+            </div>
           </div>
-        ))}
+          <Link to="/vault" className="text-[10px] text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+            View All <ChevronRight className="w-3 h-3" />
+          </Link>
+        </div>
+
+        {/* ─── DAILY MYSTERY BOX ─── */}
+        <div className="rounded-xl border border-primary/15 bg-[hsl(0_20%_7%/0.5)] p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Flame className="w-4 h-4 text-primary" />
+              <span className="font-display text-sm tracking-wider">DAILY MYSTERY BOX</span>
+            </div>
+            <div className="flex items-center gap-2">
+              {freeBoxAvailable && (
+                <motion.span
+                  className="text-[9px] px-2 py-0.5 rounded-full bg-primary/12 text-primary border border-primary/20 font-semibold"
+                  animate={{ opacity: [1, 0.6, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  Free Daily Box
+                </motion.span>
+              )}
+              <span className="px-2 py-0.5 rounded bg-multiplier/10 text-multiplier border border-multiplier/20 text-[10px] font-display">1.3x</span>
+            </div>
+          </div>
+
+          {/* Streak progress */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 flex-1">
+              {streakDays.map((d) => (
+                <motion.div
+                  key={d}
+                  className={`flex-1 h-3 rounded-full relative overflow-hidden ${d <= userState.streak ? "bg-primary" : "bg-secondary"}`}
+                  initial={d === userState.streak ? { scale: 0 } : {}}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.2 + d * 0.04 }}
+                >
+                  {d === userState.streak && (
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(0_0%_100%/0.2)] to-transparent"
+                      animate={{ x: ["-100%", "200%"] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                    />
+                  )}
+                </motion.div>
+              ))}
+            </div>
+            <span className="text-[10px] text-muted-foreground flex items-center gap-1 flex-shrink-0">
+              <motion.span
+                animate={userState.streak > 0 ? { scale: [1, 1.3, 1], rotate: [0, -8, 8, 0] } : {}}
+                transition={userState.streak > 0 ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" } : {}}
+                className="inline-flex"
+              >
+                <Flame className="w-3 h-3 text-primary" />
+              </motion.span>
+              D{userState.streak}/D7
+            </span>
+          </div>
+
+          {/* CTA — primary glow, only glowing button in vault */}
+          <Link
+            to="/vault"
+            className="relative w-full py-3.5 rounded-xl font-display text-sm flex items-center justify-center gap-2 transition-all overflow-hidden bg-primary/15 text-primary border border-primary/30 hover:bg-primary/20"
+            style={{ boxShadow: freeBoxAvailable ? "0 0 20px hsl(0 84% 40% / 0.12)" : "none" }}
+          >
+            {freeBoxAvailable && (
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(0_84%_40%/0.08)] to-transparent pointer-events-none"
+                animate={{ x: ["-200%", "200%"] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              />
+            )}
+            <Box className="w-4 h-4 relative z-10" />
+            <span className="relative z-10">Open Free Box</span>
+          </Link>
+        </div>
+
+        {/* ─── PREMIUM MYSTERY BOXES ─── */}
+        <div className="space-y-3">
+          <h4 className="font-display text-xs tracking-wider text-muted-foreground">PREMIUM MYSTERY BOXES</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {premiumBoxes.map((box) => {
+              const a = tierAccent[box.tier];
+              return (
+                <div
+                  key={box.name}
+                  className={`rounded-xl border ${a.border} ${a.bg} p-4 space-y-3 transition-all hover:brightness-110`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className={`font-display text-xs ${a.text}`}>{box.name}</span>
+                    <span className="text-[10px] text-muted-foreground">{box.cost.toLocaleString()} RP</span>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground">Top reward: <span className="text-foreground/70 font-medium">{box.topReward}</span></p>
+                  <div className="flex items-center gap-2">
+                    {box.icons.map((Icon, j) => (
+                      <Icon key={j} className="w-3 h-3 text-muted-foreground/50" />
+                    ))}
+                  </div>
+                  <button className={`w-full py-2.5 rounded-lg font-display text-xs border transition-all ${a.btnBg}`}>
+                    Open — {box.cost.toLocaleString()} RP
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
-      <motion.button
-        className="relative w-full py-3 rounded-lg bg-gold/10 text-gold border border-gold/20 font-display text-sm hover:bg-gold/15 transition-all flex items-center justify-center gap-2 overflow-hidden"
-        whileHover={{ scale: 1.01 }}
-        whileTap={{ scale: 0.98 }}
-      >
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(41_60%_53%/0.06)] to-transparent pointer-events-none"
-          animate={{ x: ["-200%", "200%"] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-        />
-        <Box className="w-4 h-4 relative z-10" />
-        <span className="relative z-10">Open a Chest</span>
-      </motion.button>
     </motion.div>
   );
 }
+
+/* RewardChestCard removed — merged into Vault */
 
 /* ═══════════════════════════════════════════════
    4. YOUR PATH — dynamic highlight
@@ -323,7 +362,7 @@ function YourPath() {
 
   return (
     <motion.div
-      className="rounded-xl border border-border bg-card p-5 flex flex-col justify-between gap-3"
+      className="rounded-xl border border-border/60 bg-card/80 p-4 flex flex-col justify-between gap-2.5"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.25 }}
@@ -1043,10 +1082,9 @@ export default function Dashboard() {
           {/* Arena nudge if idle points */}
           <ArenaNudge />
 
-          {/* 4 & 5. Vault + Chest + Path */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <VaultTeaser />
-            <RewardChestCard />
+          {/* Vault (wide) + Path (narrow) */}
+          <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4">
+            <VaultSection />
             <YourPath />
           </div>
 
