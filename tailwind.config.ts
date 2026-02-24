@@ -9,16 +9,16 @@ export default {
       center: true,
       padding: "2rem",
       screens: {
-        "2xl": "1400px",
+        "2xl": "1440px",
       },
     },
     extend: {
       fontFamily: {
-        display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
-        body: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ["Inter", "sans-serif"],
+        display: ["Oswald", "sans-serif"],
       },
       maxWidth: {
-        hub: '1280px',
+        hub: "1280px",
       },
       colors: {
         border: "hsl(var(--border))",
@@ -53,7 +53,6 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
-          hover: "hsl(var(--card-hover))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -65,11 +64,17 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        streak: "hsl(var(--streak-flame))",
+        gold: "hsl(var(--gold))",
+        "gold-shine": "hsl(var(--gold-shine))",
+        silver: "hsl(var(--silver))",
+        bronze: "hsl(var(--bronze))",
+        crimson: "hsl(var(--crimson))",
+        "crimson-deep": "hsl(var(--crimson-deep))",
         epic: "hsl(var(--epic))",
         legendary: "hsl(var(--legendary))",
         rare: "hsl(var(--rare))",
-        claim: "hsl(var(--claim))",
+        common: "hsl(var(--common))",
+        multiplier: "hsl(var(--multiplier))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -86,19 +91,34 @@ export default {
           to: { height: "0" },
         },
         "pulse-glow": {
-          "0%, 100%": { boxShadow: "0 0 10px hsl(0 72% 55% / 0.2)" },
-          "50%": { boxShadow: "0 0 25px hsl(0 72% 55% / 0.4), 0 0 50px hsl(0 72% 55% / 0.15)" },
+          "0%, 100%": { opacity: "0.4" },
+          "50%": { opacity: "1" },
         },
-        "float": {
-          "0%, 100%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-6px)" },
+        shimmer: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
+        "fade-in": {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "scale-in": {
+          "0%": { transform: "scale(0.95)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        "glow-pulse": {
+          "0%, 100%": { boxShadow: "0 0 20px hsl(0 84% 40% / 0.15)" },
+          "50%": { boxShadow: "0 0 40px hsl(0 84% 40% / 0.3)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
-        "float": "float 3s ease-in-out infinite",
+        shimmer: "shimmer 2s linear infinite",
+        "fade-in": "fade-in 0.4s ease-out",
+        "scale-in": "scale-in 0.3s ease-out",
+        "glow-pulse": "glow-pulse 3s ease-in-out infinite",
       },
     },
   },

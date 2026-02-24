@@ -4,14 +4,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
-import Entry from "./pages/Entry";
-import Hub from "./pages/Hub";
-import Tasks from "./pages/Tasks";
+import Dashboard from "./pages/Dashboard";
+import TasksEarn from "./pages/TasksEarn";
 import Leaderboard from "./pages/Leaderboard";
 import Badges from "./pages/Badges";
-import Profile from "./pages/Profile";
 import Referrals from "./pages/Referrals";
-import Wager from "./pages/Wager";
+import WagerPoints from "./pages/WagerPoints";
 import SwitchBonus from "./pages/SwitchBonus";
 import NotFound from "./pages/NotFound";
 
@@ -24,16 +22,15 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Entry />} />
           <Route element={<Layout />}>
-            <Route path="/hub" element={<Hub />} />
-            <Route path="/tasks" element={<Tasks />} />
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/hub" element={<Dashboard />} />
+            <Route path="/tasks" element={<TasksEarn />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/badges" element={<Badges />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/profile/referrals" element={<Referrals />} />
-            <Route path="/profile/wager" element={<Wager />} />
-            <Route path="/profile/switch" element={<SwitchBonus />} />
+            <Route path="/referrals" element={<Referrals />} />
+            <Route path="/wager" element={<WagerPoints />} />
+            <Route path="/switch" element={<SwitchBonus />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
