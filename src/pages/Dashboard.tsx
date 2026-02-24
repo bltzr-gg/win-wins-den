@@ -382,7 +382,7 @@ function CoreLoopRow() {
 
       <div className="relative z-10 p-5 border border-border/40 rounded-2xl">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* A) Daily Mystery Box — red accent only on button */}
+          {/* A) Vault Teaser — link to full Vault page */}
           <motion.div
             className="rounded-xl border border-border bg-[hsl(240_6%_7%)] p-5 flex flex-col justify-between gap-4"
             initial={{ opacity: 0, y: 12 }}
@@ -390,38 +390,28 @@ function CoreLoopRow() {
             transition={{ delay: 0.3 }}
           >
             <div className="flex items-center justify-between">
-              <h3 className="font-display text-sm tracking-wider">Daily Mystery Box</h3>
+              <h3 className="font-display text-sm tracking-wider">The Vault</h3>
               <Gift className="w-4 h-4 text-muted-foreground" />
             </div>
-            <p className="text-[10px] text-muted-foreground">1 free box available</p>
-            <div className="flex items-center gap-1.5">
-              {streakDays.map((d) => (
-                <motion.div
-                  key={d}
-                  className={`flex-1 h-2.5 rounded-full ${d <= currentDay ? "bg-primary" : "bg-secondary"}`}
-                  initial={d === currentDay ? { scale: 0 } : {}}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.4 + d * 0.05 }}
-                />
-              ))}
-            </div>
-            <div className="flex items-center justify-between text-[10px]">
-              <span className="text-muted-foreground flex items-center gap-1">
-                <Flame className="w-3 h-3 text-multiplier" /> D{currentDay}/D7
+            <p className="text-[10px] text-muted-foreground">Bronze, Silver & Gold mystery boxes with streak multipliers.</p>
+            <div className="flex items-center gap-2 text-[10px]">
+              <span className="text-multiplier flex items-center gap-1">
+                <Flame className="w-3 h-3" /> 4-Day Streak
               </span>
-              <span className="px-2 py-0.5 rounded bg-multiplier/10 text-multiplier border border-multiplier/20 font-semibold">
+              <span className="px-1.5 py-0.5 rounded bg-multiplier/10 text-multiplier border border-multiplier/20 font-semibold">
                 1.3x
               </span>
             </div>
-            <motion.button
-              className="w-full py-3 rounded-lg bg-gradient-to-r from-crimson-deep to-primary text-primary-foreground font-display text-sm hover:brightness-110 transition-all flex items-center justify-center gap-2"
-              style={{ boxShadow: "0 0 12px hsl(0 84% 40% / 0.08)" }}
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.98 }}
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] px-2 py-0.5 rounded-full bg-bronze/10 text-bronze border border-bronze/20 font-semibold">1 Box Ready</span>
+            </div>
+            <Link
+              to="/vault"
+              className="w-full py-3 rounded-lg bg-primary/8 text-primary border border-primary/15 font-display text-sm hover:bg-primary/12 transition-all flex items-center justify-center gap-2"
             >
               <Box className="w-4 h-4" />
-              Open Daily Box
-            </motion.button>
+              Open Vault
+            </Link>
           </motion.div>
 
           {/* B) Reward Chest — gold shimmer on button */}
