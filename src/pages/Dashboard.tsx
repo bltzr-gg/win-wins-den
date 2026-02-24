@@ -786,6 +786,107 @@ function InviteEarnCard() {
 }
 
 /* ═══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════
+   GETTING STARTED — Onboarding Funnel
+   ═══════════════════════════════════════════════ */
+const onboardingTiles = [
+  {
+    step: 1,
+    title: "LINK REALBET ACCOUNT",
+    sub: "Connect your gaming profile to start earning.",
+    cta: "Link Account",
+    href: "#",
+  },
+  {
+    step: 2,
+    title: "WIN WELCOME PRIZES",
+    sub: "Claim your free mystery box and bonus points.",
+    cta: "Claim Prizes",
+    href: "/vault",
+  },
+  {
+    step: 3,
+    title: "CHECK SWITCH BONUSES",
+    sub: "See what you qualify for from other platforms.",
+    cta: "Check Eligibility",
+    href: "/switch",
+  },
+];
+
+function GettingStarted() {
+  return (
+    <section className="space-y-4">
+      <h2 className="font-display text-sm tracking-wider text-muted-foreground">GETTING STARTED</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {onboardingTiles.map((tile, i) => (
+          <motion.div
+            key={tile.step}
+            className="group relative rounded-2xl overflow-hidden border border-[hsl(0_30%_15%/0.2)] bg-[hsl(240_8%_6%)] min-h-[220px] flex flex-col justify-between"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 + i * 0.08 }}
+            whileHover={{ y: -3, scale: 1.01 }}
+          >
+            {/* Textured dark background with red brush overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[hsl(0_20%_8%)] via-[hsl(240_8%_6%)] to-[hsl(240_6%_5%)]" />
+            {/* Red abstract brush accent — unique per tile */}
+            <div
+              className="absolute pointer-events-none opacity-[0.07]"
+              style={{
+                top: i === 0 ? "-20%" : i === 1 ? "30%" : "10%",
+                left: i === 0 ? "-10%" : i === 1 ? "40%" : "60%",
+                width: "180px",
+                height: "180px",
+                background: `radial-gradient(ellipse at ${i === 0 ? "30% 40%" : i === 1 ? "60% 50%" : "70% 30%"}, hsl(0 80% 40% / 0.8), transparent 70%)`,
+                filter: "blur(30px)",
+              }}
+            />
+            {/* Subtle grain */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+              }}
+            />
+
+            {/* Hover glow */}
+            <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+              style={{ boxShadow: "inset 0 0 40px hsl(0 60% 30% / 0.06), 0 0 20px hsl(0 60% 30% / 0.06)" }}
+            />
+
+            <div className="relative z-10 p-6 flex flex-col justify-between h-full gap-5">
+              {/* Step number */}
+              <span
+                className="font-display text-[72px] leading-none tracking-tighter text-[hsl(0_50%_25%/0.25)]"
+                style={{ WebkitTextStroke: "1px hsl(0 50% 30% / 0.15)" }}
+              >
+                {tile.step}
+              </span>
+
+              <div className="space-y-4">
+                {/* Title + subtext */}
+                <div className="space-y-1.5">
+                  <h3 className="font-display text-lg tracking-wide text-foreground leading-tight">{tile.title}</h3>
+                  <p className="text-xs text-muted-foreground">{tile.sub}</p>
+                </div>
+
+                {/* CTA */}
+                <Link
+                  to={tile.href}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-crimson-deep to-primary text-primary-foreground font-semibold text-xs hover:brightness-110 transition-all"
+                  style={{ boxShadow: "0 0 14px hsl(0 84% 40% / 0.12)" }}
+                >
+                  {tile.cta} <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════
    DASHBOARD — New priority order
    ═══════════════════════════════════════════════ */
 export default function Dashboard() {
@@ -803,10 +904,13 @@ export default function Dashboard() {
         <InviteEarnCard />
       </div>
 
+      {/* 3. Getting Started — Onboarding Funnel */}
+      <GettingStarted />
+
       {/* Arena nudge if idle points */}
       <ArenaNudge />
 
-      {/* 3 & 4. Vault + Chest + Path — 3 col row */}
+      {/* 4 & 5. Vault + Chest + Path — 3 col row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <VaultTeaser />
         <RewardChestCard />
@@ -816,10 +920,10 @@ export default function Dashboard() {
       {/* Badges strip */}
       <BadgeStrip />
 
-      {/* 5. Tasks */}
+      {/* 6. Tasks */}
       <TasksPreview />
 
-      {/* 6. Leaderboard */}
+      {/* 7. Leaderboard */}
       <LeaderboardPreview />
     </div>
   );
