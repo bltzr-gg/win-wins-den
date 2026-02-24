@@ -172,6 +172,14 @@
     border-top: 1px solid hsl(0 0% 100% / 0.06);
     border-left: 1px solid hsl(0 0% 100% / 0.04);
   }
+
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @keyframes pulse-glow {
