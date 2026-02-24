@@ -639,42 +639,47 @@ function LeaderboardPreview() {
 /* ═══════════════════════════════════════════════
    7. SWITCH BONUS BANNER — compact, not dominant
    ═══════════════════════════════════════════════ */
-function SwitchBannerCompact() {
+function SwitchBannerPromo() {
   const [walletState, setWalletState] = useState<"disconnected" | "eligible" | "claimed">("disconnected");
 
   return (
     <motion.div
       className="relative rounded-xl overflow-hidden"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.5 }}
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
     >
-      <div className="absolute inset-0 bg-gradient-to-r from-[hsl(0_40%_7%)] to-card" />
+      {/* Red gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[hsl(0_60%_8%)] via-[hsl(0_50%_10%)] to-[hsl(0_30%_6%)]" />
+      <div className="absolute top-0 left-0 w-60 h-full bg-[hsl(0_80%_30%/0.06)] blur-[60px] pointer-events-none" />
 
-      <div className="relative z-10 p-4 lg:p-5 border border-[hsl(0_30%_15%/0.2)] rounded-xl flex items-center gap-5">
-        <div className="flex-1 flex items-center gap-4">
-          <span className="text-[9px] font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/15 uppercase tracking-wider flex-shrink-0">
-            Limited
-          </span>
-          <div>
-            <p className="text-sm font-semibold">
+      <div className="relative z-10 px-5 py-5 lg:py-6 border border-[hsl(0_40%_18%/0.25)] rounded-xl flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div className="flex-1 space-y-1.5">
+          <div className="flex items-center gap-2.5">
+            <motion.span
+              className="text-[9px] font-semibold px-2 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/20 uppercase tracking-wider"
+              animate={{ opacity: [1, 0.6, 1] }}
+              transition={{ duration: 2.5, repeat: Infinity }}
+            >
+              Live
+            </motion.span>
+            <h2 className="font-display text-base lg:text-lg tracking-wide">
               Switch Bonus<span className="text-primary"> Is Live</span>
-            </p>
-            <p className="text-[10px] text-muted-foreground">Connect wallet to reveal bonus from Stake, Rollbit, or Shuffle.</p>
+            </h2>
           </div>
+          <p className="text-xs text-muted-foreground">
+            Connect your wallet to reveal your personalized bonus from Stake, Rollbit, or Shuffle — up to <span className="text-gold font-semibold">$500</span>.
+          </p>
         </div>
 
-        <div className="flex items-center gap-3 flex-shrink-0">
-          <div className="text-center hidden lg:block">
-            <p className="font-display text-base text-gold">$500</p>
-            <p className="text-[9px] text-muted-foreground">up to</p>
-          </div>
+        <div className="flex items-center gap-4 flex-shrink-0">
           <motion.button
-            className={`px-4 py-2 rounded-lg font-semibold text-xs flex items-center gap-1.5 transition-all ${
+            className={`px-5 py-2.5 rounded-lg font-semibold text-xs flex items-center gap-1.5 transition-all ${
               walletState === "claimed"
                 ? "bg-multiplier/15 text-multiplier border border-multiplier/30"
                 : "bg-gradient-to-r from-crimson-deep to-primary text-primary-foreground hover:brightness-110"
             }`}
+            style={walletState !== "claimed" ? { boxShadow: "0 0 20px hsl(0 84% 40% / 0.15)" } : {}}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => setWalletState(walletState === "disconnected" ? "eligible" : "claimed")}
@@ -684,8 +689,8 @@ function SwitchBannerCompact() {
             {walletState === "eligible" && "Claim Bonus"}
             {walletState === "claimed" && <><Check className="w-3.5 h-3.5" /> Claimed</>}
           </motion.button>
-          <Link to="/switch" className="text-[10px] text-muted-foreground hover:text-foreground transition-colors hidden lg:inline">
-            Details →
+          <Link to="/switch" className="text-[10px] text-muted-foreground hover:text-foreground transition-colors underline-offset-2 hover:underline">
+            How It Works
           </Link>
         </div>
       </div>
@@ -699,14 +704,17 @@ function SwitchBannerCompact() {
 export default function Dashboard() {
   return (
     <div className="space-y-6">
-      {/* 1. Status / Rank Card */}
+      {/* 1. Switch Bonus — promotional, leads the page */}
+      <SwitchBannerPromo />
+
+      {/* 2. Status / Rank Card */}
       <PlayerStatusCard />
       <SeasonBanner />
 
       {/* Arena nudge if idle points */}
       <ArenaNudge />
 
-      {/* 2 & 3. Vault + Chest + 4. Path — 3 col row */}
+      {/* 3 & 4. Vault + Chest + Path — 3 col row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <VaultTeaser />
         <RewardChestCard />
@@ -721,9 +729,6 @@ export default function Dashboard() {
 
       {/* 6. Leaderboard */}
       <LeaderboardPreview />
-
-      {/* 7. Switch Bonus — compact, bottom */}
-      <SwitchBannerCompact />
     </div>
   );
 }
