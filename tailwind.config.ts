@@ -75,6 +75,7 @@ export default {
         rare: "hsl(var(--rare))",
         common: "hsl(var(--common))",
         multiplier: "hsl(var(--multiplier))",
+        amber: "hsl(var(--amber))",
       },
       borderRadius: {
         lg: "var(--radius)",
