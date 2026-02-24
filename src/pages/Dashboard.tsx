@@ -621,7 +621,7 @@ const topPlayers = [
 
 function LeaderboardSidebar() {
   return (
-    <div className="relative rounded-2xl overflow-hidden h-full">
+    <div className="relative rounded-2xl overflow-hidden h-[calc(100vh-6rem)]">
       <div className="absolute inset-0 bg-[hsl(240_8%_5%)]" />
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[300px] h-[150px] bg-[hsl(41_50%_40%/0.03)] rounded-full blur-[60px] pointer-events-none" />
 
