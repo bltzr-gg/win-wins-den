@@ -719,6 +719,74 @@ function SwitchBannerPromo() {
 }
 
 /* ═══════════════════════════════════════════════
+   INVITE & EARN CARD
+   ═══════════════════════════════════════════════ */
+function InviteEarnCard() {
+  const [copied, setCopied] = useState(false);
+  const code = "DEGEN-7X42";
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <motion.div
+      className="rounded-xl border border-gold/15 bg-card p-5 flex flex-col justify-between gap-4 h-full"
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.1 }}
+    >
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Users className="w-4 h-4 text-gold" />
+          <h3 className="font-display text-sm tracking-wider">Invite & Earn</h3>
+        </div>
+
+        {/* Referral code */}
+        <button
+          onClick={handleCopy}
+          className="w-full flex items-center justify-between gap-2 px-4 py-3 rounded-lg bg-secondary/50 border border-gold/10 hover:border-gold/20 transition-all group"
+        >
+          <span className="font-display text-lg tracking-widest text-foreground">{code}</span>
+          {copied ? (
+            <Check className="w-4 h-4 text-multiplier flex-shrink-0" />
+          ) : (
+            <Copy className="w-4 h-4 text-muted-foreground group-hover:text-gold flex-shrink-0 transition-colors" />
+          )}
+        </button>
+
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-2">
+          <div className="p-2 rounded-lg bg-secondary/30 border border-border/50 text-center">
+            <p className="font-display text-base">12</p>
+            <p className="text-[9px] text-muted-foreground">Joined</p>
+          </div>
+          <div className="p-2 rounded-lg bg-secondary/30 border border-border/50 text-center">
+            <p className="font-display text-base text-gold">7</p>
+            <p className="text-[9px] text-muted-foreground">Qualified</p>
+          </div>
+          <div className="p-2 rounded-lg bg-secondary/30 border border-border/50 text-center">
+            <p className="font-display text-base text-gold">3</p>
+            <p className="text-[9px] text-muted-foreground">Chests</p>
+          </div>
+        </div>
+
+        <p className="text-[10px] text-muted-foreground italic">Earn chests from active friends</p>
+      </div>
+
+      <Link
+        to="/referrals"
+        className="w-full py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/20 font-display text-xs hover:bg-gold/15 transition-all flex items-center justify-center gap-2"
+      >
+        View Referrals <ChevronRight className="w-3 h-3" />
+      </Link>
+    </motion.div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
    DASHBOARD — New priority order
    ═══════════════════════════════════════════════ */
 export default function Dashboard() {
@@ -727,9 +795,14 @@ export default function Dashboard() {
       {/* 1. Switch Bonus — promotional, leads the page */}
       <SwitchBannerPromo />
 
-      {/* 2. Status / Rank Card */}
-      <PlayerStatusCard />
-      <SeasonBanner />
+      {/* 2. Status + Invite side by side */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-4">
+        <div className="space-y-4">
+          <PlayerStatusCard />
+          <SeasonBanner />
+        </div>
+        <InviteEarnCard />
+      </div>
 
       {/* Arena nudge if idle points */}
       <ArenaNudge />
