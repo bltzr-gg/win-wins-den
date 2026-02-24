@@ -115,7 +115,7 @@ function PlayerStatusCard() {
         <div className="space-y-2">
           <div className="w-full h-1.5 rounded-full bg-secondary overflow-hidden">
             <motion.div
-              className="h-full rounded-full bg-gradient-to-r from-primary to-gold"
+              className="h-full rounded-full bg-gradient-to-r from-gold/80 to-gold"
               initial={{ width: 0 }}
               animate={{ width: `${progressPct}%` }}
               transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
@@ -141,8 +141,7 @@ function PlayerStatusCard() {
         {primaryCTA === "climb" && (
           <Link
             to="/leaderboard"
-            className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-gradient-to-r from-crimson-deep to-primary text-primary-foreground font-semibold text-sm hover:brightness-110 transition-all"
-            style={{ boxShadow: "0 0 16px hsl(0 84% 40% / 0.1)" }}
+            className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-gold/10 text-gold border border-gold/20 font-semibold text-sm hover:bg-gold/15 transition-all"
           >
             Climb Leaderboard <ArrowRight className="w-4 h-4" />
           </Link>
@@ -375,28 +374,28 @@ function ArenaNudge() {
 
   return (
     <motion.div
-      className="rounded-xl border border-gold/15 bg-card p-4 flex items-center gap-4"
+      className="rounded-xl border border-[hsl(30_60%_30%/0.2)] bg-card p-4 flex items-center gap-4"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
     >
-      <div className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center flex-shrink-0">
-        <Zap className="w-5 h-5 text-gold" />
+      <div className="w-10 h-10 rounded-xl bg-[hsl(30_60%_50%/0.1)] border border-[hsl(30_60%_50%/0.2)] flex items-center justify-center flex-shrink-0">
+        <Zap className="w-5 h-5 text-[hsl(30_80%_55%)]" />
       </div>
       <div className="flex-1">
-        <p className="text-xs font-medium">You have <span className="text-gold font-semibold">{userState.points.toLocaleString()} REAL Points</span> sitting idle.</p>
+        <p className="text-xs font-medium">You have <span className="text-[hsl(30_80%_55%)] font-semibold">{userState.points.toLocaleString()} REAL Points</span> sitting idle.</p>
         <p className="text-[10px] text-muted-foreground">Enter Arena to multiply them.</p>
       </div>
       <motion.div
         animate={isGlowing ? {
-          boxShadow: ["0 0 8px hsl(41 60% 53% / 0.08)", "0 0 16px hsl(41 60% 53% / 0.16)", "0 0 8px hsl(41 60% 53% / 0.08)"],
+          boxShadow: ["0 0 8px hsl(30 60% 50% / 0.08)", "0 0 16px hsl(30 60% 50% / 0.16)", "0 0 8px hsl(30 60% 50% / 0.08)"],
         } : {}}
         transition={isGlowing ? { duration: 2.5, repeat: Infinity } : {}}
         className="rounded-lg"
       >
         <Link
           to="/arena"
-          className="px-4 py-2 rounded-lg bg-gold/10 text-gold border border-gold/20 text-xs font-semibold hover:bg-gold/15 transition-all flex items-center gap-1.5"
+          className="px-4 py-2 rounded-lg bg-[hsl(30_60%_50%/0.1)] text-[hsl(30_80%_55%)] border border-[hsl(30_60%_50%/0.2)] text-xs font-semibold hover:bg-[hsl(30_60%_50%/0.15)] transition-all flex items-center gap-1.5"
         >
           Enter Arena <ArrowRight className="w-3 h-3" />
         </Link>
@@ -643,8 +642,8 @@ function LeaderboardPreview() {
           })}
         </div>
 
-        <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/5 border border-primary/10">
-          <span className="font-display text-sm text-primary">#{userState.rank}</span>
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-gold/5 border border-gold/10">
+          <span className="font-display text-sm text-gold">#{userState.rank}</span>
           <div className="flex-1">
             <p className="text-xs font-semibold">YOU — degen_whale</p>
             <p className="text-[10px] text-muted-foreground">You are <span className="text-gold font-semibold">{userState.ptsToTop25.toLocaleString()} pts</span> away from Top 25.</p>
@@ -688,7 +687,7 @@ function SwitchBannerPromo() {
             </h2>
           </div>
           <p className="text-xs text-muted-foreground">
-            Connect your wallet to reveal your personalized bonus from Stake, Rollbit, or Shuffle — up to <span className="text-gold font-semibold">$500</span>.
+            Connect your wallet to reveal your personalized bonus from Stake, Rollbit, or Shuffle — up to <span className="text-primary font-semibold">$500</span>.
           </p>
         </div>
 
