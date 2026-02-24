@@ -459,12 +459,12 @@ function BadgeStrip() {
       >
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <h3 className="font-display text-sm tracking-wider">Originals Collection</h3>
+            <h3 className="font-display text-sm tracking-wider">Badges</h3>
             <span className="text-[10px] text-muted-foreground">12 / 80 collected</span>
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-rare/10 text-rare border border-rare/20 font-semibold">Competitor</span>
           </div>
           <Link to="/collection" className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors">
-            View Collection <ChevronRight className="w-3 h-3" />
+            View All <ChevronRight className="w-3 h-3" />
           </Link>
         </div>
 
@@ -593,62 +593,80 @@ function TasksPreview() {
 }
 
 /* ═══════════════════════════════════════════════
-   6. LEADERBOARD PREVIEW
+   6. LEADERBOARD SIDEBAR
    ═══════════════════════════════════════════════ */
 const topPlayers = [
   { rank: 1, name: "cryptoking_99", points: "89,240" },
   { rank: 2, name: "moon_degen", points: "76,100" },
   { rank: 3, name: "whale_hunter", points: "61,500" },
+  { rank: 4, name: "bet_maxi", points: "54,300" },
+  { rank: 5, name: "degen_alpha", points: "48,900" },
+  { rank: 6, name: "realbet_og", points: "41,200" },
+  { rank: 7, name: "lucky_strike", points: "38,750" },
+  { rank: 8, name: "chain_smoker", points: "35,100" },
+  { rank: 9, name: "risk_taker_x", points: "31,400" },
+  { rank: 10, name: "moon_shot_22", points: "28,600" },
 ];
 
-function LeaderboardPreview() {
+function LeaderboardSidebar() {
   return (
-    <div className="relative rounded-2xl overflow-hidden">
+    <div className="relative rounded-2xl overflow-hidden h-full">
       <div className="absolute inset-0 bg-[hsl(240_8%_5%)]" />
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] bg-[hsl(41_50%_40%/0.03)] rounded-full blur-[80px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-[hsl(41_30%_10%/0.04)] to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[300px] h-[150px] bg-[hsl(41_50%_40%/0.03)] rounded-full blur-[60px] pointer-events-none" />
 
       <motion.div
-        className="relative z-10 p-5 space-y-5 border border-[hsl(41_20%_15%/0.12)] rounded-2xl"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.45 }}
+        className="relative z-10 p-5 space-y-4 border border-[hsl(41_20%_15%/0.12)] rounded-2xl h-full flex flex-col"
+        initial={{ opacity: 0, x: 10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.2 }}
       >
         <div className="flex items-center justify-between">
           <h3 className="font-display text-sm tracking-wider flex items-center gap-2">
             <Trophy className="w-4 h-4 text-gold" /> Leaderboard
           </h3>
-          <Link to="/leaderboard" className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors">
-            View Full Leaderboard <ChevronRight className="w-3 h-3" />
+          <Link to="/leaderboard" className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors">
+            Full <ChevronRight className="w-3 h-3" />
           </Link>
         </div>
 
-        <div className="flex items-end justify-center gap-4 pt-2 pb-1">
+        {/* Top 3 podium compact */}
+        <div className="flex items-end justify-center gap-3 pt-1 pb-2">
           {[topPlayers[1], topPlayers[0], topPlayers[2]].map((p, i) => {
-            const heights = ["h-16", "h-24", "h-12"];
+            const heights = ["h-12", "h-18", "h-10"];
             const medals = ["🥈", "🥇", "🥉"];
             return (
-              <div key={p.rank} className="flex flex-col items-center gap-1.5 flex-1 max-w-[140px]">
-                <span className="text-xl">{medals[i]}</span>
-                <p className="text-[10px] text-muted-foreground truncate max-w-full">{p.name}</p>
+              <div key={p.rank} className="flex flex-col items-center gap-1 flex-1">
+                <span className="text-base">{medals[i]}</span>
+                <p className="text-[9px] text-muted-foreground truncate max-w-full">{p.name}</p>
                 <div
-                  className={`w-full ${heights[i]} rounded-t-lg bg-gradient-to-t from-secondary to-secondary/30 border border-border border-b-0 flex items-center justify-center`}
-                  style={i === 1 ? { boxShadow: "0 0 16px hsl(41 60% 53% / 0.08)" } : {}}
+                  className={`w-full ${heights[i]} rounded-t-md bg-gradient-to-t from-secondary to-secondary/30 border border-border border-b-0 flex items-center justify-center`}
+                  style={i === 1 ? { boxShadow: "0 0 12px hsl(41 60% 53% / 0.06)" } : {}}
                 >
-                  <span className="text-[10px] font-display text-gold">{p.points}</span>
+                  <span className="text-[9px] font-display text-gold">{p.points}</span>
                 </div>
               </div>
             );
           })}
         </div>
 
-        <div className="flex items-center gap-3 p-3 rounded-lg bg-gold/5 border border-gold/10">
-          <span className="font-display text-sm text-gold">#{userState.rank}</span>
-          <div className="flex-1">
-            <p className="text-xs font-semibold">YOU — degen_whale</p>
-            <p className="text-[10px] text-muted-foreground">You are <span className="text-gold font-semibold">{userState.ptsToTop25.toLocaleString()} pts</span> away from Top 25.</p>
+        {/* Ranking list */}
+        <div className="flex-1 space-y-1 overflow-y-auto scrollbar-none">
+          {topPlayers.slice(3).map((p) => (
+            <div key={p.rank} className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-secondary/30 transition-colors">
+              <span className="font-display text-[10px] text-muted-foreground w-5 text-right">#{p.rank}</span>
+              <p className="flex-1 text-[11px] truncate">{p.name}</p>
+              <span className="text-[10px] text-muted-foreground font-display">{p.points}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* You */}
+        <div className="flex items-center gap-2 p-2.5 rounded-lg bg-gold/5 border border-gold/10">
+          <span className="font-display text-xs text-gold">#{userState.rank}</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-[11px] font-semibold truncate">YOU</p>
           </div>
-          <span className="font-display text-sm text-foreground">{userState.points.toLocaleString()}</span>
+          <span className="font-display text-xs text-foreground">{userState.points.toLocaleString()}</span>
         </div>
       </motion.div>
     </div>
@@ -887,44 +905,86 @@ function GettingStarted() {
 }
 
 /* ═══════════════════════════════════════════════
+   SEASON CAPTION
+   ═══════════════════════════════════════════════ */
+function SeasonCaption() {
+  return (
+    <motion.div
+      className="flex items-center justify-between rounded-xl border border-gold/10 bg-card px-5 py-3"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
+      <div className="flex items-center gap-3">
+        <Trophy className="w-4 h-4 text-gold" />
+        <span className="font-display text-sm tracking-wider text-gold">SEASON 1</span>
+        <span className="text-[10px] text-muted-foreground">6.6% Reward Pool Allocation</span>
+      </div>
+      <div className="flex items-center gap-3 text-[10px]">
+        <span className="text-muted-foreground">Ends in <span className="text-foreground font-semibold">23d</span></span>
+        <span className="text-muted-foreground">•</span>
+        <span className="text-muted-foreground">Top 100 at <span className="text-gold font-semibold">{userState.top100Cutoff.toLocaleString()} pts</span></span>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
    DASHBOARD — New priority order
    ═══════════════════════════════════════════════ */
 export default function Dashboard() {
   return (
     <div className="space-y-6">
+      {/* Season 1 caption */}
+      <SeasonCaption />
+
       {/* 1. Switch Bonus — promotional, leads the page */}
       <SwitchBannerPromo />
 
-      {/* 2. Status + Invite side by side */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-4">
-        <div className="space-y-4">
-          <PlayerStatusCard />
-          <SeasonBanner />
+      {/* Main content + Leaderboard sidebar */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-5">
+        {/* Left: main content */}
+        <div className="space-y-6">
+          {/* 2. Status + Invite side by side */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
+            <div className="space-y-4">
+              <PlayerStatusCard />
+              <SeasonBanner />
+            </div>
+            <InviteEarnCard />
+          </div>
+
+          {/* Badges under profile */}
+          <BadgeStrip />
+
+          {/* 3. Getting Started */}
+          <GettingStarted />
+
+          {/* Arena nudge if idle points */}
+          <ArenaNudge />
+
+          {/* 4 & 5. Vault + Chest + Path */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <VaultTeaser />
+            <RewardChestCard />
+            <YourPath />
+          </div>
+
+          {/* 6. Tasks */}
+          <TasksPreview />
         </div>
-        <InviteEarnCard />
+
+        {/* Right: Leaderboard sidebar */}
+        <div className="hidden lg:block">
+          <div className="sticky top-4">
+            <LeaderboardSidebar />
+          </div>
+        </div>
       </div>
 
-      {/* 3. Getting Started — Onboarding Funnel */}
-      <GettingStarted />
-
-      {/* Arena nudge if idle points */}
-      <ArenaNudge />
-
-      {/* 4 & 5. Vault + Chest + Path — 3 col row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <VaultTeaser />
-        <RewardChestCard />
-        <YourPath />
+      {/* Mobile leaderboard fallback */}
+      <div className="lg:hidden">
+        <LeaderboardSidebar />
       </div>
-
-      {/* Badges strip */}
-      <BadgeStrip />
-
-      {/* 6. Tasks */}
-      <TasksPreview />
-
-      {/* 7. Leaderboard */}
-      <LeaderboardPreview />
     </div>
   );
 }
