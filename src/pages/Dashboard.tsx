@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import switchBonusBg from "@/assets/switch-bonus-bg.jpg";
 
 /* ─── Animated Counter ─── */
 function AnimatedNumber({ value, duration = 1200 }: { value: number; duration?: number }) {
@@ -696,25 +697,10 @@ function SwitchBannerPromo() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      {/* Multi-layer cinematic background */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[hsl(0_70%_6%)] via-[hsl(0_40%_8%)] to-[hsl(350_30%_5%)]" />
-      {/* Radial spotlight left */}
-      <div className="absolute -left-20 top-1/2 -translate-y-1/2 w-80 h-60 bg-[hsl(0_80%_35%/0.1)] rounded-full blur-[80px] pointer-events-none" />
-      {/* Secondary glow right */}
-      <div className="absolute -right-10 -top-10 w-60 h-60 bg-[hsl(0_70%_25%/0.06)] rounded-full blur-[60px] pointer-events-none" />
-      {/* Animated diagonal streaks */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none opacity-[0.04]"
-        style={{
-          backgroundImage: "repeating-linear-gradient(135deg, transparent, transparent 40px, hsl(0 80% 50% / 0.3) 40px, hsl(0 80% 50% / 0.3) 41px)",
-        }}
-        animate={{ backgroundPosition: ["0px 0px", "80px 80px"] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-      />
-      {/* Grain overlay */}
-      <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-      }} />
+      {/* Grunge texture background image */}
+      <img src={switchBonusBg} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+      {/* Dark overlay for text readability */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[hsl(0_0%_0%/0.6)] via-[hsl(0_0%_0%/0.3)] to-[hsl(0_0%_0%/0.7)]" />
       {/* Bottom edge glow line */}
       <div className="absolute bottom-0 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-[hsl(0_80%_40%/0.3)] to-transparent" />
 
