@@ -408,15 +408,35 @@ function ArenaNudge() {
 /* ═══════════════════════════════════════════════
    BADGES STRIP — 25% larger, stronger glow
    ═══════════════════════════════════════════════ */
+import badgeFirstBlood from "@/assets/badges/first-blood.png";
+import badgeSlotsMaster from "@/assets/badges/slots-master.png";
+import badgeHighRoller from "@/assets/badges/high-roller.png";
+import badgeLucky7 from "@/assets/badges/lucky-7.png";
+import badgeStreakKing from "@/assets/badges/streak-king.png";
+import badgeDiamondHands from "@/assets/badges/diamond-hands.png";
+import badgeChestHunter from "@/assets/badges/chest-hunter.png";
+import badgeOgPlayer from "@/assets/badges/og-player.png";
+
+const badgeImages: Record<string, string> = {
+  "First Blood": badgeFirstBlood,
+  "Slots Master": badgeSlotsMaster,
+  "High Roller": badgeHighRoller,
+  "Lucky 7": badgeLucky7,
+  "Streak King": badgeStreakKing,
+  "Diamond Hands": badgeDiamondHands,
+  "Chest Hunter": badgeChestHunter,
+  "OG Player": badgeOgPlayer,
+};
+
 const badges = [
-  { name: "First Blood", emoji: "⚔️", rarity: "Common", earned: true, desc: "Place your first wager" },
-  { name: "Slots Master", emoji: "🎰", rarity: "Epic", earned: true, desc: "Play 100 slots rounds" },
-  { name: "High Roller", emoji: "💎", rarity: "Legendary", earned: true, desc: "Wager 10k+ points" },
-  { name: "Lucky 7", emoji: "🍀", rarity: "Rare", earned: true, desc: "Win 7 bets in a row" },
-  { name: "Streak King", emoji: "🔥", rarity: "Epic", earned: true, desc: "30-day streak" },
-  { name: "Diamond Hands", emoji: "💠", rarity: "Legendary", earned: false, desc: "Hold 50k points" },
-  { name: "Chest Hunter", emoji: "🎁", rarity: "Rare", earned: false, desc: "Open 25 chests" },
-  { name: "OG Player", emoji: "👑", rarity: "Legendary", earned: true, desc: "Season 1 member" },
+  { name: "First Blood", rarity: "Common", earned: true, desc: "Place your first wager" },
+  { name: "Slots Master", rarity: "Epic", earned: true, desc: "Play 100 slots rounds" },
+  { name: "High Roller", rarity: "Legendary", earned: true, desc: "Wager 10k+ points" },
+  { name: "Lucky 7", rarity: "Rare", earned: true, desc: "Win 7 bets in a row" },
+  { name: "Streak King", rarity: "Epic", earned: true, desc: "30-day streak" },
+  { name: "Diamond Hands", rarity: "Legendary", earned: false, desc: "Hold 50k points" },
+  { name: "Chest Hunter", rarity: "Rare", earned: false, desc: "Open 25 chests" },
+  { name: "OG Player", rarity: "Legendary", earned: true, desc: "Season 1 member" },
 ];
 
 const rarityBorder: Record<string, string> = {
@@ -424,13 +444,6 @@ const rarityBorder: Record<string, string> = {
   Rare: "border-rare/40",
   Epic: "border-epic/40",
   Legendary: "border-gold/40",
-};
-
-const rarityGlowStyle: Record<string, string> = {
-  Common: "",
-  Rare: "0 0 16px hsl(220 70% 55% / 0.15)",
-  Epic: "",
-  Legendary: "",
 };
 
 function BadgeStrip() {
@@ -461,21 +474,20 @@ function BadgeStrip() {
           Collect 20 Originals → <span className="text-gold font-semibold">+0.2x Leaderboard Multiplier</span>
         </p>
 
-        <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-none">
+        <div className="flex gap-4 overflow-x-auto pb-1 scrollbar-none">
           {badges.map((b, i) => {
             const isEpic = b.rarity === "Epic" && b.earned;
             const isLegendary = b.rarity === "Legendary" && b.earned;
             return (
               <motion.div
                 key={b.name}
-                className={`group relative flex-shrink-0 w-[125px] p-4 rounded-xl border bg-[hsl(260_10%_8%/0.5)] text-center space-y-2 transition-all duration-200 hover:-translate-y-1 hover:scale-[1.03] cursor-default ${
+                className={`group relative flex-shrink-0 w-[140px] p-4 rounded-xl border bg-[hsl(260_10%_8%/0.5)] text-center space-y-2.5 transition-all duration-200 hover:-translate-y-1 hover:scale-[1.03] cursor-default ${
                   b.earned ? rarityBorder[b.rarity] : "border-border/40 opacity-35"
                 }`}
-                style={b.earned && rarityGlowStyle[b.rarity] ? { boxShadow: rarityGlowStyle[b.rarity] } : {}}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: b.earned ? 1 : 0.35, y: 0 }}
                 transition={{ delay: 0.35 + i * 0.03 }}
-                {...(isEpic && b.earned ? {
+                {...(isEpic ? {
                   animate: {
                     opacity: 1, y: 0,
                     boxShadow: [
@@ -486,7 +498,7 @@ function BadgeStrip() {
                   },
                   transition: { delay: 0.35 + i * 0.03, duration: 3, repeat: Infinity, boxShadow: { duration: 3, repeat: Infinity } },
                 } : {})}
-                {...(isLegendary && b.earned ? {
+                {...(isLegendary ? {
                   animate: {
                     opacity: 1, y: 0,
                     boxShadow: [
@@ -498,7 +510,15 @@ function BadgeStrip() {
                   transition: { delay: 0.35 + i * 0.03, duration: 2.5, repeat: Infinity, boxShadow: { duration: 2.5, repeat: Infinity } },
                 } : {})}
               >
-                <div className="text-3xl">{b.emoji}</div>
+                <div className="w-16 h-16 mx-auto rounded-xl overflow-hidden">
+                  {b.earned ? (
+                    <img src={badgeImages[b.name]} alt={b.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-secondary/50 flex items-center justify-center">
+                      <Lock className="w-5 h-5 text-muted-foreground/30" />
+                    </div>
+                  )}
+                </div>
                 <p className="text-[11px] font-semibold truncate">{b.name}</p>
                 <p className={`text-[10px] ${
                   b.rarity === "Legendary" ? "text-gold" : b.rarity === "Epic" ? "text-epic" : b.rarity === "Rare" ? "text-rare" : "text-common"

@@ -2,6 +2,30 @@ import { useState } from "react";
 import { Lock, Star, Pin, X, Calendar, Award } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import badgeFirstBlood from "@/assets/badges/first-blood.png";
+import badgeSlotsMaster from "@/assets/badges/slots-master.png";
+import badgeHighRoller from "@/assets/badges/high-roller.png";
+import badgeLucky7 from "@/assets/badges/lucky-7.png";
+import badgeStreakKing from "@/assets/badges/streak-king.png";
+import badgeDiamondHands from "@/assets/badges/diamond-hands.png";
+import badgeChestHunter from "@/assets/badges/chest-hunter.png";
+import badgeOgPlayer from "@/assets/badges/og-player.png";
+
+const badgeImageMap: Record<string, string> = {
+  "first-blood": badgeFirstBlood,
+  "10-wins": badgeFirstBlood,
+  "lucky-7": badgeLucky7,
+  "slots-master": badgeSlotsMaster,
+  "high-roller": badgeHighRoller,
+  "streak-king": badgeStreakKing,
+  "blackjack-pro": badgeLucky7,
+  "dice-lord": badgeStreakKing,
+  "mine-sweeper": badgeChestHunter,
+  "roulette-royal": badgeOgPlayer,
+  "social-butterfly": badgeFirstBlood,
+  "diamond-hands": badgeDiamondHands,
+};
+
 /* ─── Badge data ─── */
 const allBadges = [
   { id: "first-blood", name: "First Blood", rarity: "Common", earned: true, bonus: "+1%", desc: "Place your very first wager in the arena.", earnedDate: "Jan 12, 2025", hint: "" },
@@ -56,29 +80,21 @@ const rarityStyles: Record<string, {
   },
 };
 
-/* ─── Badge icons (SVG-style placeholders with initials) ─── */
-function BadgeIcon({ name, rarity, earned }: { name: string; rarity: string; earned: boolean }) {
+/* ─── Badge Image Component ─── */
+function BadgeImage({ id, rarity, earned, size = "lg" }: { id: string; rarity: string; earned: boolean; size?: "sm" | "lg" }) {
   const style = rarityStyles[rarity];
-  const initials = name.split(" ").map(w => w[0]).join("").slice(0, 2);
+  const dim = size === "lg" ? "w-24 h-24" : "w-20 h-20";
 
   return (
-    <div className={`w-20 h-20 rounded-2xl flex items-center justify-center border-2 transition-all ${
+    <div className={`${dim} rounded-2xl overflow-hidden border-2 transition-all ${
       earned ? style.borderClass : "border-border/30"
     }`}
-      style={earned && style.glowStyle ? {
-        boxShadow: style.glowStyle,
-        background: `radial-gradient(circle at 40% 40%, ${
-          rarity === "Legendary" ? "hsl(41 40% 15% / 0.3)" :
-          rarity === "Epic" ? "hsl(260 30% 15% / 0.3)" :
-          rarity === "Rare" ? "hsl(220 30% 15% / 0.3)" :
-          "hsl(240 4% 12% / 0.5)"
-        }, transparent 70%)`,
-      } : {}}
+      style={earned && style.glowStyle ? { boxShadow: style.glowStyle } : {}}
     >
       {earned ? (
-        <span className={`font-display text-2xl ${style.textClass}`}>{initials}</span>
+        <img src={badgeImageMap[id]} alt={id} className="w-full h-full object-cover" />
       ) : (
-        <div className={`w-full h-full rounded-2xl ${style.silhouetteBg} flex items-center justify-center`}>
+        <div className={`w-full h-full ${style.silhouetteBg} flex items-center justify-center`}>
           <Lock className="w-6 h-6 text-muted-foreground/30" />
         </div>
       )}
@@ -162,7 +178,7 @@ function BadgeDetailModal({ badge, onClose }: { badge: typeof allBadges[0]; onCl
         </button>
 
         <div className="flex flex-col items-center text-center space-y-4">
-          <BadgeIcon name={badge.name} rarity={badge.rarity} earned={badge.earned} />
+          <BadgeImage id={badge.id} rarity={badge.rarity} earned={badge.earned} />
           <div>
             <h3 className="font-display text-xl">{badge.name}</h3>
             <span className={`inline-block mt-1 text-[10px] px-2.5 py-0.5 rounded-full border font-semibold ${style.badgeClass}`}>
@@ -253,7 +269,7 @@ function BadgeCard({ badge, onSelect, isPinned, onTogglePin }: {
       )}
 
       <div className="relative z-10 p-5 flex flex-col items-center text-center space-y-3">
-        <BadgeIcon name={badge.name} rarity={badge.rarity} earned={badge.earned} />
+        <BadgeImage id={badge.id} rarity={badge.rarity} earned={badge.earned} />
         <div className="space-y-1">
           <h3 className="text-sm font-semibold">{badge.name}</h3>
           <span className={`inline-block text-[9px] px-2 py-0.5 rounded-full border font-semibold ${style.badgeClass}`}>
@@ -313,7 +329,7 @@ export default function Collection() {
                 style={rarityStyles[b.rarity].glowStyle ? { boxShadow: rarityStyles[b.rarity].glowStyle } : {}}
                 layout
               >
-                <BadgeIcon name={b.name} rarity={b.rarity} earned={true} />
+                <BadgeImage id={b.id} rarity={b.rarity} earned={true} size="sm" />
                 <div>
                   <p className="text-sm font-semibold">{b.name}</p>
                   <p className={`text-[10px] ${rarityStyles[b.rarity].textClass}`}>{b.rarity}</p>
