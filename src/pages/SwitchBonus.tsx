@@ -1,107 +1,131 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowRight, Shield, Gift, Zap, Wallet, ArrowLeft, Check } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Wallet, Search, Gift, Check, ArrowRight, Loader2 } from "lucide-react";
 
 const steps = [
-  { icon: Wallet, title: "Connect EVM Wallet", desc: "MetaMask, WalletConnect, or any EVM wallet" },
-  { icon: Shield, title: "Analyze On-Chain Activity", desc: "We detect platforms: Shuffle, Rollbit, Stake, etc." },
-  { icon: Gift, title: "See Your Rewards", desc: "Free Play + REAL Points based on your history" },
-  { icon: Zap, title: "Create & Claim", desc: "Link your RealBet account to claim rewards" },
+  { title: "Connect Wallet", description: "Link your wallet to verify on-chain activity", icon: Wallet },
+  { title: "Analyze Activity", description: "We scan your history across chains", icon: Search },
+  { title: "See Your Bonus", description: "Based on your degen score", icon: Gift },
+  { title: "Claim Bonus", description: "Credits added to your account", icon: Check },
 ];
 
-const SwitchBonus = () => {
-  const [walletConnected, setWalletConnected] = useState(false);
+export default function SwitchBonus() {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [bonusAmount, setBonusAmount] = useState<number | null>(null);
+
+  const handleConnect = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setCurrentStep(1);
+      setLoading(false);
+      setTimeout(() => {
+        setCurrentStep(2);
+        setBonusAmount(2450);
+      }, 2000);
+    }, 1500);
+  };
+
+  const handleClaim = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setCurrentStep(3);
+      setLoading(false);
+    }, 1000);
+  };
 
   return (
     <div className="space-y-6">
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3">
-        <Link to="/profile" className="p-2 rounded-lg hover:bg-secondary transition-colors">
-          <ArrowLeft className="w-4 h-4 text-muted-foreground" />
-        </Link>
-        <div>
-          <h1 className="text-2xl font-display font-bold">Switch Bonus</h1>
-          <p className="text-sm text-muted-foreground">See what you qualify for before creating an account.</p>
-        </div>
-      </motion.div>
+      <div>
+        <h1 className="font-display text-2xl">SWITCH BONUS</h1>
+        <p className="text-sm text-muted-foreground mt-1">Switch from other platforms and get rewarded</p>
+      </div>
 
-      {/* Hero */}
-      <motion.div
-        className="glass-card p-6 lg:p-8 text-center space-y-4 border-accent/20 relative overflow-hidden"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
-        <div className="absolute inset-0 shimmer" />
-        <div className="relative z-10">
-          <h2 className="text-3xl lg:text-4xl font-display font-bold text-gradient-accent">
-            Up to 5,000
-          </h2>
-          <p className="text-sm text-muted-foreground">REAL Points Switch Bonus</p>
-          <p className="text-xs text-muted-foreground mt-2 max-w-md mx-auto">
-            Coming from Shuffle, Stake, Rollbit, or another platform? Connect your wallet to discover what you're eligible for.
-          </p>
-        </div>
-      </motion.div>
-
-      {/* Steps */}
-      <div className="space-y-3">
-        <h3 className="font-display font-semibold text-sm">How it works</h3>
+      <div className="flex items-center gap-2">
         {steps.map((step, i) => (
-          <motion.div
-            key={step.title}
-            className="glass-card-hover p-4 flex items-center gap-4"
-            initial={{ opacity: 0, x: -15 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 + i * 0.08 }}
-          >
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-              i === 0 && walletConnected
-                ? "bg-streak/15 border border-streak/30"
-                : "bg-accent/15"
+          <div key={step.title} className="flex items-center gap-2">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
+              i <= currentStep
+                ? "bg-primary/20 text-primary border border-primary/30"
+                : "bg-secondary text-muted-foreground border border-border"
             }`}>
-              {i === 0 && walletConnected ? (
-                <Check className="w-5 h-5 text-streak" />
-              ) : (
-                <step.icon className="w-5 h-5 text-accent" />
-              )}
+              <step.icon className="w-4 h-4" />
             </div>
-            <div className="flex-1">
-              <p className="text-sm font-semibold">{step.title}</p>
-              <p className="text-xs text-muted-foreground">{step.desc}</p>
-            </div>
-            <span className="text-xs font-display font-bold text-muted-foreground">{i + 1}</span>
-          </motion.div>
+            <span className={`text-xs hidden sm:inline ${i <= currentStep ? "text-foreground" : "text-muted-foreground"}`}>
+              {step.title}
+            </span>
+            {i < steps.length - 1 && (
+              <div className={`w-8 h-px ${i < currentStep ? "bg-primary" : "bg-border"}`} />
+            )}
+          </div>
         ))}
       </div>
 
-      {/* CTA */}
-      <motion.button
-        onClick={() => setWalletConnected(true)}
-        className="w-full h-12 rounded-xl bg-accent text-accent-foreground font-display font-semibold text-sm flex items-center justify-center gap-2 glow-accent hover:brightness-110 transition-all"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        whileTap={{ scale: 0.98 }}
-      >
-        {walletConnected ? (
-          <>Analyzing... <Zap className="w-4 h-4" /></>
-        ) : (
-          <>Connect Wallet <ArrowRight className="w-4 h-4" /></>
-        )}
-      </motion.button>
-
-      {/* Supported */}
-      <motion.div className="text-center space-y-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-        <p className="text-xs text-muted-foreground">Supported platforms</p>
-        <div className="flex justify-center gap-2 flex-wrap">
-          {["Stake", "Rollbit", "Shuffle", "BC.Game", "Roobet", "Duelbits"].map((p) => (
-            <span key={p} className="px-3 py-1.5 rounded-full bg-secondary text-xs text-secondary-foreground">{p}</span>
-          ))}
+      {currentStep === 0 && (
+        <div className="card-surface card-glow-red metallic-sheen edge-highlight p-8 text-center space-y-4">
+          <h2 className="font-display text-xl">CONNECT YOUR WALLET</h2>
+          <p className="text-sm text-muted-foreground max-w-md mx-auto">
+            We'll analyze your on-chain activity across major platforms to calculate your personalized switch bonus.
+          </p>
+          <button
+            onClick={handleConnect}
+            disabled={loading}
+            className="px-6 py-3 rounded-lg bg-gradient-to-r from-crimson-deep to-primary text-primary-foreground font-semibold text-sm glow-crimson hover:brightness-110 transition-all flex items-center gap-2 mx-auto disabled:opacity-50"
+          >
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wallet className="w-4 h-4" />}
+            {loading ? "Connecting..." : "Connect Wallet"}
+          </button>
         </div>
-      </motion.div>
+      )}
+
+      {currentStep === 1 && (
+        <div className="card-surface p-8 text-center space-y-4">
+          <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto" />
+          <h2 className="font-display text-xl">ANALYZING YOUR ACTIVITY...</h2>
+          <p className="text-sm text-muted-foreground">Scanning transactions across Ethereum, Polygon, Arbitrum...</p>
+        </div>
+      )}
+
+      {currentStep === 2 && bonusAmount && (
+        <div className="card-surface card-glow-red metallic-sheen edge-highlight p-8 text-center space-y-5">
+          <h2 className="font-display text-xl">YOUR SWITCH BONUS</h2>
+          <p className="font-display text-5xl text-gradient-gold">{bonusAmount.toLocaleString()} REAL Points</p>
+          <div className="flex justify-center gap-4">
+            <div className="p-3 rounded-xl bg-secondary/50 border border-border text-center">
+              <p className="text-[10px] text-muted-foreground">Txns Found</p>
+              <p className="font-display text-lg">1,247</p>
+            </div>
+            <div className="p-3 rounded-xl bg-secondary/50 border border-border text-center">
+              <p className="text-[10px] text-muted-foreground">Platforms</p>
+              <p className="font-display text-lg">6</p>
+            </div>
+            <div className="p-3 rounded-xl bg-secondary/50 border border-border text-center">
+              <p className="text-[10px] text-muted-foreground">Degen Score</p>
+              <p className="font-display text-lg text-gold">87/100</p>
+            </div>
+          </div>
+          <button
+            onClick={handleClaim}
+            disabled={loading}
+            className="px-6 py-3 rounded-lg bg-gradient-to-r from-crimson-deep to-primary text-primary-foreground font-semibold text-sm glow-crimson hover:brightness-110 transition-all flex items-center gap-2 mx-auto disabled:opacity-50"
+          >
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Gift className="w-4 h-4" />}
+            {loading ? "Claiming..." : "Claim Bonus"}
+          </button>
+        </div>
+      )}
+
+      {currentStep === 3 && (
+        <div className="card-surface p-8 text-center space-y-4">
+          <div className="w-16 h-16 rounded-full bg-multiplier/10 text-multiplier flex items-center justify-center mx-auto">
+            <Check className="w-8 h-8" />
+          </div>
+          <h2 className="font-display text-xl">BONUS CLAIMED!</h2>
+          <p className="text-sm text-muted-foreground">
+            {bonusAmount?.toLocaleString()} REAL Points have been added to your account.
+          </p>
+          <p className="text-xs text-muted-foreground">Welcome to RealBet — let the games begin!</p>
+        </div>
+      )}
     </div>
   );
-};
-
-export default SwitchBonus;
+}
