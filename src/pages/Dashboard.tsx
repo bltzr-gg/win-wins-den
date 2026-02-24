@@ -355,37 +355,72 @@ function YourPath() {
    ═══════════════════════════════════════════════ */
 function ArenaNudge() {
   if (!idlePoints) return null;
-  const primaryCTA = getPrimaryCTA();
-  const isGlowing = primaryCTA === "arena";
 
   return (
     <motion.div
-      className="rounded-xl border border-[hsl(30_60%_30%/0.2)] bg-card p-4 flex items-center gap-4"
+      className="relative rounded-xl border border-[hsl(30_60%_30%/0.25)] bg-[hsl(240_8%_6%)] overflow-hidden"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
     >
-      <div className="w-10 h-10 rounded-xl bg-[hsl(30_60%_50%/0.1)] border border-[hsl(30_60%_50%/0.2)] flex items-center justify-center flex-shrink-0">
-        <Zap className="w-5 h-5 text-[hsl(30_80%_55%)]" />
-      </div>
-      <div className="flex-1">
-        <p className="text-xs font-medium">You have <span className="text-[hsl(30_80%_55%)] font-semibold">{userState.points.toLocaleString()} REAL Points</span> sitting idle.</p>
-        <p className="text-[10px] text-muted-foreground">Enter Arena to multiply them.</p>
-      </div>
+      {/* Animated shimmer background */}
       <motion.div
-        animate={isGlowing ? {
-          boxShadow: ["0 0 8px hsl(30 60% 50% / 0.08)", "0 0 16px hsl(30 60% 50% / 0.16)", "0 0 8px hsl(30 60% 50% / 0.08)"],
-        } : {}}
-        transition={isGlowing ? { duration: 2.5, repeat: Infinity } : {}}
-        className="rounded-lg"
-      >
-        <Link
-          to="/arena"
-          className="px-4 py-2 rounded-lg bg-[hsl(30_60%_50%/0.1)] text-[hsl(30_80%_55%)] border border-[hsl(30_60%_50%/0.2)] text-xs font-semibold hover:bg-[hsl(30_60%_50%/0.15)] transition-all flex items-center gap-1.5"
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "linear-gradient(105deg, transparent 30%, hsl(30 60% 50% / 0.04) 45%, hsl(30 60% 50% / 0.07) 50%, hsl(30 60% 50% / 0.04) 55%, transparent 70%)",
+          backgroundSize: "200% 100%",
+        }}
+        animate={{ backgroundPosition: ["-100% 0", "200% 0"] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+      />
+      {/* Radial warm glow */}
+      <div className="absolute top-0 right-[15%] w-[300px] h-[120px] bg-[hsl(30_60%_45%/0.05)] rounded-full blur-[60px] pointer-events-none" />
+      <div className="absolute bottom-0 left-[10%] w-[200px] h-[80px] bg-[hsl(30_50%_40%/0.03)] rounded-full blur-[50px] pointer-events-none" />
+
+      <div className="relative z-10 px-6 py-8 lg:py-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+        {/* Icon */}
+        <div className="w-14 h-14 rounded-2xl bg-[hsl(30_60%_50%/0.1)] border border-[hsl(30_60%_50%/0.2)] flex items-center justify-center flex-shrink-0">
+          <Zap className="w-7 h-7 text-[hsl(30_80%_55%)]" />
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 space-y-2">
+          <div className="flex items-baseline gap-3 flex-wrap">
+            <motion.span
+              className="font-display text-4xl lg:text-5xl text-[hsl(30_80%_55%)] leading-none"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5, duration: 0.4 }}
+            >
+              {userState.points.toLocaleString()}
+            </motion.span>
+            <span className="text-sm text-muted-foreground font-medium">REAL Points sitting idle</span>
+          </div>
+          <p className="text-sm text-foreground/80">
+            Multiply them in the Arena — potential <span className="font-display text-[hsl(30_80%_55%)] tracking-wide">x2–x5</span> return.
+          </p>
+        </div>
+
+        {/* CTA */}
+        <motion.div
+          animate={{
+            boxShadow: [
+              "0 0 12px hsl(30 60% 50% / 0.1)",
+              "0 0 28px hsl(30 60% 50% / 0.25)",
+              "0 0 12px hsl(30 60% 50% / 0.1)",
+            ],
+          }}
+          transition={{ duration: 2.5, repeat: Infinity }}
+          className="rounded-lg flex-shrink-0"
         >
-          Enter Arena <ArrowRight className="w-3 h-3" />
-        </Link>
-      </motion.div>
+          <Link
+            to="/arena"
+            className="px-6 py-3 rounded-lg bg-gradient-to-r from-[hsl(30_60%_35%)] to-[hsl(30_70%_45%)] text-white font-display text-sm tracking-wider hover:brightness-110 transition-all flex items-center gap-2"
+          >
+            Enter Arena <ArrowRight className="w-4 h-4" />
+          </Link>
+        </motion.div>
+      </div>
     </motion.div>
   );
 }
