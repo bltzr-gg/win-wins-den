@@ -7,7 +7,7 @@ const navItems = [
   { path: "/tasks", icon: ListTodo, label: "Tasks" },
   { path: "/leaderboard", icon: Trophy, label: "Ranks" },
   { path: "/badges", icon: Award, label: "Badges" },
-  { path: "/referrals", icon: User, label: "Refer" },
+  { path: "/profile", icon: User, label: "Profile" },
 ];
 
 const BottomNav = () => {
@@ -17,7 +17,7 @@ const BottomNav = () => {
     <nav className="fixed bottom-0 left-0 right-0 z-50 glass-card border-t border-border/50 rounded-none pb-safe">
       <div className="flex items-center justify-around h-16 max-w-lg mx-auto px-2">
         {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
+          const isActive = location.pathname.startsWith(item.path);
           return (
             <Link
               key={item.path}
