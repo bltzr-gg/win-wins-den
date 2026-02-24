@@ -954,15 +954,15 @@ export default function Dashboard() {
       {/* 1. Switch Bonus — promotional, leads the page */}
       <SwitchBannerPromo />
 
-      {/* Main content + Leaderboard sidebar */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-5">
-        {/* Left: main content */}
-        <div className="space-y-6">
-          {/* 2. Getting Started — above profile */}
-          <GettingStarted />
+      {/* 2. Getting Started — full width above the grid */}
+      <GettingStarted />
 
+      {/* Main content + Leaderboard sidebar */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_240px] gap-4">
+        {/* Left: main content */}
+        <div className="space-y-6 min-w-0">
           {/* 3. Status + Invite side by side */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-4">
             <div className="space-y-4">
               <PlayerStatusCard />
               <SeasonBanner />
@@ -989,7 +989,7 @@ export default function Dashboard() {
 
         {/* Right: Leaderboard sidebar */}
         <div className="hidden lg:block">
-          <div className="sticky top-4">
+          <div className="sticky top-20">
             <LeaderboardSidebar />
           </div>
         </div>
