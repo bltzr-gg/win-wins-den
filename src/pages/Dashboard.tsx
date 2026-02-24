@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { toast } from "@/hooks/use-toast";
 import {
   Wallet, ChevronRight, Flame, Trophy, Star, Gift, Target,
   Copy, Check, Lock, Zap, ArrowRight, Crown, Shield,
@@ -114,12 +115,21 @@ function PlayerStatusCard() {
 
         {/* Progress bar */}
         <div className="space-y-2">
-          <div className="w-full h-1.5 rounded-full bg-secondary overflow-hidden">
+          <div className="w-full h-1.5 rounded-full bg-secondary overflow-hidden relative">
             <motion.div
               className="h-full rounded-full bg-gradient-to-r from-gold/80 to-gold"
               initial={{ width: 0 }}
               animate={{ width: `${progressPct}%` }}
               transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
+            />
+            {/* Shimmer overlay moving toward next milestone */}
+            <motion.div
+              className="absolute top-0 h-full w-12 pointer-events-none"
+              style={{
+                background: "linear-gradient(90deg, transparent, hsl(41 70% 65% / 0.35), transparent)",
+              }}
+              animate={{ left: ["0%", `${progressPct}%`] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             />
           </div>
           {/* Dynamic microcopy */}
@@ -223,7 +233,17 @@ function VaultTeaser() {
       </div>
       <div className="flex items-center justify-between text-[10px]">
         <span className="text-muted-foreground flex items-center gap-1">
-          <Flame className="w-3 h-3 text-multiplier" /> D{userState.streak}/D7
+          <motion.span
+            animate={userState.streak > 0 ? {
+              scale: [1, 1.3, 1],
+              rotate: [0, -8, 8, 0],
+            } : {}}
+            transition={userState.streak > 0 ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" } : {}}
+            className="inline-flex"
+          >
+            <Flame className="w-3 h-3 text-multiplier" />
+          </motion.span>
+          D{userState.streak}/D7
         </span>
         <span className="px-1.5 py-0.5 rounded bg-multiplier/10 text-multiplier border border-multiplier/20 font-semibold">1.3x</span>
       </div>
@@ -449,14 +469,14 @@ const badgeImages: Record<string, string> = {
 };
 
 const badges = [
-  { name: "First Blood", rarity: "Common", earned: true, desc: "Place your first wager" },
-  { name: "Slots Master", rarity: "Epic", earned: true, desc: "Play 100 slots rounds" },
-  { name: "High Roller", rarity: "Legendary", earned: true, desc: "Wager 10k+ points" },
-  { name: "Lucky 7", rarity: "Rare", earned: true, desc: "Win 7 bets in a row" },
-  { name: "Streak King", rarity: "Epic", earned: true, desc: "30-day streak" },
-  { name: "Diamond Hands", rarity: "Legendary", earned: false, desc: "Hold 50k points" },
-  { name: "Chest Hunter", rarity: "Rare", earned: false, desc: "Open 25 chests" },
-  { name: "OG Player", rarity: "Legendary", earned: true, desc: "Season 1 member" },
+  { name: "First Blood", rarity: "Common", earned: true, desc: "Place your first wager", howToEarn: "Place any wager on RealBet", multiplier: "+0.01x" },
+  { name: "Slots Master", rarity: "Epic", earned: true, desc: "Play 100 slots rounds", howToEarn: "Complete 100 rounds on any slot", multiplier: "+0.05x" },
+  { name: "High Roller", rarity: "Legendary", earned: true, desc: "Wager 10k+ points", howToEarn: "Accumulate 10,000+ in wagers", multiplier: "+0.1x" },
+  { name: "Lucky 7", rarity: "Rare", earned: true, desc: "Win 7 bets in a row", howToEarn: "Win 7 consecutive bets", multiplier: "+0.03x" },
+  { name: "Streak King", rarity: "Epic", earned: true, desc: "30-day streak", howToEarn: "Maintain a 30-day login streak", multiplier: "+0.05x" },
+  { name: "Diamond Hands", rarity: "Legendary", earned: false, desc: "Hold 50k points", howToEarn: "Hold 50,000+ REAL Points", multiplier: "+0.1x" },
+  { name: "Chest Hunter", rarity: "Rare", earned: false, desc: "Open 25 chests", howToEarn: "Open 25 Reward Chests", multiplier: "+0.03x" },
+  { name: "OG Player", rarity: "Legendary", earned: true, desc: "Season 1 member", howToEarn: "Join during Season 1", multiplier: "+0.1x" },
 ];
 
 const rarityBorder: Record<string, string> = {
@@ -545,8 +565,16 @@ function BadgeStrip() {
                 }`}>
                   {b.rarity}
                 </p>
-                <div className="absolute -top-10 left-1/2 -translate-x-1/2 px-2.5 py-1.5 rounded-lg bg-card border border-border text-[9px] text-muted-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg z-10">
-                  {b.desc}
+                <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-44 px-3 py-2.5 rounded-lg bg-card border border-border text-left opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl z-10 space-y-1.5">
+                  <p className="text-[10px] font-semibold text-foreground">{b.name}</p>
+                  <div>
+                    <p className="text-[9px] text-muted-foreground">How to earn:</p>
+                    <p className="text-[9px] text-foreground/80">{b.howToEarn}</p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-[9px] text-muted-foreground">Multiplier impact:</p>
+                    <span className="text-[9px] text-gold font-semibold">{b.multiplier}</span>
+                  </div>
                 </div>
               </motion.div>
             );
@@ -797,6 +825,7 @@ function InviteEarnCard() {
   const handleCopy = () => {
     navigator.clipboard.writeText(code);
     setCopied(true);
+    toast({ title: "Copied ✓", description: "Referral code copied to clipboard" });
     setTimeout(() => setCopied(false), 2000);
   };
 
