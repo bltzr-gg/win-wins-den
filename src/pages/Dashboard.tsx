@@ -156,31 +156,16 @@ function PlayerStatusCard() {
 function SeasonBanner() {
   return (
     <motion.div
-      className={`relative rounded-xl border bg-card overflow-hidden p-4 flex items-center justify-between ${
-        isNearCutoff ? "border-gold/25" : "border-border/50"
-      }`}
+      className={`relative rounded-xl border bg-card overflow-hidden p-4 flex items-center justify-between border-border/50`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.1 }}
     >
-      {isNearCutoff && (
-        <motion.div
-          className="absolute inset-0 rounded-xl pointer-events-none"
-          animate={{
-            boxShadow: [
-              "0 0 12px hsl(41 60% 53% / 0.06)",
-              "0 0 24px hsl(41 60% 53% / 0.12)",
-              "0 0 12px hsl(41 60% 53% / 0.06)",
-            ],
-          }}
-          transition={{ duration: 3, repeat: Infinity }}
-        />
-      )}
       <div className="flex items-center gap-4 relative z-10">
         <div className="flex items-center gap-2">
-          <Trophy className="w-4 h-4 text-gold" />
+          <Trophy className="w-4 h-4 text-muted-foreground" />
           <span className="text-xs text-muted-foreground">Season 1 Reward Pool:</span>
-          <span className="text-xs text-gold font-semibold">6.6% Allocation</span>
+          <span className="text-xs text-foreground font-semibold">6.6% Allocation</span>
         </div>
         <div className="h-4 w-px bg-border" />
         <div className="flex items-center gap-2">
@@ -189,7 +174,7 @@ function SeasonBanner() {
         </div>
       </div>
       {isNearCutoff && (
-        <span className="text-[10px] px-2 py-0.5 rounded-full bg-gold/10 text-gold border border-gold/20 font-semibold relative z-10">
+        <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 font-semibold relative z-10">
           Near Cutoff
         </span>
       )}
@@ -622,18 +607,17 @@ const topPlayers = [
 function LeaderboardSidebar() {
   return (
     <div className="relative rounded-2xl overflow-hidden h-[calc(100vh-6rem)]">
-      <div className="absolute inset-0 bg-[hsl(240_8%_5%)]" />
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[300px] h-[150px] bg-[hsl(41_50%_40%/0.03)] rounded-full blur-[60px] pointer-events-none" />
+      <div className="absolute inset-0 bg-[hsl(240_6%_5%)]" />
 
       <motion.div
-        className="relative z-10 p-5 space-y-4 border border-[hsl(41_20%_15%/0.12)] rounded-2xl h-full flex flex-col"
+        className="relative z-10 p-5 space-y-4 border border-border/40 rounded-2xl h-full flex flex-col"
         initial={{ opacity: 0, x: 10 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.2 }}
       >
         <div className="flex items-center justify-between">
           <h3 className="font-display text-sm tracking-wider flex items-center gap-2">
-            <Trophy className="w-4 h-4 text-gold" /> Leaderboard
+            <Trophy className="w-4 h-4 text-muted-foreground" /> Leaderboard
           </h3>
           <Link to="/leaderboard" className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors">
             Full <ChevronRight className="w-3 h-3" />
@@ -651,9 +635,8 @@ function LeaderboardSidebar() {
                 <p className="text-[9px] text-muted-foreground truncate max-w-full">{p.name}</p>
                 <div
                   className={`w-full ${heights[i]} rounded-t-md bg-gradient-to-t from-secondary to-secondary/30 border border-border border-b-0 flex items-center justify-center`}
-                  style={i === 1 ? { boxShadow: "0 0 12px hsl(41 60% 53% / 0.06)" } : {}}
                 >
-                  <span className="text-[9px] font-display text-gold">{p.points}</span>
+                  <span className="text-[9px] font-display text-muted-foreground">{p.points}</span>
                 </div>
               </div>
             );
@@ -672,8 +655,8 @@ function LeaderboardSidebar() {
         </div>
 
         {/* You */}
-        <div className="flex items-center gap-2 p-2.5 rounded-lg bg-gold/5 border border-gold/10">
-          <span className="font-display text-xs text-gold">#{userState.rank}</span>
+        <div className="flex items-center gap-2 p-2.5 rounded-lg bg-secondary/40 border border-border/60">
+          <span className="font-display text-xs text-foreground">#{userState.rank}</span>
           <div className="flex-1 min-w-0">
             <p className="text-[11px] font-semibold truncate">YOU</p>
           </div>
@@ -764,27 +747,27 @@ function InviteEarnCard() {
 
   return (
     <motion.div
-      className="rounded-xl border border-gold/15 bg-card p-5 flex flex-col justify-between gap-4 h-full"
+      className="rounded-xl border border-amber/15 bg-card p-5 flex flex-col justify-between gap-4 h-full"
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
     >
       <div className="space-y-4">
         <div className="flex items-center gap-2">
-          <Users className="w-4 h-4 text-gold" />
+          <Users className="w-4 h-4 text-amber" />
           <h3 className="font-display text-sm tracking-wider">Invite & Earn</h3>
         </div>
 
         {/* Referral code */}
         <button
           onClick={handleCopy}
-          className="w-full flex items-center justify-between gap-2 px-4 py-3 rounded-lg bg-secondary/50 border border-gold/10 hover:border-gold/20 transition-all group"
+          className="w-full flex items-center justify-between gap-2 px-4 py-3 rounded-lg bg-secondary/50 border border-amber/10 hover:border-amber/20 transition-all group"
         >
           <span className="font-display text-lg tracking-widest text-foreground">{code}</span>
           {copied ? (
             <Check className="w-4 h-4 text-multiplier flex-shrink-0" />
           ) : (
-            <Copy className="w-4 h-4 text-muted-foreground group-hover:text-gold flex-shrink-0 transition-colors" />
+            <Copy className="w-4 h-4 text-muted-foreground group-hover:text-amber flex-shrink-0 transition-colors" />
           )}
         </button>
 
@@ -795,11 +778,11 @@ function InviteEarnCard() {
             <p className="text-[9px] text-muted-foreground">Joined</p>
           </div>
           <div className="p-2 rounded-lg bg-secondary/30 border border-border/50 text-center">
-            <p className="font-display text-base text-gold">7</p>
+            <p className="font-display text-base text-amber">7</p>
             <p className="text-[9px] text-muted-foreground">Qualified</p>
           </div>
           <div className="p-2 rounded-lg bg-secondary/30 border border-border/50 text-center">
-            <p className="font-display text-base text-gold">3</p>
+            <p className="font-display text-base text-amber">3</p>
             <p className="text-[9px] text-muted-foreground">Chests</p>
           </div>
         </div>
@@ -809,7 +792,7 @@ function InviteEarnCard() {
 
       <Link
         to="/referrals"
-        className="w-full py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/20 font-display text-xs hover:bg-gold/15 transition-all flex items-center justify-center gap-2"
+        className="w-full py-2.5 rounded-lg bg-amber/10 text-amber border border-amber/20 font-display text-xs hover:bg-amber/15 transition-all flex items-center justify-center gap-2"
       >
         View Referrals <ChevronRight className="w-3 h-3" />
       </Link>
@@ -924,19 +907,19 @@ function GettingStarted() {
 function SeasonCaption() {
   return (
     <motion.div
-      className="flex items-center justify-between rounded-xl border border-gold/10 bg-card px-5 py-3"
+      className="flex items-center justify-between rounded-xl border border-border/50 bg-card px-5 py-3"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
       <div className="flex items-center gap-3">
-        <Trophy className="w-4 h-4 text-gold" />
-        <span className="font-display text-sm tracking-wider text-gold">SEASON 1</span>
+        <Trophy className="w-4 h-4 text-muted-foreground" />
+        <span className="font-display text-sm tracking-wider text-foreground">SEASON 1</span>
         <span className="text-[10px] text-muted-foreground">6.6% Reward Pool Allocation</span>
       </div>
       <div className="flex items-center gap-3 text-[10px]">
         <span className="text-muted-foreground">Ends in <span className="text-foreground font-semibold">23d</span></span>
         <span className="text-muted-foreground">•</span>
-        <span className="text-muted-foreground">Top 100 at <span className="text-gold font-semibold">{userState.top100Cutoff.toLocaleString()} pts</span></span>
+        <span className="text-muted-foreground">Top 100 at <span className="text-foreground font-semibold">{userState.top100Cutoff.toLocaleString()} pts</span></span>
       </div>
     </motion.div>
   );
