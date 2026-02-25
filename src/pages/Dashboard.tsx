@@ -1058,8 +1058,7 @@ function LeaderboardRail() {
 export default function Dashboard() {
   return (
     <div className="space-y-5">
-      {/* Announcement Banner */}
-      <AnnouncementBanner />
+      {/* Switch Bonus card below handles this */}
 
       {/* 2-column: Main (70%) + Leaderboard Rail (30%) */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-5">

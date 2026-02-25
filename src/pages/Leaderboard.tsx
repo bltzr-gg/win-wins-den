@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Crown, TrendingUp } from "lucide-react";
+import { Crown } from "lucide-react";
 
 const leaderboardData = [
   { rank: 1, user: "crypto_king", points: 89200, tier: "Diamond", multiplier: "3.5x" },
@@ -23,55 +22,13 @@ const tierColors: Record<string, string> = {
 };
 
 export default function Leaderboard() {
-  const [season, setSeason] = useState<"s1" | "s0">("s1");
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-display text-2xl">LEADERBOARD</h1>
-          <p className="text-sm text-muted-foreground mt-1">See where you stand among the best</p>
-        </div>
-        <div className="flex gap-2">
-          {(["s1", "s0"] as const).map((s) => (
-            <button
-              key={s}
-              onClick={() => setSeason(s)}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                season === s
-                  ? "bg-gradient-to-r from-crimson-deep to-primary text-primary-foreground glow-crimson"
-                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-              }`}
-            >
-              {s === "s1" ? "Season 1" : "Season 0"}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Your rank pinned */}
-      <div className="card-surface card-glow-red p-5">
-        <div className="flex items-center gap-4">
-          <div className="text-center">
-            <p className="text-[10px] text-muted-foreground uppercase">Your Rank</p>
-            <p className="font-display text-3xl text-primary">#142</p>
-          </div>
-          <div className="h-10 w-px bg-border" />
-          <div>
-            <p className="text-[10px] text-muted-foreground">Points</p>
-            <p className="font-display text-lg">12,450</p>
-          </div>
-          <div className="h-10 w-px bg-border" />
-          <div>
-            <p className="text-[10px] text-muted-foreground">Tier</p>
-            <p className="font-display text-lg text-gold">Gold</p>
-          </div>
-          <div className="flex-1" />
-          <div className="flex items-center gap-1.5 text-xs text-multiplier">
-            <TrendingUp className="w-3.5 h-3.5" />
-            +12 today
-          </div>
-        </div>
+      <div>
+        <h1 className="font-display text-4xl text-primary">SEASON 1</h1>
+        <h2 className="font-display text-2xl mt-1">LEADERBOARD</h2>
+        <p className="text-sm text-muted-foreground mt-1">See where you stand among the best</p>
       </div>
 
       {/* Leaderboard table */}
@@ -87,6 +44,16 @@ export default function Leaderboard() {
             </tr>
           </thead>
           <tbody>
+            {/* Pinned user row */}
+            <tr className="border-b border-primary/20 bg-primary/5">
+              <td className="p-4 font-display text-sm text-primary">#42</td>
+              <td className="p-4 text-sm font-bold text-primary">YOU — degen_whale</td>
+              <td className="p-4 text-sm text-right font-display text-primary">12,450</td>
+              <td className="p-4 text-sm text-right font-semibold text-gold">Gold</td>
+              <td className="p-4 text-sm text-right">
+                <span className="px-2 py-0.5 rounded bg-gold/10 text-gold text-[10px] font-semibold border border-gold/20">2.0x</span>
+              </td>
+            </tr>
             {leaderboardData.map((row) => (
               <tr key={row.rank} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
                 <td className="p-4 font-display text-sm">
