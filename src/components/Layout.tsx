@@ -54,9 +54,6 @@ const Layout = () => {
 
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground">degen_whale</span>
-            <span className="text-xs px-2 py-0.5 rounded bg-gold/10 text-gold border border-gold/20 font-semibold">
-              Gold Tier
-            </span>
             <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center text-sm font-bold text-foreground">
               D
             </div>
