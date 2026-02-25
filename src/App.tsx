@@ -12,6 +12,7 @@ import Arena from "./pages/Arena";
 import Collection from "./pages/Collection";
 import Referrals from "./pages/Referrals";
 import SwitchBonus from "./pages/SwitchBonus";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/referrals" element={<Referrals />} />
             <Route path="/switch" element={<SwitchBonus />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
