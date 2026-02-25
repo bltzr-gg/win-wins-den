@@ -25,9 +25,6 @@ const Layout = () => {
             <Link to="/hub" className="flex items-center gap-2">
               <span className="font-display text-xl tracking-wider text-primary">REALBET</span>
             </Link>
-            <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
-              Season 1
-            </span>
           </div>
 
           <div className="flex items-center gap-1">
