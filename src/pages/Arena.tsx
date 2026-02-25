@@ -161,7 +161,6 @@ const challengeLeaders = [
 ];
 
 function DailyChallenge() {
-  const medals = ["#1", "#2", "#3"];
   const medalColors = ["text-gold", "text-silver", "text-bronze"];
 
   return (
@@ -181,7 +180,7 @@ function DailyChallenge() {
             <h3 className="font-display text-sm tracking-wider">DAILY ARENA CHALLENGE</h3>
           </div>
           <span className="text-[10px] px-2.5 py-1 rounded-full bg-amber/10 text-amber border border-amber/20 font-semibold">
-            Ends in 14h
+            Resets in 14h
           </span>
         </div>
 
@@ -192,7 +191,7 @@ function DailyChallenge() {
         <div className="grid grid-cols-3 gap-3">
           {challengeLeaders.map((p, i) => (
             <div key={p.name} className="rounded-xl border border-border/50 bg-secondary/20 p-3 text-center space-y-1.5">
-              <span className={`font-display text-sm ${medalColors[i]}`}>{medals[i]}</span>
+              <span className={`font-display text-sm ${medalColors[i]}`}>#{p.rank}</span>
               <p className="text-xs font-medium truncate">{p.name}</p>
               <p className="text-xs text-multiplier font-semibold">{p.gain}</p>
             </div>

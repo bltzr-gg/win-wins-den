@@ -773,37 +773,226 @@ function TasksPreview() {
 }
 
 /* ═══════════════════════════════════════════════
-   9. HOW IT WORKS
+   SEASON 1 AIRDROP POOL
+   ═══════════════════════════════════════════════ */
+function SeasonAirdropPool() {
+  return (
+    <motion.div
+      className="relative rounded-2xl border border-gold/20 bg-card overflow-hidden"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.16 }}
+    >
+      <div className="absolute top-0 left-[20%] w-56 h-32 bg-[hsl(41_60%_40%/0.04)] rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute inset-0 metallic-sheen pointer-events-none" />
+
+      <div className="relative z-10 p-6 lg:p-8 space-y-5">
+        <div className="flex items-center gap-2">
+          <Rocket className="w-5 h-5 text-gold" />
+          <h3 className="font-display text-lg tracking-wider">SEASON 1 AIRDROP POOL</h3>
+        </div>
+
+        <p className="text-sm text-foreground/80">
+          <span className="font-display text-2xl text-gold">6.6%</span>{" "}
+          <span className="text-muted-foreground">of total token supply is allocated to Season 1 participants.</span>
+        </p>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="rounded-xl bg-secondary/30 border border-border/50 p-4">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Your Position</p>
+            <p className="font-display text-2xl text-gold">#42</p>
+          </div>
+          <div className="rounded-xl bg-secondary/30 border border-border/50 p-4">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Current Tier</p>
+            <p className="font-display text-2xl text-gold">Gold</p>
+          </div>
+          <div className="rounded-xl bg-secondary/30 border border-border/50 p-4">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Projected Bracket</p>
+            <p className="font-display text-lg text-foreground">Top 200–500</p>
+          </div>
+          <div className="rounded-xl bg-secondary/30 border border-border/50 p-4">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Season Allocation</p>
+            <p className="font-display text-2xl text-gold">6.6%</p>
+          </div>
+        </div>
+
+        <p className="text-[10px] text-muted-foreground">Final allocation determined by leaderboard rank at season snapshot.</p>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   NFT MULTIPLIER CARD (full card for Hub)
+   ═══════════════════════════════════════════════ */
+function NftMultiplierCard() {
+  return (
+    <motion.div
+      className="relative rounded-2xl border border-gold/20 bg-card overflow-hidden"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.17 }}
+    >
+      <div className="absolute top-0 right-0 w-40 h-40 bg-[hsl(41_60%_50%/0.04)] rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute inset-0 metallic-sheen pointer-events-none" />
+
+      <div className="relative z-10 p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center">
+              <Crown className="w-6 h-6 text-gold" />
+            </div>
+            <div>
+              <h3 className="font-display text-lg tracking-wider">NFT MULTIPLIER</h3>
+              <p className="text-[10px] text-muted-foreground mt-0.5">Applies to leaderboard rank only</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="font-display text-3xl text-gold">1.1x</p>
+            <p className="text-[9px] text-muted-foreground">Current Multiplier</p>
+          </div>
+        </div>
+
+        <div className="rounded-xl bg-gold/5 border border-gold/10 p-4">
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Collect more RealBet NFTs to increase your multiplier. Higher multipliers boost your leaderboard position, giving you a better allocation tier at season snapshot.
+          </p>
+        </div>
+
+        <Link
+          to="/collection"
+          className="inline-flex items-center gap-2 text-xs text-gold hover:text-gold/80 transition-colors"
+        >
+          View Collection <ChevronRight className="w-3 h-3" />
+        </Link>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   SNAPSHOT URGENCY
+   ═══════════════════════════════════════════════ */
+function SnapshotUrgency() {
+  return (
+    <motion.div
+      className="rounded-2xl border border-primary/20 bg-card overflow-hidden"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.19 }}
+    >
+      <div className="p-6 space-y-4">
+        <div className="flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-primary" />
+          <h3 className="font-display text-sm tracking-wider text-primary">SNAPSHOT LOCK</h3>
+        </div>
+
+        <p className="text-sm text-foreground/80">
+          Final leaderboard positions lock at season end.
+        </p>
+
+        <div className="space-y-2">
+          <p className="text-xs text-muted-foreground">Your current rank determines:</p>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="rounded-lg bg-secondary/30 border border-border/50 p-3 text-center">
+              <Target className="w-4 h-4 text-amber mx-auto mb-1" />
+              <p className="text-[10px] text-foreground font-semibold">Allocation Tier</p>
+            </div>
+            <div className="rounded-lg bg-secondary/30 border border-border/50 p-3 text-center">
+              <Gift className="w-4 h-4 text-amber mx-auto mb-1" />
+              <p className="text-[10px] text-foreground font-semibold">Bonus Eligibility</p>
+            </div>
+            <div className="rounded-lg bg-secondary/30 border border-border/50 p-3 text-center">
+              <Shield className="w-4 h-4 text-amber mx-auto mb-1" />
+              <p className="text-[10px] text-foreground font-semibold">Sale Access Priority</p>
+            </div>
+          </div>
+        </div>
+
+        <p className="text-xs text-primary font-semibold">Climb before snapshot closes.</p>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   9. HOW SEASON 1 CALCULATION WORKS
    ═══════════════════════════════════════════════ */
 function HowItWorks() {
-  const bullets = [
-    { icon: Target, text: "Earn points by wagering, completing tasks, and referring friends." },
-    { icon: Box, text: "Open chests to win rewards, boosters, and badge drops." },
-    { icon: Trophy, text: "Climb the Season 1 leaderboard to unlock the reward pool." },
+  const pointsSources = [
+    { source: "Wager Points", description: "Earned from betting volume", eligible: "Yes" },
+    { source: "Arena Bonus", description: "Earned from competitive sessions", eligible: "Yes" },
+    { source: "Tasks", description: "Daily & Weekly completions", eligible: "Yes" },
+    { source: "Chests", description: "Mystery box rewards", eligible: "Yes" },
+    { source: "Referrals", description: "Invite bonuses", eligible: "Yes" },
+    { source: "NFT Multiplier", description: "Boosts leaderboard only", eligible: "Leaderboard Only" },
+  ];
+
+  const tiers = [
+    { tier: "Tier 1", range: "Top 100", color: "text-gold" },
+    { tier: "Tier 2", range: "Top 500", color: "text-silver" },
+    { tier: "Tier 3", range: "Top 1,000", color: "text-bronze" },
   ];
 
   return (
     <motion.div
-      className="rounded-xl border border-border/40 bg-card p-5 space-y-3"
+      className="rounded-2xl border border-border bg-card overflow-hidden"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.33 }}
     >
-      <div className="flex items-center gap-2">
-        <HelpCircle className="w-4 h-4 text-muted-foreground" />
-        <h3 className="font-display text-sm tracking-wider text-muted-foreground">HOW IT WORKS</h3>
-      </div>
-      <div className="space-y-2">
-        {bullets.map((b, i) => (
-          <div key={i} className="flex items-start gap-3 py-1">
-            <b.icon className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0 mt-0.5" />
-            <p className="text-xs text-muted-foreground">{b.text}</p>
+      <div className="p-6 lg:p-8 space-y-6">
+        <div className="flex items-center gap-2">
+          <HelpCircle className="w-4 h-4 text-muted-foreground" />
+          <h3 className="font-display text-lg tracking-wider">HOW SEASON 1 CALCULATION WORKS</h3>
+        </div>
+
+        {/* Points Sources Table */}
+        <div className="space-y-3">
+          <h4 className="font-display text-xs tracking-wider text-muted-foreground">POINTS SOURCES</h4>
+          <div className="rounded-xl border border-border/50 overflow-hidden">
+            <div className="grid grid-cols-3 bg-secondary/30 px-4 py-2">
+              <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Source</p>
+              <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Description</p>
+              <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider text-right">Multiplier Eligible</p>
+            </div>
+            {pointsSources.map((row) => (
+              <div key={row.source} className="grid grid-cols-3 px-4 py-2.5 border-t border-border/30 hover:bg-secondary/20 transition-colors">
+                <p className="text-xs font-medium">{row.source}</p>
+                <p className="text-xs text-muted-foreground">{row.description}</p>
+                <p className={`text-xs text-right font-semibold ${row.eligible === "Yes" ? "text-multiplier" : "text-amber"}`}>{row.eligible}</p>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+
+        {/* Allocation Model */}
+        <div className="space-y-3">
+          <h4 className="font-display text-xs tracking-wider text-muted-foreground">ALLOCATION MODEL</h4>
+          <div className="rounded-xl bg-secondary/20 border border-border/40 p-4 space-y-3">
+            <p className="text-xs text-foreground">
+              <span className="font-display text-gold text-base">6.6%</span>{" "}
+              <span className="text-muted-foreground">of total supply reserved for Season 1</span>
+            </p>
+            <p className="text-xs text-muted-foreground">Allocation weighted by final leaderboard rank:</p>
+            <div className="flex items-center gap-3">
+              {tiers.map((t) => (
+                <div key={t.tier} className="flex-1 rounded-lg bg-secondary/40 border border-border/50 p-3 text-center">
+                  <p className={`font-display text-sm ${t.color}`}>{t.tier}</p>
+                  <p className="text-[10px] text-muted-foreground">{t.range}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-[10px] text-muted-foreground">Snapshot locks at season end.</p>
+          </div>
+        </div>
+
+        {/* Disclaimers */}
+        <div className="rounded-lg bg-primary/5 border border-primary/10 p-3 space-y-1">
+          <p className="text-[10px] text-primary font-semibold">Points do NOT directly convert to tokens.</p>
+          <p className="text-[10px] text-muted-foreground">Leaderboard rank determines tier. Final tier determines allocation bracket.</p>
+        </div>
       </div>
-      <Link to="#" className="text-[10px] text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
-        Read Full FAQ <ExternalLink className="w-3 h-3" />
-      </Link>
     </motion.div>
   );
 }
@@ -927,19 +1116,28 @@ export default function Dashboard() {
           {/* 4. Badges — right under profile */}
           <BadgesPreview />
 
-          {/* 5. Points Breakdown */}
+          {/* 5. Season Airdrop Pool (6.6% allocation) */}
+          <SeasonAirdropPool />
+
+          {/* 6. NFT Multiplier (full card) */}
+          <NftMultiplierCard />
+
+          {/* 7. Points Breakdown */}
           <PointsBreakdown />
 
-          {/* 6. Reward Chests */}
+          {/* 8. Reward Chests */}
           <RewardChests />
 
-          {/* 7. Arena */}
+          {/* 9. Arena */}
           <ArenaCard />
 
-          {/* 8. Tasks */}
+          {/* 10. Tasks */}
           <TasksPreview />
 
-          {/* 9. How It Works */}
+          {/* 11. Snapshot Urgency */}
+          <SnapshotUrgency />
+
+          {/* 12. How Season 1 Calculation Works */}
           <HowItWorks />
         </div>
 
