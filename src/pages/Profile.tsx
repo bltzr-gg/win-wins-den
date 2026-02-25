@@ -191,10 +191,33 @@ export default function Profile() {
             </div>
           </div>
 
-          <div className="rounded-xl bg-gold/5 border border-gold/10 p-4">
+          <div className="rounded-xl bg-gold/5 border border-gold/10 p-4 space-y-3">
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Collect more RealBet NFTs to increase your multiplier. Higher multipliers boost your leaderboard position, giving you a better allocation tier at season snapshot.
+              Collect more Real Passes to increase your multiplier. Higher multipliers boost your leaderboard position, giving you a better allocation tier at season snapshot.
             </p>
+
+            <div className="rounded-lg border border-gold/10 overflow-hidden">
+              <div className="grid grid-cols-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground bg-gold/5 px-4 py-2">
+                <span>Real Passes Held</span>
+                <span className="text-right">Multiplier on REAL Points</span>
+              </div>
+              {[
+                { passes: "1 Pass", mult: "1.25x" },
+                { passes: "2–4 Passes", mult: "1.5x" },
+                { passes: "5–9 Passes", mult: "2.0x" },
+                { passes: "10+ Passes", mult: "2.5x" },
+              ].map((row, i) => (
+                <div
+                  key={row.passes}
+                  className={`grid grid-cols-2 px-4 py-2.5 text-xs ${
+                    i % 2 === 0 ? "bg-secondary/20" : "bg-secondary/10"
+                  } ${user.nftMultiplier === parseFloat(row.mult) ? "border-l-2 border-l-gold text-gold font-semibold" : "text-foreground"}`}
+                >
+                  <span>{row.passes}</span>
+                  <span className="text-right font-display text-sm">{row.mult}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </motion.div>
