@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
 import {
   Wallet, Link2, Crown, Flame, Shield, Gift, ChevronRight,
-  Check, Copy, ExternalLink, TrendingUp, Zap, Target, Users, Box
+  Check, Copy, ExternalLink, TrendingUp, Zap, Target, Users, Box,
+  Share2, Download, Twitter
 } from "lucide-react";
 
 /* ─── Mock state ─── */
@@ -163,21 +164,39 @@ export default function Profile() {
         </motion.div>
       </div>
 
-      {/* NFT Multiplier */}
+      {/* NFT Multiplier — Full Card */}
       <motion.div
-        className="rounded-xl border border-gold/15 bg-card p-5 flex items-center justify-between"
+        className="relative rounded-2xl border border-gold/20 bg-card overflow-hidden"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <div className="flex items-center gap-3">
-          <Crown className="w-5 h-5 text-gold" />
-          <div>
-            <p className="text-sm font-semibold">NFT Multiplier</p>
-            <p className="text-[10px] text-muted-foreground">Applies to leaderboard ranking only. Hold qualifying NFTs to boost your position.</p>
+        <div className="absolute top-0 right-0 w-40 h-40 bg-[hsl(41_60%_50%/0.04)] rounded-full blur-[80px] pointer-events-none" />
+        <div className="absolute inset-0 metallic-sheen pointer-events-none" />
+
+        <div className="relative z-10 p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center">
+                <Crown className="w-6 h-6 text-gold" />
+              </div>
+              <div>
+                <h3 className="font-display text-lg tracking-wider">NFT MULTIPLIER</h3>
+                <p className="text-[10px] text-muted-foreground mt-0.5">Applies to leaderboard rank only</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="font-display text-3xl text-gold">{user.nftMultiplier}x</p>
+              <p className="text-[9px] text-muted-foreground">Current Multiplier</p>
+            </div>
+          </div>
+
+          <div className="rounded-xl bg-gold/5 border border-gold/10 p-4">
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Collect more RealBet NFTs to increase your multiplier. Higher multipliers boost your leaderboard position, giving you a better allocation tier at season snapshot.
+            </p>
           </div>
         </div>
-        <span className="px-3 py-1.5 rounded-lg bg-gold/10 text-gold border border-gold/20 font-display text-sm">{user.nftMultiplier}x</span>
       </motion.div>
 
       {/* Points Breakdown */}
@@ -199,6 +218,69 @@ export default function Profile() {
               <p className="font-display text-lg">{item.value.toLocaleString()}</p>
             </div>
           ))}
+        </div>
+      </motion.div>
+
+      {/* Share Your Rank */}
+      <motion.div
+        className="relative rounded-2xl border border-border bg-card overflow-hidden"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.18 }}
+      >
+        <div className="absolute inset-0 metallic-sheen pointer-events-none" />
+
+        <div className="relative z-10 p-6 space-y-5">
+          <div className="flex items-center gap-2">
+            <Share2 className="w-4 h-4 text-amber" />
+            <h3 className="font-display text-sm tracking-wider">SHARE YOUR RANK</h3>
+          </div>
+
+          <p className="text-xs text-muted-foreground">Generate your Season 1 share card.</p>
+
+          {/* Share Card Preview */}
+          <div className="rounded-2xl border border-border/60 bg-gradient-to-br from-[hsl(240_8%_8%)] to-[hsl(0_15%_8%)] p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <p className="font-display text-xs text-muted-foreground tracking-wider">REALBET VIP HUB</p>
+              <p className="text-[9px] text-muted-foreground">Season 1</p>
+            </div>
+
+            <div className="text-center space-y-3">
+              <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-[hsl(41_40%_20%/0.3)] to-secondary border border-[hsl(41_30%_20%/0.2)] flex items-center justify-center text-2xl font-bold">
+                D
+              </div>
+              <h4 className="font-display text-xl">{user.username.toUpperCase()}</h4>
+              <div className="flex items-center justify-center gap-3">
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-gold/12 text-gold border border-gold/20">{user.tier}</span>
+                <span className="text-[10px] text-gold">NFT {user.nftMultiplier}x</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-lg bg-secondary/30 border border-border/40 p-3 text-center">
+                <p className="text-[9px] text-muted-foreground uppercase">Rank</p>
+                <p className="font-display text-2xl text-gold">#{user.rank}</p>
+              </div>
+              <div className="rounded-lg bg-secondary/30 border border-border/40 p-3 text-center">
+                <p className="text-[9px] text-muted-foreground uppercase">Points</p>
+                <p className="font-display text-2xl">{user.points.toLocaleString()}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center gap-3">
+            <button className="flex-1 py-3 rounded-xl bg-gradient-to-r from-crimson-deep to-primary text-primary-foreground font-display text-xs tracking-wider hover:brightness-110 transition-all flex items-center justify-center gap-2">
+              <Share2 className="w-3.5 h-3.5" />
+              Generate Card
+            </button>
+            <button className="py-3 px-4 rounded-xl bg-secondary/50 border border-border/50 text-muted-foreground hover:text-foreground transition-colors">
+              <Download className="w-4 h-4" />
+            </button>
+            <a href="#" className="py-3 px-4 rounded-xl bg-secondary/50 border border-border/50 text-muted-foreground hover:text-foreground transition-colors">
+              <Twitter className="w-4 h-4" />
+            </a>
+          </div>
         </div>
       </motion.div>
 
