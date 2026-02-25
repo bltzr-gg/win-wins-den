@@ -980,15 +980,16 @@ function LeaderboardRail() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.15 }}
       >
-        {/* Season countdown */}
+        {/* Season 1 header */}
         <div className="text-center py-2">
-          <p className="text-[9px] text-muted-foreground uppercase tracking-wider">Season ends in</p>
+          <h3 className="font-display text-2xl text-primary tracking-wider">SEASON 1</h3>
+          <p className="text-[9px] text-muted-foreground uppercase tracking-wider mt-1">Season ends in</p>
           <p className="font-display text-lg text-foreground">23 DAYS</p>
         </div>
 
         <div className="flex items-center justify-between">
           <h3 className="font-display text-xs tracking-wider flex items-center gap-1.5">
-            <Trophy className="w-3.5 h-3.5 text-muted-foreground" /> Season 1 Leaderboard
+            <Trophy className="w-3.5 h-3.5 text-muted-foreground" /> Leaderboard
           </h3>
           <Link
             to="/leaderboard"
