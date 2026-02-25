@@ -1,13 +1,14 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { Swords, Target, Trophy, Award, User } from "lucide-react";
+import { Swords, Target, Trophy, Award, User, Rocket } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const navItems = [
-  { label: "Hub", path: "/hub", icon: Swords },
-  { label: "Tasks", path: "/tasks", icon: Target },
-  { label: "Leaderboard", path: "/leaderboard", icon: Trophy },
-  { label: "Badges", path: "/collection", icon: Award },
-  { label: "Profile", path: "/profile", icon: User },
+  { label: "Hub", path: "/hub", icon: Swords, badge: null },
+  { label: "Tasks", path: "/tasks", icon: Target, badge: null },
+  { label: "Leaderboard", path: "/leaderboard", icon: Trophy, badge: null },
+  { label: "Badges", path: "/collection", icon: Award, badge: null },
+  { label: "Public Sale", path: "/public-sale", icon: Rocket, badge: "Soon" },
+  { label: "Profile", path: "/profile", icon: User, badge: null },
 ];
 
 const Layout = () => {
@@ -34,7 +35,7 @@ const Layout = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  className={`relative flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
                     active
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary"
@@ -42,6 +43,11 @@ const Layout = () => {
                 >
                   <item.icon className="w-4 h-4" />
                   {item.label}
+                  {item.badge && (
+                    <span className="text-[8px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary border border-primary/15 uppercase tracking-wider leading-none">
+                      {item.badge}
+                    </span>
+                  )}
                 </Link>
               );
             })}
