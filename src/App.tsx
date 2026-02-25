@@ -13,6 +13,7 @@ import Collection from "./pages/Collection";
 import Referrals from "./pages/Referrals";
 import SwitchBonus from "./pages/SwitchBonus";
 import Profile from "./pages/Profile";
+import PublicSale from "./pages/PublicSale";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/referrals" element={<Referrals />} />
             <Route path="/switch" element={<SwitchBonus />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/public-sale" element={<PublicSale />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
