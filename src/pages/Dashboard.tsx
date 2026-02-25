@@ -915,26 +915,26 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-5">
         {/* LEFT — Main funnel content */}
         <div className="space-y-6 min-w-0">
-          {/* 1. Getting Started */}
-          <GettingStarted />
-
-          {/* 2. Profile + Referrals */}
-          <ProfileReferralPanel />
-
-          {/* 3. Switch Bonus */}
+          {/* 1. Switch Bonus (Vampire Attack) — top priority */}
           <SwitchBonusCard />
 
-          {/* 4. Points Breakdown */}
+          {/* 2. Getting Started */}
+          <GettingStarted />
+
+          {/* 3. Profile + Referrals */}
+          <ProfileReferralPanel />
+
+          {/* 4. Badges — right under profile */}
+          <BadgesPreview />
+
+          {/* 5. Points Breakdown */}
           <PointsBreakdown />
 
-          {/* 5. Reward Chests */}
+          {/* 6. Reward Chests */}
           <RewardChests />
 
-          {/* 6. Arena */}
+          {/* 7. Arena */}
           <ArenaCard />
-
-          {/* 7. Badges */}
-          <BadgesPreview />
 
           {/* 8. Tasks */}
           <TasksPreview />
