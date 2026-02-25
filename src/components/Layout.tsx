@@ -1,14 +1,16 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { Swords, Target, Trophy, Award, User, Rocket } from "lucide-react";
+import { Swords, Crosshair, Lock, Award, Target, Trophy, Rocket, Wallet } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const navItems = [
   { label: "Hub", path: "/hub", icon: Swords, badge: null },
+  { label: "Arena", path: "/arena", icon: Crosshair, badge: null },
+  { label: "The Vault", path: "/vault", icon: Lock, badge: null },
+  { label: "Collection", path: "/collection", icon: Award, badge: null },
   { label: "Tasks", path: "/tasks", icon: Target, badge: null },
   { label: "Leaderboard", path: "/leaderboard", icon: Trophy, badge: null },
-  { label: "Badges", path: "/collection", icon: Award, badge: null },
   { label: "Public Sale", path: "/public-sale", icon: Rocket, badge: "Soon" },
-  { label: "Profile", path: "/profile", icon: User, badge: null },
+  { label: "Profile", path: "/profile", icon: Wallet, badge: null },
 ];
 
 const Layout = () => {
