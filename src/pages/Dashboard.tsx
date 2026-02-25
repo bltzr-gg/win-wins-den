@@ -271,7 +271,7 @@ function ProfileReferralPanel() {
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gold/10 border border-gold/20">
             <Crown className="w-5 h-5 text-gold" />
-            <span className="font-display text-lg text-gold">1.1x</span>
+            <span className="font-display text-lg text-gold">NFT 1.1x</span>
           </div>
         </div>
 
