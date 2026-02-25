@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Lock, Star, Pin, X, Calendar, Award } from "lucide-react";
+import { Lock, Star, Pin, X, Calendar, Award, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import badgeFirstBlood from "@/assets/badges/first-blood.png";
@@ -26,21 +26,23 @@ const badgeImageMap: Record<string, string> = {
   "diamond-hands": badgeDiamondHands,
 };
 
-/* ─── Badge data ─── */
+/* ─── Badge data with categories ─── */
 const allBadges = [
-  { id: "first-blood", name: "First Blood", rarity: "Common", earned: true, bonus: "+1%", desc: "Place your very first wager in the arena.", earnedDate: "Jan 12, 2025", hint: "" },
-  { id: "10-wins", name: "10 Victories", rarity: "Common", earned: true, bonus: "+1%", desc: "Win 10 games across any arena.", earnedDate: "Jan 18, 2025", hint: "" },
-  { id: "lucky-7", name: "Lucky Seven", rarity: "Rare", earned: true, bonus: "+2%", desc: "Hit a 7x multiplier on any game.", earnedDate: "Feb 2, 2025", hint: "" },
-  { id: "slots-master", name: "Slots Master", rarity: "Epic", earned: true, bonus: "+5%", desc: "Complete 100 rounds in Slots.", earnedDate: "Feb 14, 2025", hint: "" },
-  { id: "high-roller", name: "High Roller", rarity: "Legendary", earned: true, bonus: "+10%", desc: "Wager over 10,000 REAL Points in a single session.", earnedDate: "Mar 1, 2025", hint: "" },
-  { id: "streak-king", name: "Streak King", rarity: "Epic", earned: true, bonus: "+5%", desc: "Maintain a 30-day daily login streak.", earnedDate: "Mar 20, 2025", hint: "" },
-  { id: "blackjack-pro", name: "Blackjack Pro", rarity: "Rare", earned: false, bonus: "+2%", desc: "Win 10 blackjack games.", hint: "Win 3 more blackjack games", progress: "7/10" },
-  { id: "dice-lord", name: "Dice Lord", rarity: "Epic", earned: false, bonus: "+5%", desc: "Win 20 dice rounds.", hint: "Win 17 more dice rounds", progress: "3/20" },
-  { id: "mine-sweeper", name: "Mine Sweeper", rarity: "Rare", earned: false, bonus: "+2%", desc: "Survive 25 rounds in Mines.", hint: "Survive 13 more rounds", progress: "12/25" },
-  { id: "roulette-royal", name: "Roulette Royal", rarity: "Legendary", earned: false, bonus: "+10%", desc: "Hit the jackpot 5 times in Roulette.", hint: "Hit 4 more jackpots", progress: "1/5" },
-  { id: "social-butterfly", name: "Social Butterfly", rarity: "Common", earned: false, bonus: "+1%", desc: "Refer 5 friends to the platform.", hint: "Refer 3 more friends", progress: "2/5" },
-  { id: "diamond-hands", name: "Diamond Hands", rarity: "Legendary", earned: false, bonus: "+10%", desc: "Hold 50,000 REAL Points without wagering for 7 days.", hint: "Coming Soon", progress: "—" },
+  { id: "first-blood", name: "First Blood", rarity: "Common", category: "Combat", earned: true, bonus: "+1%", desc: "Place your very first wager.", earnedDate: "Jan 12, 2025", hint: "" },
+  { id: "10-wins", name: "10 Victories", rarity: "Common", category: "Combat", earned: true, bonus: "+1%", desc: "Win 10 games across any arena.", earnedDate: "Jan 18, 2025", hint: "" },
+  { id: "lucky-7", name: "Lucky Seven", rarity: "Rare", category: "Luck", earned: true, bonus: "+2%", desc: "Hit a 7x multiplier on any game.", earnedDate: "Feb 2, 2025", hint: "" },
+  { id: "slots-master", name: "Slots Master", rarity: "Epic", category: "Games", earned: true, bonus: "+5%", desc: "Complete 100 rounds in Slots.", earnedDate: "Feb 14, 2025", hint: "" },
+  { id: "high-roller", name: "High Roller", rarity: "Legendary", category: "Combat", earned: true, bonus: "+10%", desc: "Wager over 10,000 REAL Points.", earnedDate: "Mar 1, 2025", hint: "" },
+  { id: "streak-king", name: "Streak King", rarity: "Epic", category: "Loyalty", earned: true, bonus: "+5%", desc: "Maintain a 30-day daily login streak.", earnedDate: "Mar 20, 2025", hint: "" },
+  { id: "blackjack-pro", name: "Blackjack Pro", rarity: "Rare", category: "Games", earned: false, bonus: "+2%", desc: "Win 10 blackjack games.", hint: "Win 3 more", progress: "7/10" },
+  { id: "dice-lord", name: "Dice Lord", rarity: "Epic", category: "Games", earned: false, bonus: "+5%", desc: "Win 20 dice rounds.", hint: "Win 17 more", progress: "3/20" },
+  { id: "mine-sweeper", name: "Mine Sweeper", rarity: "Rare", category: "Games", earned: false, bonus: "+2%", desc: "Survive 25 rounds in Mines.", hint: "Survive 13 more", progress: "12/25" },
+  { id: "roulette-royal", name: "Roulette Royal", rarity: "Legendary", category: "Luck", earned: false, bonus: "+10%", desc: "Hit the jackpot 5 times.", hint: "Hit 4 more", progress: "1/5" },
+  { id: "social-butterfly", name: "Social Butterfly", rarity: "Common", category: "Social", earned: false, bonus: "+1%", desc: "Refer 5 friends.", hint: "Refer 3 more", progress: "2/5" },
+  { id: "diamond-hands", name: "Diamond Hands", rarity: "Legendary", category: "Loyalty", earned: false, bonus: "+10%", desc: "Hold 50,000 REAL Points for 7 days.", hint: "Coming Soon", progress: "—" },
 ];
+
+const categories = ["All", "Combat", "Games", "Luck", "Loyalty", "Social"];
 
 /* ─── Rarity styling ─── */
 const rarityStyles: Record<string, {
@@ -80,7 +82,7 @@ const rarityStyles: Record<string, {
   },
 };
 
-/* ─── Badge Image Component ─── */
+/* ─── Badge Image ─── */
 function BadgeImage({ id, rarity, earned, size = "lg" }: { id: string; rarity: string; earned: boolean; size?: "sm" | "lg" }) {
   const style = rarityStyles[rarity];
   const dim = size === "lg" ? "w-24 h-24" : "w-20 h-20";
@@ -132,7 +134,6 @@ function CollectionHeader() {
           </div>
         </div>
 
-        {/* Progress bar */}
         <div className="mt-4 space-y-2">
           <div className="w-full h-2 rounded-full bg-secondary overflow-hidden">
             <motion.div
@@ -197,7 +198,15 @@ function BadgeDetailModal({ badge, onClose }: { badge: typeof allBadges[0]; onCl
               <div className="px-4 py-3 rounded-xl bg-secondary/30 border border-border/50">
                 <p className="text-xs text-muted-foreground">{badge.hint}</p>
                 {badge.progress && badge.progress !== "—" && (
-                  <p className="text-xs font-semibold text-foreground mt-1">{badge.progress}</p>
+                  <div className="mt-2">
+                    <div className="w-full h-1.5 rounded-full bg-secondary overflow-hidden">
+                      <div
+                        className={`h-full rounded-full ${style.textClass === "text-gold" ? "bg-gold" : style.textClass === "text-epic" ? "bg-epic" : style.textClass === "text-rare" ? "bg-rare" : "bg-common"}`}
+                        style={{ width: `${(parseInt(badge.progress) / parseInt(badge.progress.split("/")[1])) * 100}%` }}
+                      />
+                    </div>
+                    <p className="text-xs font-semibold text-foreground mt-1">{badge.progress}</p>
+                  </div>
                 )}
               </div>
             </div>
@@ -232,22 +241,17 @@ function BadgeCard({ badge, onSelect, isPinned, onTogglePin }: {
       whileHover={badge.earned ? { y: -4, scale: 1.02 } : {}}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: badge.earned ? 1 : 0.5, y: 0 }}
-      style={badge.earned && style.glowStyle ? {
-        boxShadow: style.glowStyle,
-      } : {}}
+      style={badge.earned && style.glowStyle ? { boxShadow: style.glowStyle } : {}}
     >
-      {/* Metallic overlay */}
       <div className="absolute inset-0 metallic-sheen pointer-events-none" />
 
-      {/* Glow intensify on hover */}
       {badge.earned && style.glowStyle && (
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none rounded-2xl"
-          style={{ boxShadow: style.glowStyle.replace(/0\.\d+\)/, "0.2)") }}
+          style={{ boxShadow: style.glowStyle.replace(/0\.\d+\)/, "0.25)") }}
         />
       )}
 
-      {/* Pin button */}
       {badge.earned && (
         <button
           onClick={(e) => { e.stopPropagation(); onTogglePin(); }}
@@ -261,7 +265,6 @@ function BadgeCard({ badge, onSelect, isPinned, onTogglePin }: {
         </button>
       )}
 
-      {/* Lock icon for unearned */}
       {!badge.earned && (
         <div className="absolute top-3 right-3 z-20">
           <Lock className="w-3.5 h-3.5 text-muted-foreground/40" />
@@ -278,15 +281,21 @@ function BadgeCard({ badge, onSelect, isPinned, onTogglePin }: {
         </div>
         <p className="text-xs text-gold font-semibold">{badge.bonus}</p>
 
-        {/* Hover info for locked badges */}
         {!badge.earned && badge.hint && (
-          <div className="absolute inset-0 bg-card/90 backdrop-blur-sm rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity p-4">
+          <div className="absolute inset-0 bg-card/90 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity p-4 gap-2">
             <p className="text-xs text-muted-foreground text-center">{badge.hint}</p>
+            {badge.progress && badge.progress !== "—" && (
+              <div className="w-3/4">
+                <div className="w-full h-1.5 rounded-full bg-secondary overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-primary/60"
+                    style={{ width: `${(parseInt(badge.progress) / parseInt(badge.progress.split("/")[1])) * 100}%` }}
+                  />
+                </div>
+                <p className="text-[10px] text-muted-foreground mt-1 text-center">{badge.progress}</p>
+              </div>
+            )}
           </div>
-        )}
-
-        {badge.progress && !badge.earned && (
-          <p className="text-[10px] text-muted-foreground">{badge.progress}</p>
         )}
       </div>
     </motion.div>
@@ -297,6 +306,7 @@ function BadgeCard({ badge, onSelect, isPinned, onTogglePin }: {
 export default function Collection() {
   const [selectedBadge, setSelectedBadge] = useState<typeof allBadges[0] | null>(null);
   const [pinnedIds, setPinnedIds] = useState<string[]>(["slots-master", "high-roller", "streak-king"]);
+  const [activeCategory, setActiveCategory] = useState("All");
 
   const togglePin = (id: string) => {
     setPinnedIds(prev => {
@@ -307,6 +317,9 @@ export default function Collection() {
   };
 
   const pinnedBadges = allBadges.filter(b => pinnedIds.includes(b.id));
+  const filteredBadges = activeCategory === "All"
+    ? allBadges
+    : allBadges.filter(b => b.category === activeCategory);
 
   return (
     <div className="space-y-8">
@@ -321,7 +334,7 @@ export default function Collection() {
               SHOWCASE <span className="text-gold">({pinnedBadges.length}/3)</span>
             </h2>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 overflow-x-auto scrollbar-none pb-1">
             {pinnedBadges.map((b) => (
               <motion.div
                 key={b.id}
@@ -341,11 +354,31 @@ export default function Collection() {
         </section>
       )}
 
+      {/* Category Tabs */}
+      <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-1">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex-shrink-0 ${
+              activeCategory === cat
+                ? "bg-primary/10 text-primary border border-primary/20"
+                : "bg-secondary/50 text-muted-foreground border border-border/30 hover:bg-secondary hover:text-foreground"
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
       {/* Full Badge Grid */}
       <section className="space-y-4">
-        <h2 className="font-display text-sm tracking-wider text-muted-foreground">ALL BADGES</h2>
+        <h2 className="font-display text-sm tracking-wider text-muted-foreground">
+          {activeCategory === "All" ? "ALL BADGES" : activeCategory.toUpperCase()}
+          <span className="text-foreground/50 ml-2">({filteredBadges.length})</span>
+        </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {allBadges.map((badge, i) => (
+          {filteredBadges.map((badge, i) => (
             <motion.div
               key={badge.id}
               transition={{ delay: i * 0.03 }}
