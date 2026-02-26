@@ -369,7 +369,7 @@ function ProfileReferralPanel() {
             </div>
             <div className="p-2 rounded-lg bg-secondary/30 border border-border/50 text-center">
               <p className="font-display text-base text-amber">3</p>
-              <p className="text-[9px] text-muted-foreground">Bonus Chests</p>
+              <p className="text-[9px] text-muted-foreground">Bonus Boxes</p>
             </div>
           </div>
         </div>
@@ -452,7 +452,7 @@ function PointsBreakdown() {
   const items = [
     { label: "Wager Points", value: "6,200", icon: Zap },
     { label: "Tasks Points", value: "3,100", icon: Target },
-    { label: "Chest/Box Rewards", value: "1,850", icon: Box },
+    { label: "Mystery Box Rewards", value: "1,850", icon: Box },
     { label: "Referral Bonuses", value: "1,300", icon: Users },
     { label: "NFT Multiplier", value: "1.1x", icon: Crown, note: "" },
   ];
@@ -491,38 +491,11 @@ function PointsBreakdown() {
 }
 
 /* ═══════════════════════════════════════════════
-   5. REWARD CHESTS (merged Vault + Chests)
+   5. DAILY MYSTERY BOX (Hub card)
    ═══════════════════════════════════════════════ */
-function RewardChests() {
+function DailyMysteryBoxCard() {
   const streakDays = [1, 2, 3, 4, 5, 6, 7];
   const freeBoxAvailable = true;
-
-  const chests = [
-    { name: "Silver Chest", tier: "silver", cost: 500, label: "Improved odds", img: silverBoxImg, remaining: null },
-    { name: "Gold Chest", tier: "gold", cost: 2000, label: "Best odds", img: goldBoxImg, remaining: null },
-    {
-      name: "Diamond Chest",
-      tier: "diamond",
-      cost: 5000,
-      label: "Weekly limited",
-      img: legendaryBoxImg,
-      remaining: 87,
-    },
-  ];
-
-  const tierStyles: Record<string, { text: string; border: string; btn: string }> = {
-    silver: {
-      text: "text-silver",
-      border: "border-silver/20",
-      btn: "bg-silver/10 hover:bg-silver/15 border-silver/20 text-silver",
-    },
-    gold: { text: "text-gold", border: "border-gold/20", btn: "bg-gold/10 hover:bg-gold/15 border-gold/20 text-gold" },
-    diamond: {
-      text: "text-epic",
-      border: "border-epic/20",
-      btn: "bg-epic/10 hover:bg-epic/15 border-epic/20 text-epic",
-    },
-  };
 
   return (
     <motion.div
@@ -542,9 +515,9 @@ function RewardChests() {
               <Box className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h3 className="font-display text-xl tracking-wider">REWARD CHESTS</h3>
+              <h3 className="font-display text-xl tracking-wider">DAILY MYSTERY BOX</h3>
               <p className="text-[11px] text-muted-foreground mt-0.5">
-                Open daily boxes for streak bonuses. Spend REAL Points on premium chests for higher rewards.
+                Open daily to maintain streak and unlock higher-tier boxes.
               </p>
             </div>
           </div>
@@ -552,146 +525,84 @@ function RewardChests() {
             to="/vault"
             className="text-[10px] text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
           >
-            View All <ChevronRight className="w-3 h-3" />
+            View All Mystery Boxes <ChevronRight className="w-3 h-3" />
           </Link>
         </div>
 
-        {/* Two sub-panels */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-5">
-          {/* A) Daily Mystery Box */}
-          <div className="rounded-xl border border-primary/15 bg-[hsl(0_20%_7%/0.5)] p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <motion.span
-                  className="inline-flex"
-                  animate={{ scale: [1, 1.3, 1], rotate: [0, -8, 8, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <Flame className="w-4 h-4 text-primary" />
-                </motion.span>
-                <span className="font-display text-sm tracking-wider">DAILY MYSTERY BOX</span>
-              </div>
-              <span className="px-2 py-0.5 rounded bg-multiplier/10 text-multiplier border border-multiplier/20 text-[10px] font-display">
-                1.3x
-              </span>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-[10px]">
-                <span className="text-primary font-semibold">{userState.streak}-Day Streak</span>
-                <span className="text-muted-foreground">Day 5 → Free Chest</span>
-              </div>
-
-              <div className="flex items-center gap-1.5">
-                {streakDays.map((d) => (
-                  <motion.div
-                    key={d}
-                    className={`flex-1 h-3 rounded-full relative overflow-hidden ${d <= userState.streak ? "bg-primary" : "bg-secondary"}`}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.2 + d * 0.04 }}
-                  >
-                    {d === userState.streak && (
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(0_0%_100%/0.2)] to-transparent"
-                        animate={{ x: ["-100%", "200%"] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                      />
-                    )}
-                  </motion.div>
-                ))}
-              </div>
-
-              <p className="text-[9px] text-muted-foreground/70 flex items-center gap-1">
-                <AlertTriangle className="w-2.5 h-2.5" /> Miss a day → streak resets
-              </p>
-            </div>
-
-            {freeBoxAvailable && (
+        {/* Daily Box Panel */}
+        <div className="rounded-xl border border-primary/15 bg-[hsl(0_20%_7%/0.5)] p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
               <motion.span
-                className="block text-center text-[9px] px-2 py-0.5 rounded-full bg-primary/12 text-primary border border-primary/20 font-semibold"
-                animate={{ opacity: [1, 0.5, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                className="inline-flex"
+                animate={{ scale: [1, 1.3, 1], rotate: [0, -8, 8, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
               >
-                Free Daily Box Available
+                <Flame className="w-4 h-4 text-primary" />
               </motion.span>
-            )}
+              <span className="font-display text-sm tracking-wider">STREAK PROGRESS</span>
+            </div>
+            <span className="px-2 py-0.5 rounded bg-multiplier/10 text-multiplier border border-multiplier/20 text-[10px] font-display">
+              1.3x
+            </span>
+          </div>
 
-            <Link
-              to="/vault"
-              className="relative w-full py-3 rounded-xl font-display text-sm flex items-center justify-center gap-2 transition-all overflow-hidden bg-primary/15 text-primary border border-primary/30 hover:bg-primary/20"
-              style={{ boxShadow: freeBoxAvailable ? "0 0 20px hsl(0 84% 40% / 0.12)" : "none" }}
-            >
-              {freeBoxAvailable && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-[10px]">
+              <span className="text-primary font-semibold">{userState.streak}-Day Streak</span>
+              <span className="text-muted-foreground">Next Reward: Silver Mystery Box</span>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              {streakDays.map((d) => (
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(0_84%_40%/0.08)] to-transparent pointer-events-none"
-                  animate={{ x: ["-200%", "200%"] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                />
-              )}
-              <Box className="w-4 h-4 relative z-10" />
-              <span className="relative z-10">Open Daily Box</span>
-            </Link>
-          </div>
-
-          {/* B) Premium Reward Chests */}
-          <div className="space-y-3">
-            <h4 className="font-display text-xs tracking-wider text-muted-foreground">PREMIUM REWARD CHESTS</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {chests.map((chest) => {
-                const s = tierStyles[chest.tier];
-                return (
-                  <div
-                    key={chest.name}
-                    className={`rounded-xl border ${s.border} bg-card p-4 space-y-3 transition-all hover:brightness-110 group`}
-                  >
-                    <div className="flex justify-center py-1">
-                      <motion.img
-                        src={chest.img}
-                        alt={chest.name}
-                        className="w-16 h-16 object-contain drop-shadow-lg"
-                        animate={{ y: [0, -3, 0] }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                      />
-                    </div>
-                    <div className="text-center">
-                      <p className={`font-display text-xs ${s.text}`}>{chest.name}</p>
-                      <p className="text-[10px] text-muted-foreground">{chest.cost.toLocaleString()} RP</p>
-                      <p className="text-[9px] text-muted-foreground/70">{chest.label}</p>
-                    </div>
-
-                    {chest.remaining !== null && (
-                      <p className="text-[9px] text-center text-primary font-semibold">
-                        Limited: {chest.remaining}/100 remaining
-                      </p>
-                    )}
-
-                    {/* Possible reward icons */}
-                    <div className="flex items-center justify-center gap-2">
-                      {[Rocket, Gift, Sparkles, Ticket].map((Icon, j) => (
-                        <Icon key={j} className="w-3 h-3 text-muted-foreground/40" />
-                      ))}
-                    </div>
-
-                    <button
-                      className={`w-full py-2 rounded-lg font-display text-[10px] border transition-all ${s.btn}`}
-                    >
-                      Open — {chest.cost.toLocaleString()} RP
-                    </button>
-                  </div>
-                );
-              })}
+                  key={d}
+                  className={`flex-1 h-3 rounded-full relative overflow-hidden ${d <= userState.streak ? "bg-primary" : "bg-secondary"}`}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.2 + d * 0.04 }}
+                >
+                  {d === userState.streak && (
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(0_0%_100%/0.2)] to-transparent"
+                      animate={{ x: ["-100%", "200%"] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                    />
+                  )}
+                </motion.div>
+              ))}
             </div>
 
-            {/* Weekly Bonus Pool */}
-            <div className="rounded-lg border border-border/40 bg-secondary/20 px-4 py-3 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <DollarSign className="w-3.5 h-3.5 text-muted-foreground" />
-                <span className="text-[10px] text-muted-foreground">Weekly Bonus Pool — funded by chest activity</span>
-              </div>
-              <span className="text-[10px] text-foreground font-semibold">Resets in 3d 14h</span>
-            </div>
+            <p className="text-[9px] text-muted-foreground/70 flex items-center gap-1">
+              <AlertTriangle className="w-2.5 h-2.5" /> Miss a day → streak resets
+            </p>
           </div>
+
+          {freeBoxAvailable && (
+            <motion.span
+              className="block text-center text-[9px] px-2 py-0.5 rounded-full bg-primary/12 text-primary border border-primary/20 font-semibold"
+              animate={{ opacity: [1, 0.5, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              Free Daily Box Available
+            </motion.span>
+          )}
+
+          <Link
+            to="/vault"
+            className="relative w-full py-3 rounded-xl font-display text-sm flex items-center justify-center gap-2 transition-all overflow-hidden bg-primary/15 text-primary border border-primary/30 hover:bg-primary/20"
+            style={{ boxShadow: freeBoxAvailable ? "0 0 20px hsl(0 84% 40% / 0.12)" : "none" }}
+          >
+            {freeBoxAvailable && (
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(0_84%_40%/0.08)] to-transparent pointer-events-none"
+                animate={{ x: ["-200%", "200%"] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              />
+            )}
+            <Box className="w-4 h-4 relative z-10" />
+            <span className="relative z-10">Open Daily Box</span>
+          </Link>
         </div>
       </div>
     </motion.div>
@@ -915,7 +826,7 @@ function TasksPreview() {
 function HowItWorks() {
   const bullets = [
     { icon: Target, text: "Earn points by wagering, completing tasks, and referring friends." },
-    { icon: Box, text: "Open chests to win rewards, boosters, and badge drops." },
+    { icon: Box, text: "Open Mystery Boxes to win rewards, tickets, and REAL Points." },
     { icon: Trophy, text: "Climb the Season 1 leaderboard to unlock the reward pool." },
   ];
 
@@ -1080,8 +991,8 @@ export default function Dashboard() {
           {/* 5. Points Breakdown */}
           <PointsBreakdown />
 
-          {/* 6. Reward Chests */}
-          <RewardChests />
+          {/* 6. Daily Mystery Box */}
+          <DailyMysteryBoxCard />
 
           {/* 7. Arena */}
           <ArenaCard />

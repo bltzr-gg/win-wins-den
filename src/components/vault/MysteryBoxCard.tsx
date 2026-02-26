@@ -1,4 +1,4 @@
-import { Lock, Sparkles, Zap, DollarSign, Rocket, Ticket } from "lucide-react";
+import { Lock, Sparkles, Zap, DollarSign, Ticket } from "lucide-react";
 import { motion } from "framer-motion";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
@@ -11,11 +11,12 @@ export interface MysteryBox {
   name: string;
   tier: "bronze" | "silver" | "gold" | "legendary";
   cost: number | "FREE";
+  costLabel: string;
   topReward: string;
   available: boolean;
   lockReason?: string;
-  freeProgress?: number; // 0-100
-  winChances: { xp: number; usdc: number; booster: number; tickets: number };
+  freeProgress?: number;
+  winChances: { realPoints: number; usdc: number; tickets: number };
 }
 
 const tierConfig = {
@@ -54,9 +55,8 @@ const tierConfig = {
 };
 
 const chanceIcons = [
-  { key: "xp" as const, Icon: Zap, label: "XP" },
+  { key: "realPoints" as const, Icon: Zap, label: "REAL Points" },
   { key: "usdc" as const, Icon: DollarSign, label: "USDC" },
-  { key: "booster" as const, Icon: Rocket, label: "Booster" },
   { key: "tickets" as const, Icon: Ticket, label: "Tickets" },
 ];
 
@@ -76,7 +76,7 @@ export default function MysteryBoxCard({ box }: { box: MysteryBox }) {
       {box.cost === "FREE" ? (
         <span className="flex items-center justify-center gap-2"><Sparkles className="w-4 h-4" /> Open Free Box</span>
       ) : (
-        <span className="flex items-center justify-center gap-2"><Sparkles className="w-4 h-4" /> Open — {box.cost} RP</span>
+        <span className="flex items-center justify-center gap-2"><Sparkles className="w-4 h-4" /> Open — {box.cost.toLocaleString()} RP</span>
       )}
     </motion.button>
   ) : (
@@ -103,7 +103,6 @@ export default function MysteryBoxCard({ box }: { box: MysteryBox }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      {/* Tier glow */}
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 rounded-full blur-[80px] pointer-events-none opacity-30 group-hover:opacity-50 transition-opacity"
         style={{ backgroundColor: cfg.glow.replace(")", " / 0.15)") }}
@@ -111,7 +110,6 @@ export default function MysteryBoxCard({ box }: { box: MysteryBox }) {
       <div className="absolute inset-0 metallic-sheen pointer-events-none" />
 
       <div className="relative z-10 p-5 space-y-4">
-        {/* Box image */}
         <div className="flex justify-center py-2">
           <motion.img
             src={cfg.img}
@@ -122,20 +120,12 @@ export default function MysteryBoxCard({ box }: { box: MysteryBox }) {
           />
         </div>
 
-        {/* Tier & cost */}
         <div className="text-center space-y-1.5">
           <h3 className={`font-display text-base ${cfg.accent}`}>{box.name}</h3>
-          <p className="text-xs text-muted-foreground">
-            {box.cost === "FREE" ? (
-              <span className="text-primary font-semibold">FREE</span>
-            ) : (
-              <>{box.cost.toLocaleString()} REAL Points</>
-            )}
-          </p>
+          <p className="text-xs text-muted-foreground">{box.costLabel}</p>
           <p className="text-[10px] text-muted-foreground/80">Top reward: <span className="text-foreground/70 font-medium">{box.topReward}</span></p>
         </div>
 
-        {/* Free progress bar */}
         {box.freeProgress !== undefined && box.freeProgress < 100 && (
           <div className="space-y-1">
             <div className="flex justify-between text-[10px] text-muted-foreground">
@@ -147,7 +137,6 @@ export default function MysteryBoxCard({ box }: { box: MysteryBox }) {
                 className="h-full rounded-full bg-primary/60 transition-all"
                 style={{ width: `${box.freeProgress}%` }}
               />
-              {/* Shimmer */}
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(0_0%_100%/0.15)] to-transparent"
                 animate={{ x: ["-100%", "200%"] }}
@@ -157,7 +146,7 @@ export default function MysteryBoxCard({ box }: { box: MysteryBox }) {
           </div>
         )}
 
-        {/* Win chance mini icons */}
+        {/* Win chance icons — no boosters */}
         <div className="flex items-center justify-center gap-3">
           {chanceIcons.map(({ key, Icon, label }) => (
             <Tooltip key={key}>
@@ -174,7 +163,6 @@ export default function MysteryBoxCard({ box }: { box: MysteryBox }) {
           ))}
         </div>
 
-        {/* CTA */}
         {button}
       </div>
     </motion.div>

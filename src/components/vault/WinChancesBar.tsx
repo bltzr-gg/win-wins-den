@@ -1,11 +1,9 @@
-import { Zap, DollarSign, Rocket, Ticket, Award } from "lucide-react";
+import { Zap, DollarSign, Ticket } from "lucide-react";
 
 const chances = [
-  { label: "XP", pct: 40, Icon: Zap },
-  { label: "USDC", pct: 15, Icon: DollarSign },
-  { label: "Boosters", pct: 20, Icon: Rocket },
-  { label: "Tickets", pct: 15, Icon: Ticket },
-  { label: "Perks", pct: 10, Icon: Award },
+  { label: "REAL Points", pct: 50, Icon: Zap },
+  { label: "USDC", pct: 25, Icon: DollarSign },
+  { label: "Tickets", pct: 25, Icon: Ticket },
 ];
 
 export default function WinChancesBar() {
@@ -22,9 +20,7 @@ export default function WinChancesBar() {
               backgroundColor: [
                 "hsl(var(--primary))",
                 "hsl(var(--multiplier))",
-                "hsl(var(--rare))",
                 "hsl(var(--amber))",
-                "hsl(var(--epic))",
               ][i],
               opacity: 0.7,
             }}

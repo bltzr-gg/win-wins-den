@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Gift, Sparkles, Lock, X } from "lucide-react";
+import { Gift, Sparkles, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MysteryBoxCard, { type MysteryBox } from "@/components/vault/MysteryBoxCard";
 import WinChancesBar from "@/components/vault/WinChancesBar";
 import WeeklyDraw from "@/components/vault/WeeklyDraw";
-import ActivePerks from "@/components/vault/ActivePerks";
 import BoxHistory from "@/components/vault/BoxHistory";
+import DailyStreakTracker from "@/components/vault/DailyStreakTracker";
 
 /* ─── Box data ─── */
 const mysteryBoxes: MysteryBox[] = [
@@ -13,35 +13,39 @@ const mysteryBoxes: MysteryBox[] = [
     name: "Bronze Mystery Box",
     tier: "bronze",
     cost: "FREE",
+    costLabel: "FREE — Daily",
     topReward: "$10",
     available: true,
     freeProgress: 72,
-    winChances: { xp: 50, usdc: 10, booster: 25, tickets: 15 },
+    winChances: { realPoints: 60, usdc: 15, tickets: 25 },
   },
   {
     name: "Silver Mystery Box",
     tier: "silver",
     cost: 500,
+    costLabel: "500 REAL Points · Eligible Free on Day 5 Streak",
     topReward: "$50",
     available: true,
-    winChances: { xp: 35, usdc: 20, booster: 25, tickets: 20 },
+    winChances: { realPoints: 45, usdc: 25, tickets: 30 },
   },
   {
     name: "Gold Mystery Box",
     tier: "gold",
     cost: 2000,
+    costLabel: "2,000 REAL Points",
     topReward: "$250",
     available: true,
-    winChances: { xp: 20, usdc: 30, booster: 25, tickets: 25 },
+    winChances: { realPoints: 30, usdc: 35, tickets: 35 },
   },
   {
     name: "Legendary Mystery Box",
     tier: "legendary",
     cost: 10000,
+    costLabel: "10,000 REAL Points",
     topReward: "$2,500",
     available: false,
-    lockReason: "Reach Diamond rank to unlock Legendary boxes",
-    winChances: { xp: 10, usdc: 40, booster: 20, tickets: 30 },
+    lockReason: "Top 500 Rank required to unlock Legendary boxes",
+    winChances: { realPoints: 20, usdc: 40, tickets: 40 },
   },
 ];
 
@@ -138,9 +142,12 @@ export default function Vault() {
       <div>
         <h1 className="font-display text-2xl">THE VAULT</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Open Mystery Boxes. Unlock perks. Compete for weekly prizes.
+          Open Mystery Boxes. Compete for weekly prizes. Climb the ranks.
         </p>
       </div>
+
+      {/* Daily Streak Tracker */}
+      <DailyStreakTracker />
 
       {/* Mystery Box Tiers — horizontal scroll */}
       <section className="space-y-4">
@@ -155,13 +162,10 @@ export default function Vault() {
       {/* Win Chances */}
       <WinChancesBar />
 
-      {/* Weekly Draw */}
+      {/* Weekly Bonus Draw */}
       <WeeklyDraw />
 
-      {/* Active Perks */}
-      <ActivePerks />
-
-      {/* Box History */}
+      {/* Mystery Box History */}
       <BoxHistory />
 
       {/* Reward reveal overlay */}
