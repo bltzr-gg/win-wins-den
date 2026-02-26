@@ -503,15 +503,26 @@ function DailyMysteryBoxCard() {
   const freeBoxAvailable = true;
   const streak = userState.streak;
   const multiplier = streak >= 60 ? 2.0 : streak >= 30 ? 1.8 : streak >= 15 ? 1.5 : streak >= 7 ? 1.2 : 1.0;
+  const multiplierLabel = streak >= 60 ? "2.0x" : streak >= 30 ? "1.8x" : streak >= 15 ? "1.5x" : streak >= 7 ? "1.2x" : "1.0x";
   const baseReward = 100;
   const dailyReward = Math.floor(baseReward * multiplier);
-  const nextTiers = [
-    { day: 7, label: "1.2x Daily Rewards" },
-    { day: 15, label: "1.5x Daily Rewards" },
-    { day: 30, label: "1.8x Daily Rewards" },
-    { day: 60, label: "2.0x Daily Rewards (Max)" },
+
+  const milestones = [
+    { day: 3, reward: "+1 Bronze Mystery Box" },
+    { day: 7, reward: "+2 Bronze Mystery Boxes" },
+    { day: 15, reward: "+1 Silver Mystery Box" },
+    { day: 21, reward: "+2 Silver Mystery Boxes" },
+    { day: 30, reward: "+1 Gold Mystery Box" },
+    { day: 60, reward: "+1 Legendary Mystery Box" },
+    { day: 90, reward: "+1 Legendary Mystery Box" },
   ];
-  const nextDay = nextTiers.find((t) => streak < t.day) || null;
+  const PROGRESS_MAX = 90;
+  const markerPct = (day: number) => Math.min(100, (day / PROGRESS_MAX) * 100);
+  const progressPct = Math.min(100, (streak / PROGRESS_MAX) * 100);
+  const nextMilestone = milestones.find((m) => m.day > streak) || null;
+
+  const multiplierColor =
+    multiplier >= 2.0 ? "text-gold" : multiplier >= 1.5 ? "text-multiplier" : "text-muted-foreground";
 
   return (
     <motion.div
@@ -523,7 +534,7 @@ function DailyMysteryBoxCard() {
       <div className="absolute top-0 left-[15%] w-48 h-32 bg-[hsl(0_60%_30%/0.04)] rounded-full blur-[80px] pointer-events-none" />
       <div className="absolute inset-0 metallic-sheen pointer-events-none" />
 
-      <div className="relative z-10 p-6 lg:p-8 space-y-6">
+      <div className="relative z-10 p-6 lg:p-8 space-y-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
@@ -540,56 +551,107 @@ function DailyMysteryBoxCard() {
             to="/vault"
             className="text-[10px] text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
           >
-            View All Mystery Boxes <ChevronRight className="w-3 h-3" />
+            View All <ChevronRight className="w-3 h-3" />
           </Link>
         </div>
 
         <div className="rounded-xl border border-primary/15 bg-[hsl(0_20%_7%/0.5)] p-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <motion.span
-                className="inline-flex"
-                animate={{ scale: [1, 1.3, 1], rotate: [0, -8, 8, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <Flame className="w-4 h-4 text-primary" />
-              </motion.span>
-              <span className="font-display text-sm tracking-wider">{streak}-DAY STREAK</span>
+          {/* Streak + multiplier badge */}
+          <div className="flex items-center gap-3">
+            <motion.span
+              className="inline-flex"
+              animate={{ scale: [1, 1.3, 1], rotate: [0, -8, 8, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Flame className="w-4 h-4 text-primary" />
+            </motion.span>
+            <div className="flex items-baseline gap-2">
+              <span className="font-display text-2xl text-primary leading-none">{streak}</span>
+              <span className="text-xs text-muted-foreground">Day Streak</span>
             </div>
-            <span className={`px-2.5 py-1 rounded-lg border font-display text-xs flex items-center gap-1 ${
+            <span className={`ml-auto px-2.5 py-1 rounded-lg border font-display text-xs flex items-center gap-1 ${
               multiplier >= 2.0
                 ? "bg-gold/10 border-gold/25 text-gold"
                 : multiplier >= 1.5
                   ? "bg-multiplier/10 border-multiplier/25 text-multiplier"
-                  : "bg-secondary/50 border-border/50 text-muted-foreground"
+                  : multiplier >= 1.2
+                    ? "bg-primary/10 border-primary/25 text-primary"
+                    : "bg-secondary/50 border-border/50 text-muted-foreground"
             }`}>
-              <Zap className="w-3 h-3" /> {multiplier}x
+              <Zap className="w-3 h-3" /> {multiplierLabel}
             </span>
           </div>
 
-          <div className="space-y-1.5">
-            <div className="relative h-2 rounded-full bg-secondary overflow-hidden">
+          {/* Today's Reward */}
+          <div className="flex items-center gap-2 text-sm">
+            <Gift className="w-4 h-4 text-primary shrink-0" />
+            <span className="text-muted-foreground">{baseReward}</span>
+            {multiplier > 1.0 && (
+              <>
+                <span className="text-muted-foreground">×</span>
+                <span className={`font-display ${multiplierColor}`}>{multiplier}</span>
+                <span className="text-muted-foreground">=</span>
+              </>
+            )}
+            <span className="font-display text-foreground">{dailyReward} REAL Points</span>
+          </div>
+
+          {/* Progress bar with milestone markers */}
+          <div className="space-y-2">
+            <div className="relative h-2.5 rounded-full bg-secondary overflow-visible">
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-primary/80 to-primary"
+                className="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-primary/80 to-primary z-[1]"
                 initial={{ width: 0 }}
-                animate={{ width: `${nextDay ? Math.min(100, (streak / nextDay.day) * 100) : 100}%` }}
+                animate={{ width: `${progressPct}%` }}
                 transition={{ delay: 0.3, duration: 0.8 }}
               />
+              {milestones.map((m) => {
+                const pct = markerPct(m.day);
+                const reached = streak >= m.day;
+                return (
+                  <div
+                    key={m.day}
+                    className="absolute top-1/2 -translate-y-1/2 z-[3] group"
+                    style={{ left: `${pct}%` }}
+                  >
+                    <div
+                      className={`w-2.5 h-2.5 rounded-full border-2 -ml-[5px] transition-colors ${
+                        reached ? "bg-primary border-primary" : "bg-secondary border-muted-foreground/30"
+                      }`}
+                    />
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                      <div className="bg-card border border-border rounded-lg px-2 py-1 text-[8px] whitespace-nowrap shadow-lg">
+                        <span className="font-display">Day {m.day}</span>
+                        <br />
+                        <span className="text-muted-foreground">{m.reward}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-            {nextDay && (
-              <p className="text-[10px] text-muted-foreground">
-                Day {nextDay.day} → <span className="text-foreground/70 font-medium">{nextDay.label}</span>
-              </p>
-            )}
+            <div className="relative h-3">
+              {milestones.map((m) => (
+                <span
+                  key={m.day}
+                  className={`absolute text-[7px] -translate-x-1/2 ${
+                    streak >= m.day ? "text-primary" : "text-muted-foreground/50"
+                  }`}
+                  style={{ left: `${markerPct(m.day)}%` }}
+                >
+                  {m.day}
+                </span>
+              ))}
+            </div>
           </div>
 
-          <div className="flex items-center justify-between text-[10px]">
-            <span className="text-muted-foreground">Today's Reward</span>
-            <span className="font-display text-sm text-foreground">
-              {dailyReward} RP
-              {multiplier > 1.0 && <span className="text-multiplier ml-1">({multiplier}x)</span>}
-            </span>
-          </div>
+          {/* Next milestone */}
+          {nextMilestone && (
+            <p className="text-[10px] text-muted-foreground">
+              Next Reward: Day {nextMilestone.day} →{" "}
+              <span className="text-foreground/70 font-medium">{nextMilestone.reward}</span>
+            </p>
+          )}
 
           {freeBoxAvailable && (
             <motion.span
