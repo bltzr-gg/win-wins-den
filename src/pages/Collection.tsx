@@ -28,18 +28,18 @@ const badgeImageMap: Record<string, string> = {
 
 /* ─── Badge data with categories ─── */
 const allBadges = [
-  { id: "first-blood", name: "First Blood", rarity: "Common", category: "Combat", earned: true, bonus: "+1%", desc: "Place your very first wager.", earnedDate: "Jan 12, 2025", hint: "" },
-  { id: "10-wins", name: "10 Victories", rarity: "Common", category: "Combat", earned: true, bonus: "+1%", desc: "Win 10 games across any arena.", earnedDate: "Jan 18, 2025", hint: "" },
-  { id: "lucky-7", name: "Lucky Seven", rarity: "Rare", category: "Luck", earned: true, bonus: "+2%", desc: "Hit a 7x multiplier on any game.", earnedDate: "Feb 2, 2025", hint: "" },
-  { id: "slots-master", name: "Slots Master", rarity: "Epic", category: "Games", earned: true, bonus: "+5%", desc: "Complete 100 rounds in Slots.", earnedDate: "Feb 14, 2025", hint: "" },
-  { id: "high-roller", name: "High Roller", rarity: "Legendary", category: "Combat", earned: true, bonus: "+10%", desc: "Wager over 10,000 REAL Points.", earnedDate: "Mar 1, 2025", hint: "" },
-  { id: "streak-king", name: "Streak King", rarity: "Epic", category: "Loyalty", earned: true, bonus: "+5%", desc: "Maintain a 30-day daily login streak.", earnedDate: "Mar 20, 2025", hint: "" },
-  { id: "blackjack-pro", name: "Blackjack Pro", rarity: "Rare", category: "Games", earned: false, bonus: "+2%", desc: "Win 10 blackjack games.", hint: "Win 3 more", progress: "7/10" },
-  { id: "dice-lord", name: "Dice Lord", rarity: "Epic", category: "Games", earned: false, bonus: "+5%", desc: "Win 20 dice rounds.", hint: "Win 17 more", progress: "3/20" },
-  { id: "mine-sweeper", name: "Mine Sweeper", rarity: "Rare", category: "Games", earned: false, bonus: "+2%", desc: "Survive 25 rounds in Mines.", hint: "Survive 13 more", progress: "12/25" },
-  { id: "roulette-royal", name: "Roulette Royal", rarity: "Legendary", category: "Luck", earned: false, bonus: "+10%", desc: "Hit the jackpot 5 times.", hint: "Hit 4 more", progress: "1/5" },
-  { id: "social-butterfly", name: "Social Butterfly", rarity: "Common", category: "Social", earned: false, bonus: "+1%", desc: "Refer 5 friends.", hint: "Refer 3 more", progress: "2/5" },
-  { id: "diamond-hands", name: "Diamond Hands", rarity: "Legendary", category: "Loyalty", earned: false, bonus: "+10%", desc: "Hold 50,000 REAL Points for 7 days.", hint: "Coming Soon", progress: "—" },
+  { id: "first-blood", name: "First Blood", rarity: "Common", category: "Combat", earned: true, bonus: "+0.1%", desc: "Place your very first wager.", earnedDate: "Jan 12, 2025", hint: "" },
+  { id: "10-wins", name: "10 Victories", rarity: "Common", category: "Combat", earned: true, bonus: "+0.1%", desc: "Win 10 games across any arena.", earnedDate: "Jan 18, 2025", hint: "" },
+  { id: "lucky-7", name: "Lucky Seven", rarity: "Rare", category: "Luck", earned: true, bonus: "+0.2%", desc: "Hit a 7x multiplier on any game.", earnedDate: "Feb 2, 2025", hint: "" },
+  { id: "slots-master", name: "Slots Master", rarity: "Epic", category: "Games", earned: true, bonus: "+0.3%", desc: "Complete 100 rounds in Slots.", earnedDate: "Feb 14, 2025", hint: "" },
+  { id: "high-roller", name: "High Roller", rarity: "Legendary", category: "Combat", earned: true, bonus: "+0.5%", desc: "Wager over 10,000 REAL Points.", earnedDate: "Mar 1, 2025", hint: "" },
+  { id: "streak-king", name: "Streak King", rarity: "Epic", category: "Loyalty", earned: true, bonus: "+0.3%", desc: "Maintain a 30-day daily login streak.", earnedDate: "Mar 20, 2025", hint: "" },
+  { id: "blackjack-pro", name: "Blackjack Pro", rarity: "Rare", category: "Games", earned: false, bonus: "+0.2%", desc: "Win 10 blackjack games.", hint: "Win 3 more", progress: "7/10" },
+  { id: "dice-lord", name: "Dice Lord", rarity: "Epic", category: "Games", earned: false, bonus: "+0.3%", desc: "Win 20 dice rounds.", hint: "Win 17 more", progress: "3/20" },
+  { id: "mine-sweeper", name: "Mine Sweeper", rarity: "Rare", category: "Games", earned: false, bonus: "+0.2%", desc: "Survive 25 rounds in Mines.", hint: "Survive 13 more", progress: "12/25" },
+  { id: "roulette-royal", name: "Roulette Royal", rarity: "Legendary", category: "Luck", earned: false, bonus: "+0.5%", desc: "Hit the jackpot 5 times.", hint: "Hit 4 more", progress: "1/5" },
+  { id: "social-butterfly", name: "Social Butterfly", rarity: "Common", category: "Social", earned: false, bonus: "+0.1%", desc: "Refer 5 friends.", hint: "Refer 3 more", progress: "2/5" },
+  { id: "diamond-hands", name: "Diamond Hands", rarity: "Legendary", category: "Loyalty", earned: false, bonus: "+0.5%", desc: "Hold 50,000 REAL Points for 7 days.", hint: "Coming Soon", progress: "—" },
 ];
 
 const categories = ["All", "Combat", "Games", "Luck", "Loyalty", "Social"];
@@ -109,7 +109,7 @@ function CollectionHeader() {
   const earned = allBadges.filter(b => b.earned).length;
   const total = allBadges.length;
   const pct = Math.round((earned / total) * 100);
-  const totalBonus = allBadges.filter(b => b.earned).reduce((sum, b) => sum + parseInt(b.bonus), 0);
+  const totalBonus = Math.min(5, allBadges.filter(b => b.earned).reduce((sum, b) => sum + parseFloat(b.bonus), 0));
 
   return (
     <div className="relative rounded-2xl overflow-hidden">
@@ -128,8 +128,9 @@ function CollectionHeader() {
               <p className="font-display text-xl">{earned} <span className="text-muted-foreground">/ {total}</span></p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Total Bonus</p>
-              <p className="font-display text-xl text-gold">+{totalBonus}%</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Collection Bonus</p>
+              <p className="font-display text-xl text-gold">+{totalBonus.toFixed(1)}%</p>
+              <p className="text-[9px] text-muted-foreground">Allocation · Max 5%</p>
             </div>
           </div>
         </div>
@@ -215,7 +216,7 @@ function BadgeDetailModal({ badge, onClose }: { badge: typeof allBadges[0]; onCl
           <div className="flex items-center gap-1.5 text-sm">
             <Award className="w-4 h-4 text-gold" />
             <span className="text-gold font-semibold">{badge.bonus}</span>
-            <span className="text-muted-foreground">points bonus</span>
+            <span className="text-muted-foreground">allocation bonus</span>
           </div>
         </div>
       </motion.div>
