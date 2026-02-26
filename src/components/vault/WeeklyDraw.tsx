@@ -139,10 +139,6 @@ export default function WeeklyDraw() {
           >
             View Draw Details
           </motion.button>
-
-          <p className="text-[10px] text-muted-foreground text-center">
-            Buy tickets from any Silver, Gold, or Legendary Mystery Box below. Tickets reset weekly.
-          </p>
         </div>
       </div>
 
