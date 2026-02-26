@@ -1,4 +1,4 @@
-import { Lock, Sparkles, Zap, DollarSign } from "lucide-react";
+import { Lock, Sparkles, Zap, DollarSign, Ticket } from "lucide-react";
 import { motion } from "framer-motion";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
@@ -151,6 +151,17 @@ export default function MysteryBoxCard({ box }: { box: MysteryBox }) {
         </div>
 
         {button}
+
+        {/* Buy Ticket — premium boxes only */}
+        {box.cost !== "FREE" && box.available && (
+          <motion.button
+            className="w-full py-2 rounded-lg font-display text-[10px] border border-epic/20 bg-epic/5 text-epic hover:bg-epic/10 transition-all flex items-center justify-center gap-1.5"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            <Ticket className="w-3 h-3" /> Buy 1 Draw Ticket — 250 RP
+          </motion.button>
+        )}
       </div>
     </motion.div>
   );
