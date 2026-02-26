@@ -262,8 +262,12 @@ function ProfileReferralPanel() {
                 <span className="text-[10px] text-muted-foreground">Season 1</span>
                 <span className="text-[10px] text-multiplier flex items-center gap-1">
                   <Flame className="w-3 h-3" /> {userState.streak}-Day Streak
-                  <span className="px-1.5 py-0.5 rounded bg-multiplier/10 text-multiplier border border-multiplier/20 text-[9px] font-semibold">
-                    1.3x
+                  <span className={`px-1.5 py-0.5 rounded border text-[9px] font-semibold ${
+                    userState.streak >= 30 ? "bg-gold/10 text-gold border-gold/20" :
+                    userState.streak >= 7 ? "bg-multiplier/10 text-multiplier border-multiplier/20" :
+                    "bg-secondary/50 text-muted-foreground border-border/50"
+                  }`}>
+                    {userState.streak >= 30 ? "2.0x" : userState.streak >= 7 ? "1.5x" : "1.0x"}
                   </span>
                 </span>
               </div>
@@ -494,8 +498,12 @@ function PointsBreakdown() {
    5. DAILY MYSTERY BOX (Hub card)
    ═══════════════════════════════════════════════ */
 function DailyMysteryBoxCard() {
-  const streakDays = [1, 2, 3, 4, 5, 6, 7];
   const freeBoxAvailable = true;
+  const streak = userState.streak;
+  const multiplier = streak >= 30 ? 2.0 : streak >= 7 ? 1.5 : 1.0;
+  const baseReward = 100;
+  const dailyReward = Math.floor(baseReward * multiplier);
+  const nextDay = streak < 7 ? 7 : streak < 30 ? 30 : null;
 
   return (
     <motion.div
@@ -508,7 +516,6 @@ function DailyMysteryBoxCard() {
       <div className="absolute inset-0 metallic-sheen pointer-events-none" />
 
       <div className="relative z-10 p-6 lg:p-8 space-y-6">
-        {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
@@ -517,7 +524,7 @@ function DailyMysteryBoxCard() {
             <div>
               <h3 className="font-display text-xl tracking-wider">DAILY MYSTERY BOX</h3>
               <p className="text-[11px] text-muted-foreground mt-0.5">
-                Open daily to maintain streak and unlock higher-tier boxes.
+                Open daily to build your streak and multiply rewards.
               </p>
             </div>
           </div>
@@ -529,7 +536,6 @@ function DailyMysteryBoxCard() {
           </Link>
         </div>
 
-        {/* Daily Box Panel */}
         <div className="rounded-xl border border-primary/15 bg-[hsl(0_20%_7%/0.5)] p-5 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -540,42 +546,41 @@ function DailyMysteryBoxCard() {
               >
                 <Flame className="w-4 h-4 text-primary" />
               </motion.span>
-              <span className="font-display text-sm tracking-wider">STREAK PROGRESS</span>
+              <span className="font-display text-sm tracking-wider">{streak}-DAY STREAK</span>
             </div>
-            <span className="px-2 py-0.5 rounded bg-multiplier/10 text-multiplier border border-multiplier/20 text-[10px] font-display">
-              1.3x
+            <span className={`px-2.5 py-1 rounded-lg border font-display text-xs flex items-center gap-1 ${
+              multiplier >= 2.0
+                ? "bg-gold/10 border-gold/25 text-gold"
+                : multiplier >= 1.5
+                  ? "bg-multiplier/10 border-multiplier/25 text-multiplier"
+                  : "bg-secondary/50 border-border/50 text-muted-foreground"
+            }`}>
+              <Zap className="w-3 h-3" /> {multiplier}x
             </span>
           </div>
 
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-[10px]">
-              <span className="text-primary font-semibold">{userState.streak}-Day Streak</span>
-              <span className="text-muted-foreground">Next Reward: Silver Mystery Box</span>
+          <div className="space-y-1.5">
+            <div className="relative h-2 rounded-full bg-secondary overflow-hidden">
+              <motion.div
+                className="h-full rounded-full bg-gradient-to-r from-primary/80 to-primary"
+                initial={{ width: 0 }}
+                animate={{ width: `${nextDay ? Math.min(100, (streak / nextDay) * 100) : 100}%` }}
+                transition={{ delay: 0.3, duration: 0.8 }}
+              />
             </div>
+            {nextDay && (
+              <p className="text-[10px] text-muted-foreground">
+                Day {nextDay} → <span className="text-foreground/70 font-medium">{nextDay === 7 ? "1.5x Daily Rewards" : "2.0x Daily Rewards"}</span>
+              </p>
+            )}
+          </div>
 
-            <div className="flex items-center gap-1.5">
-              {streakDays.map((d) => (
-                <motion.div
-                  key={d}
-                  className={`flex-1 h-3 rounded-full relative overflow-hidden ${d <= userState.streak ? "bg-primary" : "bg-secondary"}`}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.2 + d * 0.04 }}
-                >
-                  {d === userState.streak && (
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(0_0%_100%/0.2)] to-transparent"
-                      animate={{ x: ["-100%", "200%"] }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                    />
-                  )}
-                </motion.div>
-              ))}
-            </div>
-
-            <p className="text-[9px] text-muted-foreground/70 flex items-center gap-1">
-              <AlertTriangle className="w-2.5 h-2.5" /> Miss a day → streak resets
-            </p>
+          <div className="flex items-center justify-between text-[10px]">
+            <span className="text-muted-foreground">Today's Reward</span>
+            <span className="font-display text-sm text-foreground">
+              {dailyReward} RP
+              {multiplier > 1.0 && <span className="text-multiplier ml-1">({multiplier}x)</span>}
+            </span>
           </div>
 
           {freeBoxAvailable && (
@@ -603,6 +608,10 @@ function DailyMysteryBoxCard() {
             <Box className="w-4 h-4 relative z-10" />
             <span className="relative z-10">Open Daily Box</span>
           </Link>
+
+          <p className="text-[9px] text-muted-foreground/60 flex items-center gap-1">
+            <AlertTriangle className="w-2.5 h-2.5" /> Miss a day → streak resets to 0
+          </p>
         </div>
       </div>
     </motion.div>
