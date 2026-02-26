@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Gift, Sparkles, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MysteryBoxCard, { type MysteryBox } from "@/components/vault/MysteryBoxCard";
-import WinChancesBar from "@/components/vault/WinChancesBar";
 import WeeklyDraw from "@/components/vault/WeeklyDraw";
 import BoxHistory from "@/components/vault/BoxHistory";
 import DailyStreakTracker from "@/components/vault/DailyStreakTracker";
@@ -158,9 +157,6 @@ export default function Vault() {
           ))}
         </div>
       </section>
-
-      {/* Win Chances */}
-      <WinChancesBar />
 
       {/* Weekly Bonus Draw */}
       <WeeklyDraw />
