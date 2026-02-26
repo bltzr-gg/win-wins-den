@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Trophy, Users, Ticket, Clock, Gift } from "lucide-react";
+import { Trophy, Users, Ticket, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 
 function useCountdown(targetDate: Date) {
@@ -21,12 +21,6 @@ function useCountdown(targetDate: Date) {
   return remaining;
 }
 
-const ticketRules = [
-  { action: "Open Silver Mystery Box", tickets: "+1 Ticket" },
-  { action: "Open Gold Mystery Box", tickets: "+3 Tickets" },
-  { action: "Open Legendary Mystery Box", tickets: "+10 Tickets" },
-  { action: "Weekly Arena Top 10", tickets: "+5 Tickets" },
-];
 
 export default function WeeklyDraw() {
   const nextDraw = new Date();
@@ -80,33 +74,6 @@ export default function WeeklyDraw() {
             </div>
           </div>
 
-          <motion.button
-            className="w-full py-3 rounded-xl font-display text-sm border border-epic/30 bg-epic/10 text-epic hover:bg-epic/15 transition-all"
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            View Draw Details
-          </motion.button>
-        </div>
-      </div>
-
-      {/* How to earn tickets */}
-      <div className="rounded-xl border border-border/40 bg-card/60 p-5 space-y-3">
-        <h3 className="font-display text-xs tracking-wider text-muted-foreground">HOW TO EARN TICKETS</h3>
-        <div className="space-y-2">
-          {ticketRules.map((rule) => (
-            <div key={rule.action} className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-secondary/30 transition-colors">
-              <div className="flex items-center gap-2">
-                <Gift className="w-3.5 h-3.5 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">{rule.action}</span>
-              </div>
-              <span className="text-xs font-semibold text-epic">{rule.tickets}</span>
-            </div>
-          ))}
-        </div>
-        <div className="pt-2 border-t border-border/30 space-y-1">
-          <p className="text-[10px] text-muted-foreground">Tickets cannot be purchased.</p>
-          <p className="text-[10px] text-muted-foreground">Tickets reset weekly.</p>
         </div>
       </div>
     </div>
