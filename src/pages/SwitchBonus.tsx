@@ -19,10 +19,10 @@ const PLATFORMS = [
 
 const CHAINS = ["Ethereum", "Solana", "Arbitrum", "Base", "Polygon", "BSC", "Avalanche", "Optimism"];
 
-type Step = "twitter" | "wallets" | "analyzing" | "complete";
+type Step = "connect" | "analyzing" | "complete";
 
 export default function SwitchBonus() {
-  const [step, setStep] = useState<Step>("twitter");
+  const [step, setStep] = useState<Step>("connect");
   const [twitterConnected, setTwitterConnected] = useState(false);
   const [twitterHandle, setTwitterHandle] = useState("");
   const [wallets, setWallets] = useState<string[]>([""]);
@@ -56,7 +56,6 @@ export default function SwitchBonus() {
   const connectTwitter = () => {
     setTwitterConnected(true);
     setTwitterHandle("@degenking");
-    setStep("wallets");
   };
 
   const canGenerate = wallets.some((w) => w.trim().length > 0);
@@ -90,8 +89,8 @@ export default function SwitchBonus() {
 
       {/* Step indicators */}
       <div className="flex items-center gap-3">
-        {(["twitter", "wallets", "analyzing", "complete"] as Step[]).map((s, i) => {
-          const stepOrder = ["twitter", "wallets", "analyzing", "complete"];
+        {(["connect", "analyzing", "complete"] as Step[]).map((s, i) => {
+          const stepOrder = ["connect", "analyzing", "complete"];
           const currentIdx = stepOrder.indexOf(step);
           const thisIdx = stepOrder.indexOf(s);
           const isComplete = thisIdx < currentIdx;
@@ -110,152 +109,118 @@ export default function SwitchBonus() {
               <span className={`text-xs hidden sm:inline font-medium ${
                 isCurrent ? "text-foreground" : "text-muted-foreground"
               }`}>
-                {s === "twitter" ? "Twitter" : s === "wallets" ? "Wallets" : s === "analyzing" ? "Analyze" : "Claim"}
+                {s === "connect" ? "Connect" : s === "analyzing" ? "Analyze" : "Claim"}
               </span>
-              {i < 3 && <div className={`w-12 h-px ${isComplete ? "bg-primary" : "bg-border"}`} />}
+              {i < 2 && <div className={`w-12 h-px ${isComplete ? "bg-primary" : "bg-border"}`} />}
             </div>
           );
         })}
       </div>
 
       <AnimatePresence mode="wait">
-        {/* STEP 1: Connect Twitter */}
-        {step === "twitter" && (
+        {/* STEP 1: Connect */}
+        {step === "connect" && (
           <motion.div
-            key="twitter"
+            key="connect"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             className="space-y-5"
           >
-            {/* Twitter Connection CTA */}
-            <div className="card-surface p-6 text-center space-y-4">
-              <div className="w-16 h-16 rounded-2xl bg-secondary border border-border flex items-center justify-center mx-auto">
-                <Twitter className="w-8 h-8 text-muted-foreground" />
-              </div>
-              <div>
-                <h2 className="font-display text-lg">CONNECT YOUR TWITTER</h2>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Link your Twitter account to generate your personalized Degen Card
-                </p>
-              </div>
-              <button
-                onClick={connectTwitter}
-                className="w-full py-3.5 rounded-lg bg-gradient-to-r from-crimson-deep to-primary text-primary-foreground font-display text-sm glow-crimson hover:brightness-110 transition-all flex items-center justify-center gap-2"
-              >
-                <Twitter className="w-4 h-4" />
-                CONNECT TWITTER
-              </button>
-            </div>
-          </motion.div>
-        )}
-
-        {/* STEP 2: Connect Wallets */}
-        {step === "wallets" && (
-          <motion.div
-            key="wallets"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="space-y-5"
-          >
-            {/* Connected Twitter confirmation */}
-            <div className="card-surface p-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-multiplier/10 text-multiplier border border-multiplier/20 flex items-center justify-center">
-                  <Twitter className="w-5 h-5" />
+            {!twitterConnected ? (
+              /* Twitter Connection CTA */
+              <div className="card-surface p-6 text-center space-y-4">
+                <div className="w-16 h-16 rounded-2xl bg-secondary border border-border flex items-center justify-center mx-auto">
+                  <Twitter className="w-8 h-8 text-muted-foreground" />
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">Twitter Connected</p>
-                  <p className="text-[10px] text-muted-foreground">{twitterHandle}</p>
-                </div>
-                <div className="w-8 h-8 rounded-full bg-multiplier/10 text-multiplier flex items-center justify-center">
-                  <Check className="w-4 h-4" />
-                </div>
-              </div>
-            </div>
-
-            {/* Trading Volume Preview */}
-            <div className="card-surface card-glow-red metallic-sheen edge-highlight p-5">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-3 font-display">
-                Estimated Trading Volume
-              </p>
-              <div className="flex items-baseline gap-1.5">
-                <span className="font-display text-3xl text-gradient-gold">$847,293</span>
-                <span className="text-[10px] text-muted-foreground">total volume detected</span>
-              </div>
-              <div className="flex flex-wrap gap-1.5 mt-3">
-                {["Stake", "Rollbit", "HyperLiquid", "Pump.fun", "Jupiter", "MetaWin"].map((p) => {
-                  const platform = PLATFORMS.find((pl) => pl.name === p);
-                  return (
-                    <span
-                      key={p}
-                      className="px-2 py-0.5 rounded-full text-[10px] font-medium border border-border bg-secondary/60"
-                      style={{ color: platform?.color }}
-                    >
-                      {p}
-                    </span>
-                  );
-                })}
-              </div>
-              <p className="text-[10px] text-muted-foreground mt-3">
-                Connect your casino & trading wallets below to increase your score
-              </p>
-            </div>
-
-            {/* Wallets */}
-            <div className="card-surface p-4 space-y-3">
-              <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium">Connect Casino & Trading Wallets</p>
-                  <p className="text-[10px] text-muted-foreground">
-                    Add up to 10 wallets to maximize your Degen Score · {wallets.length}/10
+                  <h2 className="font-display text-lg">CONNECT YOUR TWITTER</h2>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Link your Twitter account to generate your personalized Degen Card
                   </p>
                 </div>
-                {wallets.length < 10 && (
-                  <button
-                    onClick={addWallet}
-                    className="w-8 h-8 rounded-lg bg-secondary border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
-                )}
+                <button
+                  onClick={connectTwitter}
+                  className="w-full py-3.5 rounded-lg bg-gradient-to-r from-crimson-deep to-primary text-primary-foreground font-display text-sm glow-crimson hover:brightness-110 transition-all flex items-center justify-center gap-2"
+                >
+                  <Twitter className="w-4 h-4" />
+                  CONNECT TWITTER
+                </button>
               </div>
-              <div className="space-y-2">
-                {wallets.map((wallet, i) => (
-                  <div key={i} className="flex gap-2">
-                    <div className="flex-1 relative">
-                      <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <input
-                        type="text"
-                        value={wallet}
-                        onChange={(e) => updateWallet(i, e.target.value)}
-                        placeholder={`Wallet address ${i + 1} (EVM, SOL, etc.)`}
-                        className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-background border border-border text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/40"
-                      />
+            ) : (
+              /* Wallets UI after Twitter connected */
+              <>
+                {/* Connected Twitter confirmation */}
+                <div className="card-surface p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-multiplier/10 text-multiplier border border-multiplier/20 flex items-center justify-center">
+                      <Twitter className="w-5 h-5" />
                     </div>
-                    {wallets.length > 1 && (
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Twitter Connected</p>
+                      <p className="text-[10px] text-muted-foreground">{twitterHandle}</p>
+                    </div>
+                    <div className="w-8 h-8 rounded-full bg-multiplier/10 text-multiplier flex items-center justify-center">
+                      <Check className="w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Wallets */}
+                <div className="card-surface p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium">Connect Casino & Trading Wallets</p>
+                      <p className="text-[10px] text-muted-foreground">
+                        Add up to 10 wallets to maximize your Degen Score · {wallets.length}/10
+                      </p>
+                    </div>
+                    {wallets.length < 10 && (
                       <button
-                        onClick={() => removeWallet(i)}
-                        className="w-10 h-10 rounded-lg bg-background border border-border flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors"
+                        onClick={addWallet}
+                        className="w-8 h-8 rounded-lg bg-secondary border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
                       >
-                        <X className="w-4 h-4" />
+                        <Plus className="w-4 h-4" />
                       </button>
                     )}
                   </div>
-                ))}
-              </div>
-            </div>
+                  <div className="space-y-2">
+                    {wallets.map((wallet, i) => (
+                      <div key={i} className="flex gap-2">
+                        <div className="flex-1 relative">
+                          <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <input
+                            type="text"
+                            value={wallet}
+                            onChange={(e) => updateWallet(i, e.target.value)}
+                            placeholder={`Wallet address ${i + 1} (EVM, SOL, etc.)`}
+                            className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-background border border-border text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/40"
+                          />
+                        </div>
+                        {wallets.length > 1 && (
+                          <button
+                            onClick={() => removeWallet(i)}
+                            className="w-10 h-10 rounded-lg bg-background border border-border flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
-            {/* Generate Button */}
-            <button
-              onClick={handleGenerate}
-              disabled={!canGenerate}
-              className="w-full py-3.5 rounded-lg bg-gradient-to-r from-crimson-deep to-primary text-primary-foreground font-display text-sm glow-crimson hover:brightness-110 transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              <Sparkles className="w-4 h-4" />
-              GENERATE SCORE
-            </button>
+                {/* Generate Button */}
+                <button
+                  onClick={handleGenerate}
+                  disabled={!canGenerate}
+                  className="w-full py-3.5 rounded-lg bg-gradient-to-r from-crimson-deep to-primary text-primary-foreground font-display text-sm glow-crimson hover:brightness-110 transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  GENERATE SCORE
+                </button>
+              </>
+            )}
           </motion.div>
         )}
 
