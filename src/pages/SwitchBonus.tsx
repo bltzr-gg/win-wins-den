@@ -128,47 +128,6 @@ export default function SwitchBonus() {
             exit={{ opacity: 0, y: -10 }}
             className="space-y-5"
           >
-            {/* Example Card Preview */}
-            <div className="card-surface card-glow-red metallic-sheen edge-highlight p-5">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-3 font-display">
-                Example Card Preview
-              </p>
-              <div className="flex items-start gap-4">
-                <div className="w-14 h-14 rounded-full bg-secondary border border-border flex items-center justify-center flex-shrink-0">
-                  <span className="text-lg">🎰</span>
-                </div>
-                <div className="flex-1 min-w-0 space-y-2">
-                  <div>
-                    <p className="font-display text-sm">DEGENKING</p>
-                    <p className="text-[10px] text-muted-foreground">@degenking</p>
-                  </div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="font-display text-2xl text-gradient-gold">$847,293</span>
-                    <span className="text-[10px] text-muted-foreground">total volume</span>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {["Stake", "Rollbit", "HyperLiquid", "Pump.fun", "Jupiter", "MetaWin"].map((p) => {
-                      const platform = PLATFORMS.find((pl) => pl.name === p);
-                      return (
-                        <span
-                          key={p}
-                          className="px-2 py-0.5 rounded-full text-[10px] font-medium border border-border bg-secondary/60"
-                          style={{ color: platform?.color }}
-                        >
-                          {p}
-                        </span>
-                      );
-                    })}
-                  </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[10px] text-muted-foreground">Degen Score:</span>
-                    <span className="font-display text-sm text-primary">91/100</span>
-                    <span className="text-[10px] text-muted-foreground ml-auto">4,850 REAL Points</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             {/* Twitter Connection CTA */}
             <div className="card-surface p-6 text-center space-y-4">
               <div className="w-16 h-16 rounded-2xl bg-secondary border border-border flex items-center justify-center mx-auto">
