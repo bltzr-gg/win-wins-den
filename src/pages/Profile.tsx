@@ -68,6 +68,36 @@ export default function Profile() {
         </motion.div>
       )}
 
+      {/* Referral Code — moved to top */}
+      <motion.div
+        className="rounded-2xl border border-amber/15 bg-card p-6 space-y-4"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.03 }}
+      >
+        <div className="flex items-center gap-2">
+          <Users className="w-4 h-4 text-amber" />
+          <h3 className="font-display text-sm tracking-wider">REFERRAL CODE</h3>
+        </div>
+        <button
+          onClick={handleCopyRef}
+          className="w-full flex items-center justify-between gap-2 px-4 py-3 rounded-lg bg-secondary/50 border border-amber/10 hover:border-amber/20 transition-all group"
+        >
+          <span className="font-display text-lg tracking-widest text-foreground">DEGEN-7X42</span>
+          {copiedRef ? (
+            <Check className="w-4 h-4 text-multiplier flex-shrink-0" />
+          ) : (
+            <Copy className="w-4 h-4 text-muted-foreground group-hover:text-amber flex-shrink-0 transition-colors" />
+          )}
+        </button>
+        <Link
+          to="/referrals"
+          className="inline-flex items-center gap-1 text-xs text-amber hover:text-amber/80 transition-colors"
+        >
+          View Referral Stats <ExternalLink className="w-3 h-3" />
+        </Link>
+      </motion.div>
+
       {/* Profile + Connections Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Identity Card */}
@@ -113,7 +143,6 @@ export default function Profile() {
         >
           <h3 className="font-display text-sm tracking-wider">CONNECTIONS</h3>
 
-          {/* RealBet Account */}
           <div className={`rounded-xl border p-4 flex items-center justify-between ${
             user.accountLinked ? "border-multiplier/20 bg-multiplier/5" : "border-primary/20 bg-primary/5"
           }`}>
@@ -135,7 +164,6 @@ export default function Profile() {
             </button>
           </div>
 
-          {/* Wallet */}
           <div className={`rounded-xl border p-4 flex items-center justify-between ${
             user.walletConnected ? "border-multiplier/20 bg-multiplier/5" : "border-border"
           }`}>
@@ -157,7 +185,6 @@ export default function Profile() {
             </button>
           </div>
 
-          {/* Manage */}
           <button className="w-full py-2.5 rounded-lg bg-secondary/50 text-muted-foreground text-xs font-medium border border-border/50 hover:bg-secondary/80 transition-colors">
             Manage Connections
           </button>
@@ -261,7 +288,6 @@ export default function Profile() {
 
           <p className="text-xs text-muted-foreground">Generate your Season 1 share card.</p>
 
-          {/* Share Card Preview */}
           <div className="rounded-2xl border border-border/60 bg-gradient-to-br from-[hsl(240_8%_8%)] to-[hsl(0_15%_8%)] p-6 space-y-4">
             <div className="flex items-center justify-between">
               <p className="font-display text-xs text-muted-foreground tracking-wider">REALBET VIP HUB</p>
@@ -291,7 +317,6 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex items-center gap-3">
             <button className="flex-1 py-3 rounded-xl bg-gradient-to-r from-crimson-deep to-primary text-primary-foreground font-display text-xs tracking-wider hover:brightness-110 transition-all flex items-center justify-center gap-2">
               <Share2 className="w-3.5 h-3.5" />
@@ -305,36 +330,6 @@ export default function Profile() {
             </a>
           </div>
         </div>
-      </motion.div>
-
-      {/* Referral Code */}
-      <motion.div
-        className="rounded-2xl border border-amber/15 bg-card p-6 space-y-4"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        <div className="flex items-center gap-2">
-          <Users className="w-4 h-4 text-amber" />
-          <h3 className="font-display text-sm tracking-wider">REFERRAL CODE</h3>
-        </div>
-        <button
-          onClick={handleCopyRef}
-          className="w-full flex items-center justify-between gap-2 px-4 py-3 rounded-lg bg-secondary/50 border border-amber/10 hover:border-amber/20 transition-all group"
-        >
-          <span className="font-display text-lg tracking-widest text-foreground">DEGEN-7X42</span>
-          {copiedRef ? (
-            <Check className="w-4 h-4 text-multiplier flex-shrink-0" />
-          ) : (
-            <Copy className="w-4 h-4 text-muted-foreground group-hover:text-amber flex-shrink-0 transition-colors" />
-          )}
-        </button>
-        <Link
-          to="/referrals"
-          className="inline-flex items-center gap-1 text-xs text-amber hover:text-amber/80 transition-colors"
-        >
-          View Referral Stats <ExternalLink className="w-3 h-3" />
-        </Link>
       </motion.div>
     </div>
   );
