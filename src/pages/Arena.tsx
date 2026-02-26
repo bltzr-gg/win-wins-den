@@ -26,28 +26,25 @@ function PerformanceCard() {
           <h2 className="font-display text-sm tracking-wider">ARENA PERFORMANCE</h2>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-3 gap-6">
           <div>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Available</p>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Arena Points Earned</p>
             <p className="font-display text-3xl text-foreground">12,450</p>
-            <p className="text-[10px] text-muted-foreground mt-0.5">REAL Points</p>
+            <p className="text-[10px] text-muted-foreground/60 mt-0.5">Based on wagering activity</p>
           </div>
           <div>
             <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Total Wagered</p>
-            <p className="font-display text-2xl text-amber">8,200</p>
+            <p className="font-display text-2xl text-amber">$8,200</p>
           </div>
           <div>
             <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Net Result</p>
             <div className="flex items-center gap-1.5">
               <p className={`font-display text-2xl ${isPositive ? "text-multiplier" : "text-primary"}`}>
-                {isPositive ? "+" : ""}{netResult.toLocaleString()}
+                {isPositive ? "+$" : "-$"}{Math.abs(netResult).toLocaleString()}
               </p>
               {isPositive ? <TrendingUp className="w-4 h-4 text-multiplier" /> : <TrendingDown className="w-4 h-4 text-primary" />}
             </div>
-          </div>
-          <div>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Arena Multi</p>
-            <p className="font-display text-2xl text-amber">1.5x</p>
+            <p className="text-[10px] text-muted-foreground/60 mt-0.5">Across all Arena sessions</p>
           </div>
         </div>
       </div>
@@ -63,7 +60,7 @@ function ArenaBreakdown() {
     { label: "Total Arena Points Earned", value: "12,700", icon: Zap, color: "text-amber" },
     { label: "Total Arena Wagers", value: "8,200", icon: Dices, color: "text-foreground" },
     { label: "Net Arena Result", value: "+4,250", icon: TrendingUp, color: "text-multiplier" },
-    { label: "Arena Multiplier Applied", value: "1.5x", icon: Crown, color: "text-amber" },
+    
     { label: "Win Rate", value: "62%", icon: Target, color: "text-foreground" },
     { label: "Last 7 Days Performance", value: "+1,840", icon: Activity, color: "text-multiplier" },
     { label: "Best Streak", value: "9 Wins", icon: Flame, color: "text-primary" },
@@ -260,7 +257,7 @@ function GameGrid() {
 
               <div className="flex items-center justify-between">
                 <span className="text-[10px] text-muted-foreground">24h Volume</span>
-                <span className="text-[10px] text-foreground/70 font-semibold">{game.volume} pts</span>
+                <span className="text-[10px] text-foreground/70 font-semibold">{game.volume}</span>
               </div>
 
               <motion.button
