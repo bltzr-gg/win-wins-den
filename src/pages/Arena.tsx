@@ -123,7 +123,7 @@ function HowArenaWorks() {
   const points = [
     { icon: Dices, text: "Wager REAL Points on competitive arena games." },
     { icon: TrendingUp, text: "Winning accelerates your leaderboard climb with Arena Multiplier." },
-    { icon: Flame, text: "Losses burn points — Arena is a high-risk, high-reward layer." },
+    
     { icon: Shield, text: "Arena is a competitive sub-engine — separate from passive earning." },
   ];
 
