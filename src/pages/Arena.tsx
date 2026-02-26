@@ -255,10 +255,6 @@ function GameGrid() {
                 <p className="text-[10px] text-muted-foreground mt-0.5">{game.desc}</p>
               </div>
 
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] text-muted-foreground">24h Volume</span>
-                <span className="text-[10px] text-foreground/70 font-semibold">{game.volume}</span>
-              </div>
 
               <motion.button
                 className="w-full py-3 rounded-xl bg-primary/8 text-primary border border-primary/15 font-display text-sm hover:bg-primary/12 transition-all flex items-center justify-center gap-2"
