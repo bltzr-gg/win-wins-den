@@ -1,4 +1,5 @@
-import { Lock, Sparkles, Zap, DollarSign, Ticket } from "lucide-react";
+import { useState } from "react";
+import { Lock, Sparkles, Zap, DollarSign, Ticket, Minus, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
@@ -53,6 +54,54 @@ const rewardIcons = [
   { Icon: Zap, label: "REAL Points" },
   { Icon: DollarSign, label: "USDC" },
 ];
+
+const TICKET_PRICE = 250;
+
+function TicketBuySection() {
+  const [qty, setQty] = useState(1);
+  const totalCost = qty * TICKET_PRICE;
+
+  return (
+    <div className="rounded-lg border border-epic/15 bg-epic/[0.03] p-3 space-y-2.5">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
+          <Ticket className="w-3 h-3 text-epic" />
+          <span className="font-display text-[10px] text-epic">BUY DRAW TICKETS</span>
+        </div>
+        <span className="text-[9px] text-muted-foreground">1 Ticket = {TICKET_PRICE} RP</span>
+      </div>
+
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
+          <motion.button
+            className="w-7 h-7 rounded-md border border-border/50 bg-secondary/30 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all"
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setQty(Math.max(1, qty - 1))}
+          >
+            <Minus className="w-3 h-3" />
+          </motion.button>
+          <span className="font-display text-base w-8 text-center">{qty}</span>
+          <motion.button
+            className="w-7 h-7 rounded-md border border-border/50 bg-secondary/30 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all"
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setQty(qty + 1)}
+          >
+            <Plus className="w-3 h-3" />
+          </motion.button>
+        </div>
+        <span className="text-[10px] text-muted-foreground">{totalCost.toLocaleString()} RP</span>
+      </div>
+
+      <motion.button
+        className="w-full py-2 rounded-lg font-display text-[10px] border border-epic/25 bg-epic/10 text-epic hover:bg-epic/15 transition-all"
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.97 }}
+      >
+        Buy {qty} Ticket{qty > 1 ? "s" : ""}
+      </motion.button>
+    </div>
+  );
+}
 
 export default function MysteryBoxCard({ box }: { box: MysteryBox }) {
   const cfg = tierConfig[box.tier];
@@ -152,16 +201,8 @@ export default function MysteryBoxCard({ box }: { box: MysteryBox }) {
 
         {button}
 
-        {/* Buy Ticket — premium boxes only */}
-        {box.cost !== "FREE" && box.available && (
-          <motion.button
-            className="w-full py-2 rounded-lg font-display text-[10px] border border-epic/20 bg-epic/5 text-epic hover:bg-epic/10 transition-all flex items-center justify-center gap-1.5"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            <Ticket className="w-3 h-3" /> Buy 1 Draw Ticket — 250 RP
-          </motion.button>
-        )}
+        {/* Buy Tickets — premium boxes only */}
+        {box.cost !== "FREE" && box.available && <TicketBuySection />}
       </div>
     </motion.div>
   );
