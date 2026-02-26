@@ -1,16 +1,17 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { Swords, Crosshair, Lock, Award, Target, Trophy, Rocket, Wallet } from "lucide-react";
+import { Swords, Crosshair, Lock, Award, Target, Trophy, Rocket, Wallet, Sparkles } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const navItems = [
-  { label: "Hub", path: "/hub", icon: Swords, badge: null },
-  { label: "Arena", path: "/arena", icon: Crosshair, badge: null },
-  { label: "The Vault", path: "/vault", icon: Lock, badge: null },
-  { label: "Collection", path: "/collection", icon: Award, badge: null },
-  { label: "Tasks", path: "/tasks", icon: Target, badge: null },
-  { label: "Leaderboard", path: "/leaderboard", icon: Trophy, badge: null },
-  { label: "Public Sale", path: "/public-sale", icon: Rocket, badge: "Soon" },
-  { label: "Profile", path: "/profile", icon: Wallet, badge: null },
+  { label: "Hub", path: "/hub", icon: Swords, variant: "default" as const },
+  { label: "Arena", path: "/arena", icon: Crosshair, variant: "default" as const },
+  { label: "The Vault", path: "/vault", icon: Lock, variant: "default" as const },
+  { label: "Collection", path: "/collection", icon: Award, variant: "default" as const },
+  { label: "Tasks", path: "/tasks", icon: Target, variant: "default" as const },
+  { label: "Leaderboard", path: "/leaderboard", icon: Trophy, variant: "default" as const },
+  { label: "Public Sale", path: "/public-sale", icon: Rocket, variant: "default" as const, badge: "Soon" },
+  { label: "Switch Bonus", path: "/switch", icon: Sparkles, variant: "red" as const },
+  { label: "Profile", path: "/profile", icon: Wallet, variant: "default" as const },
 ];
 
 const Layout = () => {
@@ -35,14 +36,18 @@ const Layout = () => {
                   key={item.path}
                   to={item.path}
                   className={`relative flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
-                    active
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    item.variant === "red"
+                      ? active
+                        ? "bg-primary/20 text-primary border border-primary/30"
+                        : "bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 hover:brightness-110"
+                      : active
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                   }`}
                 >
                   <item.icon className="w-4 h-4" />
                   {item.label}
-                  {item.badge && (
+                  {"badge" in item && item.badge && (
                     <span className="text-[8px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary border border-primary/15 uppercase tracking-wider leading-none">
                       {item.badge}
                     </span>
