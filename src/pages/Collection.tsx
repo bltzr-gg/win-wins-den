@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Lock, Star, Pin, X, Calendar, Award, Search } from "lucide-react";
+import { Lock, Star, Pin, X, Calendar, Award, Search, RotateCcw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import badgeFirstBlood from "@/assets/badges/first-blood.png";
@@ -224,82 +224,152 @@ function BadgeDetailModal({ badge, onClose }: { badge: typeof allBadges[0]; onCl
   );
 }
 
-/* ─── Badge Card ─── */
+/* ─── Badge Card (Flip) ─── */
 function BadgeCard({ badge, onSelect, isPinned, onTogglePin }: {
   badge: typeof allBadges[0];
   onSelect: () => void;
   isPinned: boolean;
   onTogglePin: () => void;
 }) {
+  const [flipped, setFlipped] = useState(false);
   const style = rarityStyles[badge.rarity];
 
+  const handleClick = () => {
+    setFlipped(!flipped);
+  };
+
   return (
-    <motion.div
-      className={`group relative rounded-2xl border bg-card overflow-hidden cursor-pointer transition-all duration-300 ${
-        badge.earned ? style.borderClass : "border-border/30 opacity-50"
-      }`}
-      onClick={onSelect}
-      whileHover={badge.earned ? { y: -4, scale: 1.02 } : {}}
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: badge.earned ? 1 : 0.5, y: 0 }}
-      style={badge.earned && style.glowStyle ? { boxShadow: style.glowStyle } : {}}
+    <div
+      className="cursor-pointer"
+      style={{ perspective: "800px" }}
+      onClick={handleClick}
     >
-      <div className="absolute inset-0 metallic-sheen pointer-events-none" />
-
-      {badge.earned && style.glowStyle && (
-        <div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none rounded-2xl"
-          style={{ boxShadow: style.glowStyle.replace(/0\.\d+\)/, "0.25)") }}
-        />
-      )}
-
-      {badge.earned && (
-        <button
-          onClick={(e) => { e.stopPropagation(); onTogglePin(); }}
-          className={`absolute top-3 right-3 p-1.5 rounded-lg transition-all z-20 ${
-            isPinned
-              ? "bg-gold/15 text-gold border border-gold/25"
-              : "bg-secondary/50 text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-secondary border border-transparent"
+      <motion.div
+        className="relative w-full"
+        style={{ transformStyle: "preserve-3d" }}
+        animate={{ rotateY: flipped ? 180 : 0 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+      >
+        {/* ── FRONT ── */}
+        <motion.div
+          className={`relative rounded-2xl border bg-card overflow-hidden transition-all duration-300 ${
+            badge.earned ? style.borderClass : "border-border/30 opacity-50"
           }`}
+          style={{
+            backfaceVisibility: "hidden",
+            ...(badge.earned && style.glowStyle ? { boxShadow: style.glowStyle } : {}),
+          }}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: badge.earned ? 1 : 0.5, y: 0 }}
         >
-          <Pin className="w-3 h-3" />
-        </button>
-      )}
+          <div className="absolute inset-0 metallic-sheen pointer-events-none" />
 
-      {!badge.earned && (
-        <div className="absolute top-3 right-3 z-20">
-          <Lock className="w-3.5 h-3.5 text-muted-foreground/40" />
-        </div>
-      )}
+          {badge.earned && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onTogglePin(); }}
+              className={`absolute top-3 right-3 p-1.5 rounded-lg transition-all z-20 ${
+                isPinned
+                  ? "bg-gold/15 text-gold border border-gold/25"
+                  : "bg-secondary/50 text-muted-foreground hover:bg-secondary border border-transparent"
+              }`}
+            >
+              <Pin className="w-3 h-3" />
+            </button>
+          )}
 
-      <div className="relative z-10 p-5 flex flex-col items-center text-center space-y-3">
-        <BadgeImage id={badge.id} rarity={badge.rarity} earned={badge.earned} />
-        <div className="space-y-1">
-          <h3 className="text-sm font-semibold">{badge.name}</h3>
-          <span className={`inline-block text-[9px] px-2 py-0.5 rounded-full border font-semibold ${style.badgeClass}`}>
-            {badge.rarity}
-          </span>
-        </div>
-        <p className="text-xs text-gold font-semibold">{badge.bonus}</p>
+          {!badge.earned && (
+            <div className="absolute top-3 right-3 z-20">
+              <Lock className="w-3.5 h-3.5 text-muted-foreground/40" />
+            </div>
+          )}
 
-        {!badge.earned && badge.hint && (
-          <div className="absolute inset-0 bg-card/90 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity p-4 gap-2">
-            <p className="text-xs text-muted-foreground text-center">{badge.hint}</p>
-            {badge.progress && badge.progress !== "—" && (
-              <div className="w-3/4">
-                <div className="w-full h-1.5 rounded-full bg-secondary overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-primary/60"
-                    style={{ width: `${(parseInt(badge.progress) / parseInt(badge.progress.split("/")[1])) * 100}%` }}
-                  />
-                </div>
-                <p className="text-[10px] text-muted-foreground mt-1 text-center">{badge.progress}</p>
-              </div>
-            )}
+          <div className="relative z-10 p-5 flex flex-col items-center text-center space-y-3">
+            <BadgeImage id={badge.id} rarity={badge.rarity} earned={badge.earned} />
+            <div className="space-y-1">
+              <h3 className="text-sm font-semibold">{badge.name}</h3>
+              <span className={`inline-block text-[9px] px-2 py-0.5 rounded-full border font-semibold ${style.badgeClass}`}>
+                {badge.rarity}
+              </span>
+            </div>
+            <p className="text-xs text-gold font-semibold">{badge.bonus} Allocation</p>
           </div>
-        )}
-      </div>
-    </motion.div>
+        </motion.div>
+
+        {/* ── BACK ── */}
+        <div
+          className={`absolute inset-0 rounded-2xl border bg-card overflow-hidden ${
+            badge.earned ? style.borderClass : "border-border/30"
+          }`}
+          style={{
+            backfaceVisibility: "hidden",
+            transform: "rotateY(180deg)",
+            ...(badge.earned && style.glowStyle ? { boxShadow: style.glowStyle } : {}),
+          }}
+        >
+          <div className="absolute inset-0 metallic-sheen pointer-events-none" />
+          <div className="relative z-10 p-5 flex flex-col justify-between h-full">
+            {/* Header */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold">{badge.name}</h3>
+                <RotateCcw className="w-3.5 h-3.5 text-muted-foreground/50" />
+              </div>
+              <span className={`inline-block text-[9px] px-2 py-0.5 rounded-full border font-semibold ${style.badgeClass}`}>
+                {badge.rarity}
+              </span>
+            </div>
+
+            {/* How to earn */}
+            <div className="space-y-2 my-3">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-display">
+                {badge.earned ? "How you earned it" : "How to earn"}
+              </p>
+              <p className="text-xs text-foreground/80 leading-relaxed">{badge.desc}</p>
+
+              {!badge.earned && badge.progress && badge.progress !== "—" && (
+                <div className="space-y-1">
+                  <div className="w-full h-1.5 rounded-full bg-secondary overflow-hidden">
+                    <div
+                      className={`h-full rounded-full ${
+                        badge.rarity === "Legendary" ? "bg-gold" :
+                        badge.rarity === "Epic" ? "bg-epic" :
+                        badge.rarity === "Rare" ? "bg-rare" : "bg-common"
+                      }`}
+                      style={{ width: `${(parseInt(badge.progress) / parseInt(badge.progress.split("/")[1])) * 100}%` }}
+                    />
+                  </div>
+                  <p className="text-[10px] text-muted-foreground">{badge.progress} · {badge.hint}</p>
+                </div>
+              )}
+
+              {!badge.earned && badge.progress === "—" && (
+                <p className="text-[10px] text-muted-foreground italic">{badge.hint}</p>
+              )}
+
+              {badge.earned && badge.earnedDate && (
+                <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                  <Calendar className="w-3 h-3" />
+                  <span>Earned {badge.earnedDate}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Bonus */}
+            <div className={`rounded-lg border p-2.5 text-center ${
+              badge.earned
+                ? "border-gold/20 bg-gold/5"
+                : "border-border/30 bg-secondary/10"
+            }`}>
+              <div className="flex items-center justify-center gap-1.5">
+                <Award className="w-3.5 h-3.5 text-gold" />
+                <span className="text-sm font-display text-gold">{badge.bonus}</span>
+              </div>
+              <p className="text-[9px] text-muted-foreground mt-0.5">Allocation Bonus</p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </div>
   );
 }
 
