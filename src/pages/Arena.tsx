@@ -26,7 +26,7 @@ function PerformanceCard() {
           <h2 className="font-display text-sm tracking-wider">ARENA PERFORMANCE</h2>
         </div>
 
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 gap-6">
           <div>
             <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Arena Points Earned</p>
             <p className="font-display text-3xl text-foreground">12,450</p>
@@ -35,16 +35,6 @@ function PerformanceCard() {
           <div>
             <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Total Wagered</p>
             <p className="font-display text-2xl text-amber">$8,200</p>
-          </div>
-          <div>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Net Result</p>
-            <div className="flex items-center gap-1.5">
-              <p className={`font-display text-2xl ${isPositive ? "text-multiplier" : "text-primary"}`}>
-                {isPositive ? "+$" : "-$"}{Math.abs(netResult).toLocaleString()}
-              </p>
-              {isPositive ? <TrendingUp className="w-4 h-4 text-multiplier" /> : <TrendingDown className="w-4 h-4 text-primary" />}
-            </div>
-            <p className="text-[10px] text-muted-foreground/60 mt-0.5">Across all Arena sessions</p>
           </div>
         </div>
       </div>
@@ -57,14 +47,12 @@ function ArenaBreakdown() {
   const [expanded, setExpanded] = useState(false);
 
   const stats = [
-    { label: "Total Arena Points Earned", value: "12,700", icon: Zap, color: "text-amber" },
-    { label: "Total Arena Wagers", value: "8,200", icon: Dices, color: "text-foreground" },
-    { label: "Net Arena Result", value: "+4,250", icon: TrendingUp, color: "text-multiplier" },
-    
-    { label: "Win Rate", value: "62%", icon: Target, color: "text-foreground" },
-    { label: "Last 7 Days Performance", value: "+1,840", icon: Activity, color: "text-multiplier" },
-    { label: "Best Streak", value: "9 Wins", icon: Flame, color: "text-primary" },
-    { label: "Current Active Wagers", value: "2", icon: Shield, color: "text-amber" },
+    { label: "Slots", value: "3,200 pts", icon: Dices, color: "text-amber" },
+    { label: "Blackjack", value: "2,800 pts", icon: Swords, color: "text-foreground" },
+    { label: "Roulette", value: "2,450 pts", icon: CircleDot, color: "text-amber" },
+    { label: "Dice", value: "1,900 pts", icon: Dices, color: "text-foreground" },
+    { label: "Strike Zone", value: "1,200 pts", icon: Target, color: "text-primary" },
+    { label: "Mines", value: "900 pts", icon: Bomb, color: "text-amber" },
   ];
 
   return (
