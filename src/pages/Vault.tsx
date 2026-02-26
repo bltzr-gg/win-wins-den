@@ -39,8 +39,7 @@ const mysteryBoxes: MysteryBox[] = [
     cost: 10000,
     costLabel: "10,000 REAL Points",
     topReward: "$2,500",
-    available: false,
-    lockReason: "Top 500 Rank required to unlock Legendary boxes",
+    available: true,
   },
 ];
 
