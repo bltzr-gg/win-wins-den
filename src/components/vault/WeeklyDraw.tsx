@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Trophy, Users, Ticket, Clock, Minus, Plus, X } from "lucide-react";
+import { Trophy, Users, Ticket, Clock, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 function useCountdown(targetDate: Date) {
@@ -20,8 +20,6 @@ function useCountdown(targetDate: Date) {
   }, [targetDate]);
   return remaining;
 }
-
-const TICKET_PRICE = 250;
 
 /* ─── Draw Details Modal ─── */
 function DrawDetailsModal({ userTickets, onClose }: { userTickets: number; onClose: () => void }) {
@@ -83,11 +81,8 @@ export default function WeeklyDraw() {
   nextDraw.setHours(20, 0, 0, 0);
   const countdown = useCountdown(nextDraw);
 
-  const [userTickets, setUserTickets] = useState(12);
-  const [qty, setQty] = useState(1);
+  const userTickets = 12;
   const [showDetails, setShowDetails] = useState(false);
-
-  const totalCost = qty * TICKET_PRICE;
 
   return (
     <div className="space-y-4">
@@ -135,52 +130,6 @@ export default function WeeklyDraw() {
             </div>
           </div>
 
-          {/* Buy Tickets */}
-          <div className="rounded-xl border border-border/40 bg-secondary/10 p-5 space-y-4">
-            <h3 className="font-display text-xs tracking-wider text-muted-foreground">BUY DRAW TICKETS</h3>
-            <p className="text-xs text-muted-foreground">1 Ticket = {TICKET_PRICE} REAL Points</p>
-
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <motion.button
-                  className="w-9 h-9 rounded-lg border border-border/50 bg-secondary/30 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all"
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setQty(Math.max(1, qty - 1))}
-                >
-                  <Minus className="w-4 h-4" />
-                </motion.button>
-                <span className="font-display text-xl w-12 text-center">{qty}</span>
-                <motion.button
-                  className="w-9 h-9 rounded-lg border border-border/50 bg-secondary/30 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all"
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setQty(qty + 1)}
-                >
-                  <Plus className="w-4 h-4" />
-                </motion.button>
-              </div>
-
-              <div className="flex-1 text-right">
-                <p className="text-[10px] text-muted-foreground uppercase">Total Cost</p>
-                <p className="font-display text-lg">{totalCost.toLocaleString()} <span className="text-xs text-muted-foreground">RP</span></p>
-              </div>
-            </div>
-
-            <motion.button
-              className="w-full py-3 rounded-xl font-display text-sm border border-epic/30 bg-epic/10 text-epic hover:bg-epic/15 transition-all"
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setUserTickets(userTickets + qty)}
-            >
-              Buy {qty} Ticket{qty > 1 ? "s" : ""}
-            </motion.button>
-
-            <div className="space-y-1 text-[10px] text-muted-foreground">
-              <p>Tickets increase your chance of winning.</p>
-              <p>Tickets reset at the end of each weekly draw.</p>
-              <p>More tickets = higher probability.</p>
-            </div>
-          </div>
-
           {/* View Draw Details */}
           <motion.button
             className="w-full py-2.5 rounded-xl font-display text-xs border border-border/30 bg-secondary/20 text-muted-foreground hover:text-foreground hover:bg-secondary/30 transition-all"
@@ -190,6 +139,10 @@ export default function WeeklyDraw() {
           >
             View Draw Details
           </motion.button>
+
+          <p className="text-[10px] text-muted-foreground text-center">
+            Buy tickets from any Silver, Gold, or Legendary Mystery Box below. Tickets reset weekly.
+          </p>
         </div>
       </div>
 
