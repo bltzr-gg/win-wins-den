@@ -5,14 +5,15 @@ interface HistoryEntry {
   date: string;
   boxType: string;
   reward: string;
+  ticketsEarned: string;
   value: string;
 }
 
 const demoHistory: HistoryEntry[] = [
-  { date: "Feb 23, 2026", boxType: "Silver", reward: "XP Boost", value: "650 RP" },
-  { date: "Feb 22, 2026", boxType: "Bronze", reward: "120 XP", value: "120 RP" },
-  { date: "Feb 21, 2026", boxType: "Bronze", reward: "85 XP", value: "85 RP" },
-  { date: "Feb 20, 2026", boxType: "Silver", reward: "5 USDC", value: "$5.00" },
+  { date: "Feb 23, 2026", boxType: "Silver", reward: "450 REAL Points", ticketsEarned: "+1", value: "450 RP" },
+  { date: "Feb 22, 2026", boxType: "Bronze", reward: "120 REAL Points", ticketsEarned: "—", value: "120 RP" },
+  { date: "Feb 21, 2026", boxType: "Bronze", reward: "85 REAL Points", ticketsEarned: "—", value: "85 RP" },
+  { date: "Feb 20, 2026", boxType: "Silver", reward: "5 USDC", ticketsEarned: "+1", value: "$5.00" },
 ];
 
 const tierColor: Record<string, string> = {
@@ -48,8 +49,9 @@ export default function BoxHistory() {
               <tr className="border-b border-border/30 bg-secondary/20">
                 <th className="text-left p-3 text-[10px] font-display text-muted-foreground uppercase tracking-wider">Date</th>
                 <th className="text-left p-3 text-[10px] font-display text-muted-foreground uppercase tracking-wider">Box Type</th>
-                <th className="text-left p-3 text-[10px] font-display text-muted-foreground uppercase tracking-wider">Reward Won</th>
-                <th className="text-right p-3 text-[10px] font-display text-muted-foreground uppercase tracking-wider">Value</th>
+                <th className="text-left p-3 text-[10px] font-display text-muted-foreground uppercase tracking-wider">Reward</th>
+                <th className="text-center p-3 text-[10px] font-display text-muted-foreground uppercase tracking-wider">Tickets Earned</th>
+                <th className="text-right p-3 text-[10px] font-display text-muted-foreground uppercase tracking-wider">REAL Points Value</th>
               </tr>
             </thead>
             <tbody>
@@ -64,6 +66,7 @@ export default function BoxHistory() {
                   <td className="p-3 text-xs text-muted-foreground">{entry.date}</td>
                   <td className={`p-3 text-xs font-display ${tierColor[entry.boxType] || "text-foreground"}`}>{entry.boxType}</td>
                   <td className="p-3 text-xs text-foreground/80">{entry.reward}</td>
+                  <td className="p-3 text-xs text-epic text-center font-medium">{entry.ticketsEarned}</td>
                   <td className="p-3 text-xs text-foreground/70 text-right font-medium">{entry.value}</td>
                 </motion.tr>
               ))}
