@@ -1,4 +1,4 @@
-import { Lock, Sparkles, Zap, DollarSign, Ticket } from "lucide-react";
+import { Lock, Sparkles, Zap, DollarSign } from "lucide-react";
 import { motion } from "framer-motion";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
@@ -16,7 +16,6 @@ export interface MysteryBox {
   available: boolean;
   lockReason?: string;
   freeProgress?: number;
-  winChances: { realPoints: number; usdc: number; tickets: number };
 }
 
 const tierConfig = {
@@ -26,7 +25,6 @@ const tierConfig = {
     border: "border-bronze/25",
     accent: "text-bronze",
     btnBg: "bg-bronze/15 hover:bg-bronze/25 border-bronze/30 text-bronze",
-    glowClass: "",
   },
   silver: {
     img: silverBoxImg,
@@ -34,7 +32,6 @@ const tierConfig = {
     border: "border-silver/25",
     accent: "text-silver",
     btnBg: "bg-silver/15 hover:bg-silver/25 border-silver/30 text-silver",
-    glowClass: "",
   },
   gold: {
     img: goldBoxImg,
@@ -42,7 +39,6 @@ const tierConfig = {
     border: "border-gold/25",
     accent: "text-gold",
     btnBg: "bg-gold/15 hover:bg-gold/25 border-gold/30 text-gold",
-    glowClass: "glow-gold",
   },
   legendary: {
     img: legendaryBoxImg,
@@ -50,14 +46,12 @@ const tierConfig = {
     border: "border-epic/25",
     accent: "text-epic",
     btnBg: "bg-epic/15 hover:bg-epic/25 border-epic/30 text-epic",
-    glowClass: "glow-epic",
   },
 };
 
-const chanceIcons = [
-  { key: "realPoints" as const, Icon: Zap, label: "REAL Points" },
-  { key: "usdc" as const, Icon: DollarSign, label: "USDC" },
-  { key: "tickets" as const, Icon: Ticket, label: "Tickets" },
+const rewardIcons = [
+  { Icon: Zap, label: "REAL Points" },
+  { Icon: DollarSign, label: "USDC" },
 ];
 
 export default function MysteryBoxCard({ box }: { box: MysteryBox }) {
@@ -146,20 +140,13 @@ export default function MysteryBoxCard({ box }: { box: MysteryBox }) {
           </div>
         )}
 
-        {/* Win chance icons — no boosters */}
-        <div className="flex items-center justify-center gap-3">
-          {chanceIcons.map(({ key, Icon, label }) => (
-            <Tooltip key={key}>
-              <TooltipTrigger asChild>
-                <div className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground/70 transition-colors cursor-default">
-                  <Icon className="w-3 h-3" />
-                  <span>{label}</span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="top" className="text-xs">
-                {box.winChances[key]}% chance
-              </TooltipContent>
-            </Tooltip>
+        {/* Reward types — REAL Points & USDC only */}
+        <div className="flex items-center justify-center gap-4">
+          {rewardIcons.map(({ Icon, label }) => (
+            <div key={label} className="flex items-center gap-1 text-[10px] text-muted-foreground">
+              <Icon className="w-3 h-3" />
+              <span>{label}</span>
+            </div>
           ))}
         </div>
 

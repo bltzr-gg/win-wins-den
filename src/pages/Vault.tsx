@@ -16,7 +16,6 @@ const mysteryBoxes: MysteryBox[] = [
     topReward: "$10",
     available: true,
     freeProgress: 72,
-    winChances: { realPoints: 60, usdc: 15, tickets: 25 },
   },
   {
     name: "Silver Mystery Box",
@@ -25,7 +24,6 @@ const mysteryBoxes: MysteryBox[] = [
     costLabel: "500 REAL Points · Eligible Free on Day 5 Streak",
     topReward: "$50",
     available: true,
-    winChances: { realPoints: 45, usdc: 25, tickets: 30 },
   },
   {
     name: "Gold Mystery Box",
@@ -34,7 +32,6 @@ const mysteryBoxes: MysteryBox[] = [
     costLabel: "2,000 REAL Points",
     topReward: "$250",
     available: true,
-    winChances: { realPoints: 30, usdc: 35, tickets: 35 },
   },
   {
     name: "Legendary Mystery Box",
@@ -44,7 +41,6 @@ const mysteryBoxes: MysteryBox[] = [
     topReward: "$2,500",
     available: false,
     lockReason: "Top 500 Rank required to unlock Legendary boxes",
-    winChances: { realPoints: 20, usdc: 40, tickets: 40 },
   },
 ];
 
