@@ -287,9 +287,9 @@ export default function Arena() {
 
       <PerformanceCard />
       <ArenaBreakdown />
-      <HowArenaWorks />
       <DailyChallenge />
       <GameGrid />
+      <HowArenaWorks />
     </div>
   );
 }
