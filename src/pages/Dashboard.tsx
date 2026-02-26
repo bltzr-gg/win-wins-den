@@ -263,11 +263,13 @@ function ProfileReferralPanel() {
                 <span className="text-[10px] text-multiplier flex items-center gap-1">
                   <Flame className="w-3 h-3" /> {userState.streak}-Day Streak
                   <span className={`px-1.5 py-0.5 rounded border text-[9px] font-semibold ${
+                    userState.streak >= 60 ? "bg-gold/10 text-gold border-gold/20" :
                     userState.streak >= 30 ? "bg-gold/10 text-gold border-gold/20" :
-                    userState.streak >= 7 ? "bg-multiplier/10 text-multiplier border-multiplier/20" :
+                    userState.streak >= 15 ? "bg-multiplier/10 text-multiplier border-multiplier/20" :
+                    userState.streak >= 7 ? "bg-primary/10 text-primary border-primary/20" :
                     "bg-secondary/50 text-muted-foreground border-border/50"
                   }`}>
-                    {userState.streak >= 30 ? "2.0x" : userState.streak >= 7 ? "1.5x" : "1.0x"}
+                    {userState.streak >= 60 ? "2.0x" : userState.streak >= 30 ? "1.8x" : userState.streak >= 15 ? "1.5x" : userState.streak >= 7 ? "1.2x" : "1.0x"}
                   </span>
                 </span>
               </div>
@@ -500,10 +502,16 @@ function PointsBreakdown() {
 function DailyMysteryBoxCard() {
   const freeBoxAvailable = true;
   const streak = userState.streak;
-  const multiplier = streak >= 30 ? 2.0 : streak >= 7 ? 1.5 : 1.0;
+  const multiplier = streak >= 60 ? 2.0 : streak >= 30 ? 1.8 : streak >= 15 ? 1.5 : streak >= 7 ? 1.2 : 1.0;
   const baseReward = 100;
   const dailyReward = Math.floor(baseReward * multiplier);
-  const nextDay = streak < 7 ? 7 : streak < 30 ? 30 : null;
+  const nextTiers = [
+    { day: 7, label: "1.2x Daily Rewards" },
+    { day: 15, label: "1.5x Daily Rewards" },
+    { day: 30, label: "1.8x Daily Rewards" },
+    { day: 60, label: "2.0x Daily Rewards (Max)" },
+  ];
+  const nextDay = nextTiers.find((t) => streak < t.day) || null;
 
   return (
     <motion.div
@@ -564,13 +572,13 @@ function DailyMysteryBoxCard() {
               <motion.div
                 className="h-full rounded-full bg-gradient-to-r from-primary/80 to-primary"
                 initial={{ width: 0 }}
-                animate={{ width: `${nextDay ? Math.min(100, (streak / nextDay) * 100) : 100}%` }}
+                animate={{ width: `${nextDay ? Math.min(100, (streak / nextDay.day) * 100) : 100}%` }}
                 transition={{ delay: 0.3, duration: 0.8 }}
               />
             </div>
             {nextDay && (
               <p className="text-[10px] text-muted-foreground">
-                Day {nextDay} → <span className="text-foreground/70 font-medium">{nextDay === 7 ? "1.5x Daily Rewards" : "2.0x Daily Rewards"}</span>
+                Day {nextDay.day} → <span className="text-foreground/70 font-medium">{nextDay.label}</span>
               </p>
             )}
           </div>
