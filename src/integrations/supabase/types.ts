@@ -14,13 +14,171 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          id: string
+          twitter_handle: string | null
+          twitter_id: string | null
+          avatar_url: string | null
+          display_name: string | null
+          tier: string
+          points_balance: number
+          streak_current: number
+          streak_last_checkin: string | null
+          nft_multiplier: number
+          referral_code: string | null
+          referred_by: string | null
+          wallet_address: string | null
+          account_linked: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          twitter_handle?: string | null
+          twitter_id?: string | null
+          avatar_url?: string | null
+          display_name?: string | null
+          tier?: string
+          points_balance?: number
+          streak_current?: number
+          streak_last_checkin?: string | null
+          nft_multiplier?: number
+          referral_code?: string | null
+          referred_by?: string | null
+          wallet_address?: string | null
+          account_linked?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          twitter_handle?: string | null
+          twitter_id?: string | null
+          avatar_url?: string | null
+          display_name?: string | null
+          tier?: string
+          points_balance?: number
+          streak_current?: number
+          streak_last_checkin?: string | null
+          nft_multiplier?: number
+          referral_code?: string | null
+          referred_by?: string | null
+          wallet_address?: string | null
+          account_linked?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      points_transactions: {
+        Row: {
+          id: string
+          user_id: string
+          amount: number
+          reason: string
+          reference_id: string | null
+          metadata: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          amount: number
+          reason: string
+          reference_id?: string | null
+          metadata?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          amount?: number
+          reason?: string
+          reference_id?: string | null
+          metadata?: Json
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "points_transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      bonuses: {
+        Row: {
+          id: string
+          user_id: string
+          bonus_type: string
+          amount_points: number
+          amount_usd: number
+          external_reference: string | null
+          status: string
+          metadata: Json
+          created_at: string
+          granted_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          bonus_type: string
+          amount_points?: number
+          amount_usd?: number
+          external_reference?: string | null
+          status?: string
+          metadata?: Json
+          created_at?: string
+          granted_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          bonus_type?: string
+          amount_points?: number
+          amount_usd?: number
+          external_reference?: string | null
+          status?: string
+          metadata?: Json
+          created_at?: string
+          granted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bonuses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_leaderboard: {
+        Args: { p_limit?: number }
+        Returns: {
+          rank: number
+          id: string
+          twitter_handle: string | null
+          display_name: string | null
+          avatar_url: string | null
+          tier: string
+          points_balance: number
+          nft_multiplier: number
+          effective_points: number
+        }[]
+      }
+      get_user_rank: {
+        Args: { p_user_id: string }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never

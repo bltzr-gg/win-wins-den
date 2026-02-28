@@ -1,12 +1,14 @@
+"use client";
+
 import { useState } from "react";
 import { Lock, Sparkles, Zap, DollarSign, Ticket, Minus, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
-import bronzeBoxImg from "@/assets/boxes/bronze-box.png";
-import silverBoxImg from "@/assets/boxes/silver-box.png";
-import goldBoxImg from "@/assets/boxes/gold-box.png";
-import legendaryBoxImg from "@/assets/boxes/legendary-box.png";
+const bronzeBoxImg = "/assets/boxes/bronze-box.png";
+const silverBoxImg = "/assets/boxes/silver-box.png";
+const goldBoxImg = "/assets/boxes/gold-box.png";
+const legendaryBoxImg = "/assets/boxes/legendary-box.png";
 
 export interface MysteryBox {
   name: string;

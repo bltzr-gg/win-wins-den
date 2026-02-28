@@ -1,0 +1,5 @@
+import Collection from "@/views/Collection";
+
+export default function Page() {
+  return <Collection />;
+}
