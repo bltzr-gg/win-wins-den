@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
 import {
@@ -12,13 +13,6 @@ import {
 import { useAuth } from "@/lib/auth";
 import { usePointsBalance, usePointsBreakdown } from "@/hooks/use-points";
 import { useUserRank } from "@/hooks/use-leaderboard";
-
-const defaultPointsBreakdown = [
-  { label: "Wager Points", value: 6200, icon: Zap },
-  { label: "Tasks Points", value: 3100, icon: Target },
-  { label: "Chest/Box Rewards", value: 1850, icon: Box },
-  { label: "Referral Bonuses", value: 1300, icon: Users },
-];
 
 const reasonToLabel: Record<string, { label: string; icon: typeof Zap }> = {
   wager: { label: "Wager Points", icon: Zap },
@@ -31,23 +25,32 @@ const reasonToLabel: Record<string, { label: string; icon: typeof Zap }> = {
 
 export default function Profile() {
   const [copiedRef, setCopiedRef] = useState(false);
-  const { profile } = useAuth();
+  const router = useRouter();
+  const { user: authUser, profile, loading } = useAuth();
   const { data: pointsData } = usePointsBalance();
   const { data: rank } = useUserRank();
   const { data: breakdownRaw } = usePointsBreakdown();
 
+  useEffect(() => {
+    if (!loading && !authUser) {
+      router.replace("/login");
+    }
+  }, [authUser, loading, router]);
+
+  if (loading || !authUser) return null;
+
   const user = {
-    username: profile?.twitter_handle ?? profile?.display_name ?? "degen_whale",
-    tier: pointsData?.tier ?? profile?.tier ?? "Gold",
-    rank: rank ?? 42,
-    points: pointsData?.points_balance ?? profile?.points_balance ?? 12450,
-    streak: pointsData?.streak_current ?? profile?.streak_current ?? 4,
+    username: profile?.twitter_handle ?? profile?.display_name ?? null,
+    tier: pointsData?.tier ?? profile?.tier ?? null,
+    rank: rank ?? null,
+    points: pointsData?.points_balance ?? profile?.points_balance ?? null,
+    streak: pointsData?.streak_current ?? profile?.streak_current ?? null,
     accountLinked: profile?.account_linked ?? false,
     walletConnected: !!profile?.wallet_address,
-    nftMultiplier: pointsData?.nft_multiplier ?? profile?.nft_multiplier ?? 1.1,
+    nftMultiplier: pointsData?.nft_multiplier ?? profile?.nft_multiplier ?? null,
     welcomeClaimed: false,
     avatarUrl: profile?.avatar_url ?? null,
-    referralCode: profile?.referral_code ?? "DEGEN-7X42",
+    referralCode: profile?.referral_code ?? null,
   };
 
   const pointsBreakdown = breakdownRaw
@@ -55,12 +58,13 @@ export default function Profile() {
         .filter(([reason]) => reasonToLabel[reason])
         .map(([reason, value]) => ({
           label: reasonToLabel[reason].label,
-          value,
+          value: value as number,
           icon: reasonToLabel[reason].icon,
         }))
-    : defaultPointsBreakdown;
+    : [];
 
   const handleCopyRef = () => {
+    if (!user.referralCode) return;
     navigator.clipboard.writeText(user.referralCode);
     setCopiedRef(true);
     toast({ title: "Copied ✓", description: "Referral code copied to clipboard" });
@@ -108,17 +112,23 @@ export default function Profile() {
           <Users className="w-4 h-4 text-amber" />
           <h3 className="font-display text-sm tracking-wider">REFERRAL CODE</h3>
         </div>
-        <button
-          onClick={handleCopyRef}
-          className="w-full flex items-center justify-between gap-2 px-4 py-3 rounded-lg bg-secondary/50 border border-amber/10 hover:border-amber/20 transition-all group"
-        >
-          <span className="font-display text-lg tracking-widest text-foreground">{user.referralCode}</span>
-          {copiedRef ? (
-            <Check className="w-4 h-4 text-multiplier flex-shrink-0" />
-          ) : (
-            <Copy className="w-4 h-4 text-muted-foreground group-hover:text-amber flex-shrink-0 transition-colors" />
-          )}
-        </button>
+        {user.referralCode ? (
+          <button
+            onClick={handleCopyRef}
+            className="w-full flex items-center justify-between gap-2 px-4 py-3 rounded-lg bg-secondary/50 border border-amber/10 hover:border-amber/20 transition-all group"
+          >
+            <span className="font-display text-lg tracking-widest text-foreground">{user.referralCode}</span>
+            {copiedRef ? (
+              <Check className="w-4 h-4 text-multiplier flex-shrink-0" />
+            ) : (
+              <Copy className="w-4 h-4 text-muted-foreground group-hover:text-amber flex-shrink-0 transition-colors" />
+            )}
+          </button>
+        ) : (
+          <div className="w-full px-4 py-3 rounded-lg bg-secondary/30 border border-amber/10 text-sm text-muted-foreground">
+            Referral code loading...
+          </div>
+        )}
         <Link
           href="/referrals"
           className="inline-flex items-center gap-1 text-xs text-amber hover:text-amber/80 transition-colors"
@@ -140,16 +150,16 @@ export default function Profile() {
               <img src={user.avatarUrl} alt="" className="w-16 h-16 rounded-2xl object-cover border border-[hsl(41_30%_20%/0.2)]" />
             ) : (
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[hsl(41_40%_20%/0.3)] to-secondary border border-[hsl(41_30%_20%/0.2)] flex items-center justify-center text-2xl font-bold">
-                {user.username[0].toUpperCase()}
+                {(user.username?.[0] ?? "?").toUpperCase()}
               </div>
             )}
             <div>
-              <h2 className="font-display text-xl tracking-wide">{user.username.toUpperCase()}</h2>
+              <h2 className="font-display text-xl tracking-wide">{(user.username ?? "").toUpperCase()}</h2>
               <div className="flex items-center gap-2 mt-1">
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-gold/12 text-gold border border-gold/20">{user.tier}</span>
-                <span className="text-[10px] text-muted-foreground">Rank #{user.rank}</span>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-gold/12 text-gold border border-gold/20">{user.tier ?? "—"}</span>
+                <span className="text-[10px] text-muted-foreground">Rank #{user.rank ?? "—"}</span>
                 <span className="text-[10px] text-multiplier flex items-center gap-1">
-                  <Flame className="w-3 h-3" /> {user.streak}-Day Streak
+                  <Flame className="w-3 h-3" /> {user.streak ?? 0}-Day Streak
                 </span>
               </div>
             </div>
@@ -158,11 +168,11 @@ export default function Profile() {
           <div className="grid grid-cols-2 gap-4">
             <div className="rounded-xl bg-secondary/30 border border-border/50 p-4">
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Total REAL Points</p>
-              <p className="font-display text-3xl">{user.points.toLocaleString()}</p>
+              <p className="font-display text-3xl">{(user.points ?? 0).toLocaleString()}</p>
             </div>
             <div className="rounded-xl bg-secondary/30 border border-border/50 p-4">
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Season Rank</p>
-              <p className="font-display text-3xl text-gold">#{user.rank}</p>
+              <p className="font-display text-3xl text-gold">#{user.rank ?? "—"}</p>
             </div>
           </div>
         </motion.div>
@@ -246,7 +256,7 @@ export default function Profile() {
               </div>
             </div>
             <div className="text-right">
-              <p className="font-display text-3xl text-gold">{user.nftMultiplier}x</p>
+              <p className="font-display text-3xl text-gold">{user.nftMultiplier ?? "—"}x</p>
               <p className="text-[9px] text-muted-foreground">Current Multiplier</p>
             </div>
           </div>
@@ -271,7 +281,7 @@ export default function Profile() {
                   key={row.passes}
                   className={`grid grid-cols-2 px-4 py-2.5 text-xs ${
                     i % 2 === 0 ? "bg-secondary/20" : "bg-secondary/10"
-                  } ${user.nftMultiplier === parseFloat(row.mult) ? "border-l-2 border-l-gold text-gold font-semibold" : "text-foreground"}`}
+                  } ${(user.nftMultiplier ?? 0) === parseFloat(row.mult) ? "border-l-2 border-l-gold text-gold font-semibold" : "text-foreground"}`}
                 >
                   <span>{row.passes}</span>
                   <span className="text-right font-display text-sm">{row.mult}</span>
@@ -291,17 +301,21 @@ export default function Profile() {
       >
         <div className="flex items-center justify-between">
           <h3 className="font-display text-sm tracking-wider">POINTS BREAKDOWN</h3>
-          <span className="text-xs text-muted-foreground">Total: <span className="text-foreground font-semibold">{user.points.toLocaleString()}</span></span>
+          <span className="text-xs text-muted-foreground">Total: <span className="text-foreground font-semibold">{(user.points ?? 0).toLocaleString()}</span></span>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {pointsBreakdown.map((item) => (
-            <div key={item.label} className="rounded-xl bg-secondary/30 border border-border/50 p-4 space-y-2">
-              <item.icon className="w-4 h-4 text-muted-foreground" />
-              <p className="text-[10px] text-muted-foreground">{item.label}</p>
-              <p className="font-display text-lg">{item.value.toLocaleString()}</p>
-            </div>
-          ))}
-        </div>
+        {pointsBreakdown.length > 0 ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {pointsBreakdown.map((item) => (
+              <div key={item.label} className="rounded-xl bg-secondary/30 border border-border/50 p-4 space-y-2">
+                <item.icon className="w-4 h-4 text-muted-foreground" />
+                <p className="text-[10px] text-muted-foreground">{item.label}</p>
+                <p className="font-display text-lg">{item.value.toLocaleString()}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">No points data available yet.</p>
+        )}
       </motion.div>
 
       {/* Share Your Rank */}
@@ -329,23 +343,23 @@ export default function Profile() {
 
             <div className="text-center space-y-3">
               <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-[hsl(41_40%_20%/0.3)] to-secondary border border-[hsl(41_30%_20%/0.2)] flex items-center justify-center text-2xl font-bold">
-                D
+                {(user.username?.[0] ?? "?").toUpperCase()}
               </div>
-              <h4 className="font-display text-xl">{user.username.toUpperCase()}</h4>
+              <h4 className="font-display text-xl">{(user.username ?? "").toUpperCase()}</h4>
               <div className="flex items-center justify-center gap-3">
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-gold/12 text-gold border border-gold/20">{user.tier}</span>
-                <span className="text-[10px] text-gold">NFT {user.nftMultiplier}x</span>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-gold/12 text-gold border border-gold/20">{user.tier ?? "—"}</span>
+                <span className="text-[10px] text-gold">NFT {user.nftMultiplier ?? "—"}x</span>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="rounded-lg bg-secondary/30 border border-border/40 p-3 text-center">
                 <p className="text-[9px] text-muted-foreground uppercase">Rank</p>
-                <p className="font-display text-2xl text-gold">#{user.rank}</p>
+                <p className="font-display text-2xl text-gold">#{user.rank ?? "—"}</p>
               </div>
               <div className="rounded-lg bg-secondary/30 border border-border/40 p-3 text-center">
                 <p className="text-[9px] text-muted-foreground uppercase">Points</p>
-                <p className="font-display text-2xl">{user.points.toLocaleString()}</p>
+                <p className="font-display text-2xl">{(user.points ?? 0).toLocaleString()}</p>
               </div>
             </div>
           </div>
