@@ -252,6 +252,7 @@ function ProfileReferralPanel() {
   const code = state.referralCode;
 
   const handleCopy = () => {
+    if (!code) return;
     navigator.clipboard.writeText(code);
     setCopied(true);
     toast({ title: "Copied ✓", description: "Referral code copied to clipboard" });
