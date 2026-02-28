@@ -105,7 +105,7 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
 
       {/* Page content with transitions */}
       <main className="max-w-hub mx-auto px-6 py-8">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="sync">
           <motion.div
             key={pathname}
             initial={{ opacity: 0, y: 12 }}
