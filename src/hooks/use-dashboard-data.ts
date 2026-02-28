@@ -5,8 +5,8 @@ import { usePointsBalance, usePointsBreakdown } from "@/hooks/use-points";
 import { useUserRank } from "@/hooks/use-leaderboard";
 
 /**
- * Provides the user state used by the Dashboard, with mock fallbacks.
- * Once the DB is populated with real data, the mock values are replaced.
+ * Provides the user state used by the Dashboard.
+ * User-specific fields return null when unauthenticated or data is unavailable.
  */
 export function useDashboardData() {
   const { profile } = useAuth();
@@ -17,23 +17,23 @@ export function useDashboardData() {
   const hasRealData = !!pointsData;
 
   const userState = {
-    points: pointsData?.points_balance ?? profile?.points_balance ?? 12450,
-    rank: rank ?? 42,
+    points: pointsData?.points_balance ?? profile?.points_balance ?? null,
+    rank: rank ?? null,
     walletLinked: !!profile?.wallet_address,
     accountLinked: profile?.account_linked ?? false,
     firstBetPlaced: false,
     arenaActivity: false,
-    streak: pointsData?.streak_current ?? profile?.streak_current ?? 4,
-    tier: pointsData?.tier ?? profile?.tier ?? "Gold",
-    nftMultiplier: pointsData?.nft_multiplier ?? profile?.nft_multiplier ?? 1.1,
-    displayName: profile?.twitter_handle ?? profile?.display_name ?? "DEGEN_WHALE",
+    streak: pointsData?.streak_current ?? profile?.streak_current ?? null,
+    tier: pointsData?.tier ?? profile?.tier ?? null,
+    nftMultiplier: pointsData?.nft_multiplier ?? profile?.nft_multiplier ?? null,
+    displayName: profile?.twitter_handle ?? profile?.display_name ?? null,
     avatarUrl: profile?.avatar_url ?? null,
-    referralCode: profile?.referral_code ?? "DEGEN-7X42",
+    referralCode: profile?.referral_code ?? null,
     // Computed stats (mock for now, can be derived from leaderboard later)
     top100Cutoff: 10200,
     cutoffMovedToday: 150,
     ptsToPassNext: 300,
-    nextRankUser: `#${(rank ?? 42) - 1}`,
+    nextRankUser: rank != null ? `#${rank - 1}` : null,
     ptsToTop25: 1800,
   };
 
