@@ -9,32 +9,59 @@ import {
   Check, Copy, ExternalLink, TrendingUp, Zap, Target, Users, Box,
   Share2, Download, Twitter
 } from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { usePointsBalance, usePointsBreakdown } from "@/hooks/use-points";
+import { useUserRank } from "@/hooks/use-leaderboard";
 
-/* ─── Mock state ─── */
-const user = {
-  username: "degen_whale",
-  tier: "Gold",
-  rank: 42,
-  points: 12450,
-  streak: 4,
-  accountLinked: false,
-  walletConnected: true,
-  nftMultiplier: 1.1,
-  welcomeClaimed: false,
-};
-
-const pointsBreakdown = [
+const defaultPointsBreakdown = [
   { label: "Wager Points", value: 6200, icon: Zap },
   { label: "Tasks Points", value: 3100, icon: Target },
   { label: "Chest/Box Rewards", value: 1850, icon: Box },
   { label: "Referral Bonuses", value: 1300, icon: Users },
 ];
 
+const reasonToLabel: Record<string, { label: string; icon: typeof Zap }> = {
+  wager: { label: "Wager Points", icon: Zap },
+  task: { label: "Tasks Points", icon: Target },
+  mystery_box: { label: "Chest/Box Rewards", icon: Box },
+  referral: { label: "Referral Bonuses", icon: Users },
+  bonus_api: { label: "Bonus Rewards", icon: Gift },
+  daily_streak: { label: "Daily Streak", icon: Flame },
+};
+
 export default function Profile() {
   const [copiedRef, setCopiedRef] = useState(false);
+  const { profile } = useAuth();
+  const { data: pointsData } = usePointsBalance();
+  const { data: rank } = useUserRank();
+  const { data: breakdownRaw } = usePointsBreakdown();
+
+  const user = {
+    username: profile?.twitter_handle ?? profile?.display_name ?? "degen_whale",
+    tier: pointsData?.tier ?? profile?.tier ?? "Gold",
+    rank: rank ?? 42,
+    points: pointsData?.points_balance ?? profile?.points_balance ?? 12450,
+    streak: pointsData?.streak_current ?? profile?.streak_current ?? 4,
+    accountLinked: profile?.account_linked ?? false,
+    walletConnected: !!profile?.wallet_address,
+    nftMultiplier: pointsData?.nft_multiplier ?? profile?.nft_multiplier ?? 1.1,
+    welcomeClaimed: false,
+    avatarUrl: profile?.avatar_url ?? null,
+    referralCode: profile?.referral_code ?? "DEGEN-7X42",
+  };
+
+  const pointsBreakdown = breakdownRaw
+    ? Object.entries(breakdownRaw)
+        .filter(([reason]) => reasonToLabel[reason])
+        .map(([reason, value]) => ({
+          label: reasonToLabel[reason].label,
+          value,
+          icon: reasonToLabel[reason].icon,
+        }))
+    : defaultPointsBreakdown;
 
   const handleCopyRef = () => {
-    navigator.clipboard.writeText("DEGEN-7X42");
+    navigator.clipboard.writeText(user.referralCode);
     setCopiedRef(true);
     toast({ title: "Copied ✓", description: "Referral code copied to clipboard" });
     setTimeout(() => setCopiedRef(false), 2000);
@@ -85,7 +112,7 @@ export default function Profile() {
           onClick={handleCopyRef}
           className="w-full flex items-center justify-between gap-2 px-4 py-3 rounded-lg bg-secondary/50 border border-amber/10 hover:border-amber/20 transition-all group"
         >
-          <span className="font-display text-lg tracking-widest text-foreground">DEGEN-7X42</span>
+          <span className="font-display text-lg tracking-widest text-foreground">{user.referralCode}</span>
           {copiedRef ? (
             <Check className="w-4 h-4 text-multiplier flex-shrink-0" />
           ) : (
@@ -109,9 +136,13 @@ export default function Profile() {
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[hsl(41_40%_20%/0.3)] to-secondary border border-[hsl(41_30%_20%/0.2)] flex items-center justify-center text-2xl font-bold">
-              D
-            </div>
+            {user.avatarUrl ? (
+              <img src={user.avatarUrl} alt="" className="w-16 h-16 rounded-2xl object-cover border border-[hsl(41_30%_20%/0.2)]" />
+            ) : (
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[hsl(41_40%_20%/0.3)] to-secondary border border-[hsl(41_30%_20%/0.2)] flex items-center justify-center text-2xl font-bold">
+                {user.username[0].toUpperCase()}
+              </div>
+            )}
             <div>
               <h2 className="font-display text-xl tracking-wide">{user.username.toUpperCase()}</h2>
               <div className="flex items-center gap-2 mt-1">

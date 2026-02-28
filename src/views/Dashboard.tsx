@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import { toast } from "@/hooks/use-toast";
 import {
   Wallet,
@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDashboardData } from "@/hooks/use-dashboard-data";
 
 const switchBonusBg = "/assets/switch-bonus-bg.jpg";
 const platformStake = "/assets/platforms/stake.png";
@@ -71,8 +72,8 @@ function AnimatedNumber({ value, duration = 1200 }: { value: number; duration?: 
   return <>{display.toLocaleString()}</>;
 }
 
-/* ─── Mock user state ─── */
-const userState = {
+/* ─── User state (defaults used as fallback until DB is live) ─── */
+const defaultUserState = {
   points: 12450,
   rank: 42,
   walletLinked: true,
@@ -80,12 +81,22 @@ const userState = {
   firstBetPlaced: false,
   arenaActivity: false,
   streak: 4,
+  tier: "Gold",
+  nftMultiplier: 1.1,
+  displayName: "DEGEN_WHALE",
+  avatarUrl: null as string | null,
+  referralCode: "DEGEN-7X42",
   top100Cutoff: 10200,
   cutoffMovedToday: 150,
   ptsToPassNext: 300,
   nextRankUser: "#41",
   ptsToTop25: 1800,
 };
+type UserState = typeof defaultUserState;
+const UserStateCtx = createContext<UserState>(defaultUserState);
+const useUserState = () => useContext(UserStateCtx);
+// Alias for sub-components that reference `userState` directly
+let userState = defaultUserState;
 
 const platforms = [
   { name: "Stake", logo: platformStake },
@@ -232,7 +243,8 @@ function GettingStarted() {
    ═══════════════════════════════════════════════ */
 function ProfileReferralPanel() {
   const [copied, setCopied] = useState(false);
-  const code = "DEGEN-7X42";
+  const state = useUserState();
+  const code = state.referralCode;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(code);
@@ -252,14 +264,18 @@ function ProfileReferralPanel() {
       >
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[hsl(41_40%_20%/0.3)] to-secondary border border-[hsl(41_30%_20%/0.2)] flex items-center justify-center text-xl font-bold">
-              D
-            </div>
+            {state.avatarUrl ? (
+              <img src={state.avatarUrl} alt="" className="w-14 h-14 rounded-2xl object-cover border border-[hsl(41_30%_20%/0.2)]" />
+            ) : (
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[hsl(41_40%_20%/0.3)] to-secondary border border-[hsl(41_30%_20%/0.2)] flex items-center justify-center text-xl font-bold">
+                {state.displayName[0].toUpperCase()}
+              </div>
+            )}
             <div>
-              <h2 className="font-display text-xl tracking-wide">DEGEN_WHALE</h2>
+              <h2 className="font-display text-xl tracking-wide">{state.displayName.toUpperCase()}</h2>
               <div className="flex items-center gap-2 mt-1 flex-wrap">
                 <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-gold/12 text-gold border border-gold/20">
-                  Gold
+                  {state.tier}
                 </span>
                 <span className="text-[10px] text-muted-foreground">Season 1</span>
                 <span className="text-[10px] text-multiplier flex items-center gap-1">
@@ -279,7 +295,7 @@ function ProfileReferralPanel() {
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gold/10 border border-gold/20">
             <Crown className="w-5 h-5 text-gold" />
-            <span className="font-display text-lg text-gold">NFT 1.1x</span>
+            <span className="font-display text-lg text-gold">NFT {state.nftMultiplier}x</span>
           </div>
         </div>
 
@@ -1049,54 +1065,59 @@ function LeaderboardRail() {
    DASHBOARD — 2-column layout
    ═══════════════════════════════════════════════ */
 export default function Dashboard() {
+  const { userState: realData } = useDashboardData();
+
+  // Merge real data into the module-level alias used by sub-components
+  userState = { ...defaultUserState, ...realData };
+
   return (
-    <div className="space-y-5">
-      {/* Switch Bonus card below handles this */}
+    <UserStateCtx.Provider value={userState}>
+      <div className="space-y-5">
+        {/* 2-column: Main (70%) + Leaderboard Rail (30%) */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-5">
+          {/* LEFT — Main funnel content */}
+          <div className="space-y-6 min-w-0">
+            {/* 1. Switch Bonus (Vampire Attack) — top priority */}
+            <SwitchBonusCard />
 
-      {/* 2-column: Main (70%) + Leaderboard Rail (30%) */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-5">
-        {/* LEFT — Main funnel content */}
-        <div className="space-y-6 min-w-0">
-          {/* 1. Switch Bonus (Vampire Attack) — top priority */}
-          <SwitchBonusCard />
+            {/* 2. Getting Started */}
+            <GettingStarted />
 
-          {/* 2. Getting Started */}
-          <GettingStarted />
+            {/* 3. Profile + Referrals */}
+            <ProfileReferralPanel />
 
-          {/* 3. Profile + Referrals */}
-          <ProfileReferralPanel />
+            {/* 4. Badges — right under profile */}
+            <BadgesPreview />
 
-          {/* 4. Badges — right under profile */}
-          <BadgesPreview />
+            {/* 5. Points Breakdown */}
+            <PointsBreakdown />
 
-          {/* 5. Points Breakdown */}
-          <PointsBreakdown />
+            {/* 6. Daily Mystery Box */}
+            <DailyMysteryBoxCard />
 
-          {/* 6. Daily Mystery Box */}
-          <DailyMysteryBoxCard />
+            {/* 7. Arena */}
+            <ArenaCard />
 
-          {/* 7. Arena */}
-          <ArenaCard />
+            {/* 8. Tasks */}
+            <TasksPreview />
 
-          {/* 8. Tasks */}
-          <TasksPreview />
+            {/* 9. How It Works */}
+            <HowItWorks />
+          </div>
 
-          {/* 9. How It Works */}
-          <HowItWorks />
-        </div>
-
-        {/* RIGHT — Leaderboard Rail (sticky) */}
-        <div className="hidden lg:block">
-          <div className="sticky top-20">
-            <LeaderboardRail />
+          {/* RIGHT — Leaderboard Rail (sticky) */}
+          <div className="hidden lg:block">
+            <div className="sticky top-20">
+              <LeaderboardRail />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Mobile leaderboard */}
-      <div className="lg:hidden">
-        <LeaderboardRail />
+        {/* Mobile leaderboard */}
+        <div className="lg:hidden">
+          <LeaderboardRail />
+        </div>
       </div>
-    </div>
+    </UserStateCtx.Provider>
   );
 }

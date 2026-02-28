@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Swords, Crosshair, Lock, Award, Target, Trophy, Rocket, Wallet, Sparkles, LogOut } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/lib/auth";
+import { useEffect } from "react";
 
 const navItems = [
   { label: "Hub", path: "/", icon: Swords, variant: "default" as const },
@@ -20,7 +21,24 @@ const navItems = [
 
 export default function HubLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "/";
-  const { profile, signOut } = useAuth();
+  const router = useRouter();
+  const { user, profile, loading, signOut } = useAuth();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace("/login");
+    }
+  }, [loading, user, router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-muted-foreground text-sm animate-pulse">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-background">
