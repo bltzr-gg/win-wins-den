@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Swords, Crosshair, Lock, Award, Target, Trophy, Rocket, Wallet, Sparkles, LogOut, LogIn } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth";
 
 const navItems = [
@@ -105,17 +105,14 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
 
       {/* Page content with transitions */}
       <main className="max-w-hub mx-auto px-6 py-8">
-        <AnimatePresence mode="sync">
-          <motion.div
-            key={pathname}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-          >
-            {children}
-          </motion.div>
-        </AnimatePresence>
+        <motion.div
+          key={pathname}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+        >
+          {children}
+        </motion.div>
       </main>
     </div>
   );

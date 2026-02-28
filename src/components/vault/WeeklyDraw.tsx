@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Trophy, Users, Ticket, Clock, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -78,9 +78,12 @@ function DrawDetailsModal({ userTickets, onClose }: { userTickets: number; onClo
 }
 
 export default function WeeklyDraw() {
-  const nextDraw = new Date();
-  nextDraw.setDate(nextDraw.getDate() + ((7 - nextDraw.getDay()) % 7 || 7));
-  nextDraw.setHours(20, 0, 0, 0);
+  const nextDraw = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + ((7 - d.getDay()) % 7 || 7));
+    d.setHours(20, 0, 0, 0);
+    return d;
+  }, []);
   const countdown = useCountdown(nextDraw);
 
   const userTickets = 12;
