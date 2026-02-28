@@ -274,11 +274,11 @@ function ProfileReferralPanel() {
               <img src={state.avatarUrl} alt="" className="w-14 h-14 rounded-2xl object-cover border border-[hsl(41_30%_20%/0.2)]" />
             ) : (
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[hsl(41_40%_20%/0.3)] to-secondary border border-[hsl(41_30%_20%/0.2)] flex items-center justify-center text-xl font-bold">
-                {state.displayName[0].toUpperCase()}
+                {(state.displayName?.[0] ?? "?").toUpperCase()}
               </div>
             )}
             <div>
-              <h2 className="font-display text-xl tracking-wide">{state.displayName.toUpperCase()}</h2>
+              <h2 className="font-display text-xl tracking-wide">{(state.displayName ?? "").toUpperCase()}</h2>
               <div className="flex items-center gap-2 mt-1 flex-wrap">
                 <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-gold/12 text-gold border border-gold/20">
                   {state.tier}
