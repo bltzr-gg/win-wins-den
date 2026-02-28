@@ -1,10 +1,11 @@
 "use client";
 
+import { ReactNode } from "react";
 import { useAuth } from "@/lib/auth";
 import { LogIn, Lock } from "lucide-react";
 
 interface AuthGateProps {
-  children: React.ReactNode;
+  children: ReactNode;
   message?: string;
   compact?: boolean; // for small inline sections — shows a link instead of a full button
 }

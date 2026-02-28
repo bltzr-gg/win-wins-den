@@ -34,6 +34,8 @@ import {
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDashboardData } from "@/hooks/use-dashboard-data";
+import AuthGate from "@/components/AuthGate";
+import { useAuth } from "@/lib/auth";
 
 const switchBonusBg = "/assets/switch-bonus-bg.jpg";
 const platformStake = "/assets/platforms/stake.png";
@@ -74,22 +76,22 @@ function AnimatedNumber({ value, duration = 1200 }: { value: number; duration?: 
 
 /* ─── User state (defaults used as fallback until DB is live) ─── */
 const defaultUserState = {
-  points: 12450,
-  rank: 42,
-  walletLinked: true,
+  points: null as number | null,
+  rank: null as number | null,
+  walletLinked: false,
   accountLinked: false,
   firstBetPlaced: false,
   arenaActivity: false,
-  streak: 4,
-  tier: "Gold",
-  nftMultiplier: 1.1,
-  displayName: "DEGEN_WHALE",
+  streak: null as number | null,
+  tier: null as string | null,
+  nftMultiplier: null as number | null,
+  displayName: null as string | null,
   avatarUrl: null as string | null,
-  referralCode: "DEGEN-7X42",
+  referralCode: null as string | null,
   top100Cutoff: 10200,
   cutoffMovedToday: 150,
   ptsToPassNext: 300,
-  nextRankUser: "#41",
+  nextRankUser: null as string | null,
   ptsToTop25: 1800,
 };
 type UserState = typeof defaultUserState;
@@ -155,14 +157,17 @@ function AnnouncementBanner() {
    1. GETTING STARTED (3 CTAs)
    ═══════════════════════════════════════════════ */
 function GettingStarted() {
+  const { user } = useAuth();
   const tiles = [
     {
       step: 1,
-      title: "LINK REALBET ACCOUNT",
-      sub: "Connect your gaming profile to start earning.",
-      cta: "Link Account",
-      href: "/profile",
-      primary: !userState.accountLinked,
+      title: user ? "LINK REALBET ACCOUNT" : "CREATE YOUR ACCOUNT",
+      sub: user
+        ? "Connect your gaming profile to start earning."
+        : "Sign in with X to join the hub and start earning.",
+      cta: user ? "Link Account" : "Sign In",
+      href: user ? "/profile" : "/login",
+      primary: user ? !userState.accountLinked : true,
     },
     {
       step: 2,
@@ -279,15 +284,15 @@ function ProfileReferralPanel() {
                 </span>
                 <span className="text-[10px] text-muted-foreground">Season 1</span>
                 <span className="text-[10px] text-multiplier flex items-center gap-1">
-                  <Flame className="w-3 h-3" /> {userState.streak}-Day Streak
+                  <Flame className="w-3 h-3" /> {userState.streak ?? 0}-Day Streak
                   <span className={`px-1.5 py-0.5 rounded border text-[9px] font-semibold ${
-                    userState.streak >= 60 ? "bg-gold/10 text-gold border-gold/20" :
-                    userState.streak >= 30 ? "bg-gold/10 text-gold border-gold/20" :
-                    userState.streak >= 15 ? "bg-multiplier/10 text-multiplier border-multiplier/20" :
-                    userState.streak >= 7 ? "bg-primary/10 text-primary border-primary/20" :
+                    (userState.streak ?? 0) >= 60 ? "bg-gold/10 text-gold border-gold/20" :
+                    (userState.streak ?? 0) >= 30 ? "bg-gold/10 text-gold border-gold/20" :
+                    (userState.streak ?? 0) >= 15 ? "bg-multiplier/10 text-multiplier border-multiplier/20" :
+                    (userState.streak ?? 0) >= 7 ? "bg-primary/10 text-primary border-primary/20" :
                     "bg-secondary/50 text-muted-foreground border-border/50"
                   }`}>
-                    {userState.streak >= 60 ? "2.0x" : userState.streak >= 30 ? "1.8x" : userState.streak >= 15 ? "1.5x" : userState.streak >= 7 ? "1.2x" : "1.0x"}
+                    {(userState.streak ?? 0) >= 60 ? "2.0x" : (userState.streak ?? 0) >= 30 ? "1.8x" : (userState.streak ?? 0) >= 15 ? "1.5x" : (userState.streak ?? 0) >= 7 ? "1.2x" : "1.0x"}
                   </span>
                 </span>
               </div>
@@ -303,7 +308,7 @@ function ProfileReferralPanel() {
           <div>
             <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">REAL Points</p>
             <p className="font-display text-3xl leading-none">
-              <AnimatedNumber value={userState.points} />
+              <AnimatedNumber value={userState.points ?? 0} />
             </p>
           </div>
           <div>
@@ -519,7 +524,7 @@ function PointsBreakdown() {
    ═══════════════════════════════════════════════ */
 function DailyMysteryBoxCard() {
   const freeBoxAvailable = true;
-  const streak = userState.streak;
+  const streak = userState.streak ?? 0;
   const multiplier = streak >= 60 ? 2.0 : streak >= 30 ? 1.8 : streak >= 15 ? 1.5 : streak >= 7 ? 1.2 : 1.0;
   const multiplierLabel = streak >= 60 ? "2.0x" : streak >= 30 ? "1.8x" : streak >= 15 ? "1.5x" : streak >= 7 ? "1.2x" : "1.0x";
   const baseReward = 100;
@@ -730,17 +735,19 @@ function ArenaCard() {
           <p className="text-xs text-muted-foreground">
             Wager REAL Points for competitive outcomes. High risk. Higher rank acceleration.
           </p>
-          <div className="flex items-center gap-4 mt-2 text-[10px]">
-            <span className="text-muted-foreground">
-              Win Rate: <span className="text-foreground font-semibold">62%</span>
-            </span>
-            <span className="text-muted-foreground">
-              Arena Multi: <span className="text-amber font-semibold">1.5x</span>
-            </span>
-            <span className="text-muted-foreground">
-              7d Net: <span className="text-multiplier font-semibold">+4,250</span>
-            </span>
-          </div>
+          <AuthGate compact>
+            <div className="flex items-center gap-4 mt-2 text-[10px]">
+              <span className="text-muted-foreground">
+                Win Rate: <span className="text-foreground font-semibold">62%</span>
+              </span>
+              <span className="text-muted-foreground">
+                Arena Multi: <span className="text-amber font-semibold">1.5x</span>
+              </span>
+              <span className="text-muted-foreground">
+                7d Net: <span className="text-multiplier font-semibold">+4,250</span>
+              </span>
+            </div>
+          </AuthGate>
         </div>
 
         <div className="flex items-center gap-3 flex-shrink-0">
@@ -1049,13 +1056,15 @@ function LeaderboardRail() {
         </div>
 
         {/* Pinned user rank */}
-        <div className="flex items-center gap-2 p-2.5 rounded-lg bg-primary/5 border border-primary/10">
-          <span className="font-display text-xs text-primary">#{userState.rank}</span>
-          <div className="flex-1 min-w-0">
-            <p className="text-[10px] font-semibold truncate">YOU (degen_whale)</p>
+        <AuthGate compact>
+          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-primary/5 border border-primary/10">
+            <span className="font-display text-xs text-primary">#{userState.rank ?? "—"}</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] font-semibold truncate">{userState.displayName ? `YOU (${userState.displayName})` : "YOU"}</p>
+            </div>
+            <span className="font-display text-xs text-foreground">{(userState.points ?? 0).toLocaleString()}</span>
           </div>
-          <span className="font-display text-xs text-foreground">{userState.points.toLocaleString()}</span>
-        </div>
+        </AuthGate>
       </motion.div>
     </div>
   );
@@ -1084,22 +1093,32 @@ export default function Dashboard() {
             <GettingStarted />
 
             {/* 3. Profile + Referrals */}
-            <ProfileReferralPanel />
+            <AuthGate message="Sign in to view your profile and referral stats">
+              <ProfileReferralPanel />
+            </AuthGate>
 
             {/* 4. Badges — right under profile */}
-            <BadgesPreview />
+            <AuthGate message="Sign in to see your badge collection">
+              <BadgesPreview />
+            </AuthGate>
 
             {/* 5. Points Breakdown */}
-            <PointsBreakdown />
+            <AuthGate message="Sign in to see your points breakdown">
+              <PointsBreakdown />
+            </AuthGate>
 
             {/* 6. Daily Mystery Box */}
-            <DailyMysteryBoxCard />
+            <AuthGate message="Sign in to track your streak and open daily boxes">
+              <DailyMysteryBoxCard />
+            </AuthGate>
 
             {/* 7. Arena */}
             <ArenaCard />
 
             {/* 8. Tasks */}
-            <TasksPreview />
+            <AuthGate message="Sign in to see your tasks progress">
+              <TasksPreview />
+            </AuthGate>
 
             {/* 9. How It Works */}
             <HowItWorks />
