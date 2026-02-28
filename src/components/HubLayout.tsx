@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { Swords, Crosshair, Lock, Award, Target, Trophy, Rocket, Wallet, Sparkles, LogOut } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Swords, Crosshair, Lock, Award, Target, Trophy, Rocket, Wallet, Sparkles, LogOut, LogIn } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/lib/auth";
-import { useEffect } from "react";
 
 const navItems = [
   { label: "Hub", path: "/", icon: Swords, variant: "default" as const },
@@ -21,24 +20,7 @@ const navItems = [
 
 export default function HubLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "/";
-  const router = useRouter();
-  const { user, profile, loading, signOut } = useAuth();
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.replace("/login");
-    }
-  }, [loading, user, router]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-muted-foreground text-sm animate-pulse">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!user) return null;
+  const { user, profile, signOut } = useAuth();
 
   return (
     <div className="min-h-screen bg-background">
@@ -84,27 +66,39 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground">
-              {profile?.twitter_handle ?? profile?.display_name ?? "User"}
-            </span>
-            {profile?.avatar_url ? (
-              <img
-                src={profile.avatar_url}
-                alt=""
-                className="w-8 h-8 rounded-lg object-cover"
-              />
+            {user ? (
+              <>
+                <span className="text-sm text-muted-foreground">
+                  {profile?.twitter_handle ?? profile?.display_name ?? "User"}
+                </span>
+                {profile?.avatar_url ? (
+                  <img
+                    src={profile.avatar_url}
+                    alt=""
+                    className="w-8 h-8 rounded-lg object-cover"
+                  />
+                ) : (
+                  <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center text-sm font-bold text-foreground">
+                    {(profile?.display_name ?? "U")[0].toUpperCase()}
+                  </div>
+                )}
+                <button
+                  onClick={signOut}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  title="Sign out"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </>
             ) : (
-              <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center text-sm font-bold text-foreground">
-                {(profile?.display_name ?? "U")[0].toUpperCase()}
-              </div>
+              <Link
+                href="/login"
+                className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-primary/10 text-primary text-sm font-medium hover:bg-primary/15 transition-colors"
+              >
+                <LogIn className="w-4 h-4" />
+                Sign In
+              </Link>
             )}
-            <button
-              onClick={signOut}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              title="Sign out"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
           </div>
         </div>
       </nav>
